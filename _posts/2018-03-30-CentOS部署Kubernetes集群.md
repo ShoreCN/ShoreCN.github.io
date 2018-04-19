@@ -6,7 +6,7 @@ categories:
 tags: Kubernetes
 ---
 
-#CentOS部署Kubernetes集群
+# CentOS部署Kubernetes集群
 ## 相关组件版本
 
 | 名称 | 版本号 |
@@ -23,7 +23,7 @@ systemctl enable docker && systemctl start docker
 
 ## 设置节点名称
 Kubernetes集群中的所有节点名称不能相同，所以在创建集群前先修改好各个节点的名称防止冲突。  
-` hostname -b 名称 `
+`hostname -b 名称`  
 
 ## 安装Kubernetes组件
 ### 配置yum镜像源文件
@@ -63,7 +63,7 @@ Kubernetes集群的正常使用依赖于CNI(Container Network Interface)。
 在这个部署场景中我们选用Flannel
 
 ### 初始化集群
-`kubeadmin init --pod-network-cidr=10.244.0.0/16 `
+`kubeadmin init --pod-network-cidr=10.244.0.0/16 `  
 为了保证Flannel可以正常工作，需要在Kubeadm init时加上“—pod-network-cidr=10.244.0.0/16 ”参数，使用其余CNI对应的参数各不相同，详情请参考[官方文档](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network)
 
 若输出以下类似内容则代表集群已经初始化成功了：
@@ -91,14 +91,16 @@ as root:
 
 ### 配置环境参数
 留意kubeadm init成功之后的回显，其中提醒了我们使用集群前需要做的相应配置。  
-`mkdir -p $HOME/.kube`
-`sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config`
-`sudo chown $(id -u):$(id -g) $HOME/.kube/config`
+`mkdir -p $HOME/.kube`  
+`sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config`  
+`sudo chown $(id -u):$(id -g) $HOME/.kube/config`  
 
 
 ### 安装CNI
 我们使用Flannel作为这个集群的CNI，所以使用如下命令安装Flannel：  
-`kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml`
+```
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+```
 
 其余类型的CNI的安装方式可以参照[官方文档](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network)
 
