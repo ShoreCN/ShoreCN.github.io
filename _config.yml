@@ -4,10 +4,10 @@
 # ---------------------------------------------------------------
 
 # Site
-title: NexT
+title: Shore Space
 subtitle:
-description: Shore
-author: John Doe
+description: C/Python/通信/SDN/云计算
+author: Shore
 # Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
 language: zh-Hans
 date_format: '%Y-%m-%d'
@@ -212,9 +212,10 @@ font:
 # Social Links
 # Key is the link label showing to end users.
 # Value is the target link (E.g. GitHub: https://github.com/iissnan)
-#social:
+social:
   #LinkLabel: Link
-
+  GitHub: https://github.com/ShoreCN
+  Zhihu: https://www.zhihu.com/people/shore-80
 
 # Social Links Icons
 # Icon Mapping:
