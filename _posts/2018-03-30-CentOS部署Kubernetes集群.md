@@ -11,6 +11,7 @@ tags: Kubernetes
 
 | 名称 | 版本号 |
 |:---|:---|
+|CentOS|7.4.1708|
 |docker | 1.13.1|
 |kubeadm | 1.10.1|
 |kubectl| 1.9.3|
