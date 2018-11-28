@@ -54,6 +54,7 @@ categories: 容器
 - 通过RUN指令执行命令行操作，这里主要是yum install进行依赖软件包安装
 - 通过EXPOSE指令指定需要暴露的服务端口
 - 通过ENTRYPOINT指令设置容器运行起来后需要执行的程序或命令
+
 ```
 FROM daocloud.io/centos:7 
 MAINTAINER mate
