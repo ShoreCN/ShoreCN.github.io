@@ -80,6 +80,6 @@ ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
 制作镜像过程中，配置可以通过ENV直接设置到环境变量中，但如果是运行的程序依赖的配置需要文件化，类似样例中的supervisord.conf配置文件，那么此文件最好
 
 ### 编写Dockerfile
-更加详细具体的Dockerfile的语法格式、编写规范可以参考如下资料：
+更加详细具体的Dockerfile的语法格式、编写规范可以参考如下资料：  
 [| Docker Documentation](https://docs.docker.com/engine/reference/builder/)
 http://www.docker.org.cn/dockerppt/114.html
