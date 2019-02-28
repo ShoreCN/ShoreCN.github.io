@@ -1,0 +1,1780 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+    <entry>
+      <title><![CDATA[在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客]]></title>
+      <url>/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS/</url>
+      <content type="html"><![CDATA[<h2 id="jekyll简介">Jekyll简介</h2>
+<p>Jekyll 是一个简单且完全免费的静态博客站点生成工具，类似WordPress。但是和WordPress又有很大的不同，原因是jekyll只是一个只用 Markdown (或 Textile)、Liquid、HTML &amp; CSS 就可以生成静态网页的工具，不需要数据库支持。但是可以配合第三方服务,例如Disqus。</p>
+
+<h2 id="docker简介">Docker简介</h2>
+<p>Docker是一个开放源代码软件项目，让应用程序部署的工作可以自动化进行，借此在Linux操作系统上，提供一个额外的软件抽象层，以及操作系统层虚拟化的自动管理机制。</p>
+
+<h2 id="jekyll部署">Jekyll部署</h2>
+<h3 id="环境">环境</h3>
+<p>AWS Ubuntu 16.04.5 LTS</p>
+
+<h3 id="安装">安装</h3>
+<h4 id="docker安装">Docker安装</h4>
+<p>Docker的安装资料已经十分丰富了，参见官网指导即可。</p>
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>[Get Docker CE for Ubuntu</td>
+        <td>Docker Documentation](https://docs.docker.com/install/linux/docker-ce/ubuntu/)</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+<h4 id="jekyll安装">Jekyll安装</h4>
+<p>因为使用Docker，所以免去了Jekyll安装。不用再关心系统版本、依赖组件之类的问题，开箱即用。</p>
+
+<h3 id="选择jekyll模板">选择Jekyll模板</h3>
+<p>网上有大量的现成Jekyll模板可以选择，此处以Jekyll-Now为例。
+在服务器上创建一个目录并git clone模板代码：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir jekyllBlog
+cd jekyllBlog
+git clone https://github.com/barryclark/jekyll-now.git .
+</code></pre></div></div>
+
+<h3 id="构建">构建</h3>
+<p>Jekyll提供了一条build命令将模板编译为静态网页，直接在执行如下Docker命令即可：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export JEKYLL_VERSION=3.8
+docker run --rm --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:$JEKYLL_VERSION jekyll build
+</code></pre></div></div>
+
+<p>~可以看到新生成一个_site目录，就是刚刚构建出来的网页文件~</p>
+
+<h3 id="开启服务">开启服务</h3>
+<p>Jekyll 同时也集成了一个网页服务，通过serve命令即可开启。
+<code class="highlighter-rouge">docker run --rm --volume="$PWD:/srv/jekyll" -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll serve</code></p>
+
+<p>~通过-p参数指定了对外暴露的的服务器端口为4000~</p>
+
+<p>至此，我们就可以通过服务器的IP加端口（例如http://1.2.3.4:4000）访问刚刚创建好的静态博客系统了。</p>
+
+<blockquote>
+  <p>参考资料<br />
+<a href="https://stackoverflow.com/questions/53470794/setup-jekyll-via-docker">Setup Jekyll via Docker? - Stack Overflow</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        
+          <category> 工具 </category>
+        
+      </categories>
+      <tags>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[使用NGINX Ingress进行Kubernetes集群负载均衡]]></title>
+      <url>/2018/12/25/k8s-nginx-ingress-install/</url>
+      <content type="html"><![CDATA[<h2 id="1-概述">1 概述</h2>
+<p>Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。</p>
+
+<h2 id="2-安装">2 安装</h2>
+<p>Ingress的安装方式有两种</p>
+<ul>
+  <li>
+    <p>通过Kubernetes配置文件安装<br />
+Ingress相关的yaml文件归档在如下地址：<a href="https://github.com/nginxinc/kubernetes-ingress/tree/master/deployments">kubernetes-ingress/deployments at master · nginxinc/kubernetes-ingress · GitHub</a>
+可以通过下载相关文件后使用kubectl apply直接进行部署，参阅指导文档<a href="https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/installation.md">kubernetes-ingress/installation.md at master · nginxinc/kubernetes-ingress · GitHub</a>，此处不予赘述</p>
+  </li>
+  <li>
+    <p>通过Helm安装<br />
+本文主要介绍通过Helm安装使用Ingress，所以开始前请确保已经安装好Helm了。</p>
+  </li>
+</ul>
+
+<h3 id="21-选择服务暴露方式">2.1 选择服务暴露方式</h3>
+<p>Ingress对外部提供服务通常选择如下两种方式：</p>
+<ul>
+  <li>
+    <p>LoadBalancer<br />
+需要云厂商支持并购买，为每个LoadBalancer类型的Service分配公网IP地址</p>
+  </li>
+  <li>
+    <p>hostPort<br />
+hostPort是直接将容器的端口与所调度的节点上的端口连接起来，这样用户就可以通过宿主机的IP加上端口号来访问Pod了，如:</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: influxdb
+spec:
+  containers:
+    - name: influxdb
+      image: influxdb
+      ports:
+        - containerPort: 8086
+          hostPort: 8086
+</code></pre></div></div>
+<blockquote>
+  <p>hostPort的方案有个缺点，因为Pod重新调度的时候该Pod被调度到的宿主机可能会变动，这样就变化后用户必须自己维护一个Pod与所在宿主机的对应关系。</p>
+</blockquote>
+
+<h3 id="22-使用loadbalancer提供服务">2.2 使用LoadBalancer提供服务</h3>
+<p>这种方式部署起来十分简单，因为stable/nginx-ingress这个helm包默认就是使用这种方式部署。确保在云厂商上已经开通了LoadBalancer服务之后，执行如下命令进行一键安装：<br />
+<code class="highlighter-rouge">helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress</code></p>
+
+<p>部署完成后查看结果：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl get svc -n kube-system
+NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
+nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   80:30113/TCP,443:32564/TCP   21h
+</code></pre></div></div>
+
+<h3 id="23-使用hostport提供服务">2.3 使用hostPort提供服务</h3>
+<p>之前有提到hostPort的缺点在于Pod被调度变化到其他宿主机时需要手动维护。那么我们通过DaemonSet将Nginx 的 Ingress Controller Pod指定到特定宿主机上面来解决这个问题，牺牲了一定的可靠性，但就可以不再操心如何手工维护服务的地址变化问题了，二者的利弊取舍可以根据使用场景进行评估。</p>
+
+<h4 id="231-选择边缘节点">2.3.1 选择边缘节点</h4>
+<p>边缘节点：监听外部流量进入集群内部的节点
+这里我们选择集群内部的一个节点作为边缘节点，注意这个节点需要有外部可以访问的公网地址并且80、443端口没有被其他应用占用。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get nodes
+NAME                      STATUS   ROLES    AGE   VERSION
+izj6cfiv0zhc0j2k7ruyhsz   Ready    &lt;none&gt;   16d   v1.13.0
+k8s-cluster1-master       Ready    master   16d   v1.13.0
+</code></pre></div></div>
+<p>以这个集群为例，我们选择izj6cfiv0zhc0j2k7ruyhsz作为边缘节点</p>
+
+<h4 id="232-为边缘节点添加标签">2.3.2 为边缘节点添加标签</h4>
+<p>我们使用如下指令给这个节点加上一个内容为node:edge的label，后续在DaemonSet部署时根据label进行绑定即可。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node=edge
+node "izj6cfiv0zhc0j2k7ruyhsz" labeled
+</code></pre></div></div>
+
+<p>删除标签可以使用如下命令</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node-
+node "izj6cfiv0zhc0j2k7ruyhsz" labeled
+</code></pre></div></div>
+
+<h4 id="233-使用helm安装ingress">2.3.3 使用helm安装ingress</h4>
+<p>配置好边缘节点之后即可以使用Helm安装ingress了，安装命令如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm install stable/nginx-ingress \
+  --namespace kube-system \
+  --name nginx-ingress \
+  --set controller.kind=DaemonSet \
+  --set controller.daemonset.useHostPort=true \
+  --set controller.nodeSelector.node=edge \
+  --set controller.service.type=ClusterIP
+</code></pre></div></div>
+
+<p>参数解释：</p>
+<ul>
+  <li>namespace  可选项，配置后可指定ingress安装的命令空间，默认为default</li>
+  <li>name  生成的资源名称</li>
+  <li>set controller.kind=DaemonSet  选择部署方式为DaemonSet</li>
+  <li>set controller.daemonset.useHostPort=true  开启hostPort功能，可以直接通过节点访问ingress服务</li>
+  <li>controller.nodeSelector.node=edge  提供对外提供服务的节点筛选方式，需要和之前配置的节点label匹配，例如之前配置的node=edge，这里也需要填上一样的键值</li>
+  <li>set controller.service.type=ClusterIP  内部服务的类型</li>
+</ul>
+
+<p>安装完成之后检查一下对应pod是否都正常运行了</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get pods -n kube-system | grep nginx-ingress
+nginx-ingress-controller-hv8h9                   1/1     Running   0          15d
+nginx-ingress-default-backend-56d99b86fb-4jlxn   1/1     Running   0          15d
+</code></pre></div></div>
+
+<h2 id="3-配置">3 配置</h2>
+<h3 id="31-创建测试服务">3.1 创建测试服务</h3>
+<p>Ingress安装完成之后，就可以配置相应规则来对外暴露服务了。我们可以创建一个服务来测试
+创建一个my-nginx.yaml，内容为</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    name: http
+  selector:
+    run: my-nginx
+</code></pre></div></div>
+
+<p>通过<code class="highlighter-rouge">kubectl apply -f my-nginx.yaml</code>进行创建，通过<code class="highlighter-rouge">kubectl get service</code>可以看到my-nginx服务已经创建成功</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get svc
+NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+kubernetes                           ClusterIP   10.96.0.1        &lt;none&gt;        443/TCP          17d
+my-nginx                             ClusterIP   10.100.181.157   &lt;none&gt;        80/TCP,443/TCP   13d
+</code></pre></div></div>
+
+<h3 id="32-创建ingress规则">3.2 创建ingress规则</h3>
+<p>创建完成服务之后，我们就可以通过配置ingress规则来暴露服务了，</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-nginx
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: www.10cloud.tk
+    http:
+      paths:
+      - path: /web
+        backend:
+          serviceName: my-nginx
+          servicePort: 80
+  tls:
+  - hosts:
+    - www.10cloud.tk
+    secretName: www-10cloud-tk-tls
+</code></pre></div></div>
+
+<p>参数解释</p>
+<ul>
+  <li>kubernetes.io/ingress.class: “nginx”<br />
+通过定义kubernetes.io/ingress.class 这个annotation可以在有多个ingress controller的情况下能够让请求被我们安装的这个处理</li>
+  <li>nginx.ingress.kubernetes.io/rewrite-target: /<br />
+配置位置重定向，作用是使Ingress以根路径转发到后端，避免访问路径错误配置而导致的404错误。参数详细说明参照<a href="https://github.com/kubernetes/ingress-nginx/tree/master/docs/examples/rewrite">ingress-nginx/docs/examples/rewrite at master · kubernetes/ingress-nginx · GitHub</a></li>
+  <li>host<br />
+域名地址</li>
+  <li>path<br />
+外部访问的相对地址</li>
+  <li>backend<br />
+通过配置服务名称和服务端口来指定和path绑定的后端服务</li>
+  <li>tls<br />
+创建了证书之后，可以通过tls绑定已创建的secret来实现https安全访问功能</li>
+</ul>
+
+<p>至此，我们的Ingress创建完成并且通过配置服务与域名的关系，实现了外部访问的功能，通过域名<code class="highlighter-rouge">chenshuo.tk/web</code>即看到nginx的内容，说明通过域名已经可以访问集群内的服务了</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome to nginx!
+If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
+
+For online documentation and support please refer to nginx.org.
+Commercial support is available at nginx.com.
+
+Thank you for using nginx.
+</code></pre></div></div>
+
+]]></content>
+      <categories>
+        
+      </categories>
+      <tags>
+        
+          <tag> Kubernetes </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[Linux系统下Helm（Kubernetes包管理器）的安装使用]]></title>
+      <url>/kubernetes/2018/12/11/Helm-install/</url>
+      <content type="html"><![CDATA[<h2 id="概述">概述</h2>
+<p>Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。</p>
+
+<h2 id="安装">安装</h2>
+<h3 id="安装客户端helm">安装客户端（Helm）</h3>
+<p>官方提供了多种安装方式，这里选用脚本安装的方法，使用命令<code class="highlighter-rouge">curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash</code>会自动抓取最新的版本完成客户端的安装：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  7236  100  7236    0     0  74494      0 --:--:-- --:--:-- --:--:-- 74597
+Downloading https://kubernetes-helm.storage.googleapis.com/helm-v2.12.0-linux-amd64.tar.gz
+Preparing to install helm and tiller into /usr/local/bin
+helm installed into /usr/local/bin/helm
+tiller installed into /usr/local/bin/tiller
+Run 'helm init' to configure helm.
+</code></pre></div></div>
+
+<h3 id="安装服务端tiller">安装服务端（Tiller）</h3>
+<p>Helm安装完成之后，通过命令行<code class="highlighter-rouge">helm init</code>即可完成服务端Tiller的安装。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# helm init
+Creating /root/.helm
+Creating /root/.helm/repository
+Creating /root/.helm/repository/cache
+Creating /root/.helm/repository/local
+Creating /root/.helm/plugins
+Creating /root/.helm/starters
+Creating /root/.helm/cache/archive
+Creating /root/.helm/repository/repositories.yaml
+Adding stable repo with URL: https://kubernetes-charts.storage.googleapis.com
+Adding local repo with URL: http://127.0.0.1:8879/charts
+$HELM_HOME has been configured at /root/.helm.
+
+Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
+
+Please note: by default, Tiller is deployed with an insecure 'allow unauthenticated users' policy.
+To prevent this, run `helm init` with the --tiller-tls-verify flag.
+For more information on securing your installation see: https://docs.helm.sh/using_helm/#securing-your-helm-installation
+Happy Helming!
+</code></pre></div></div>
+
+<p>使用命令<code class="highlighter-rouge">helm version</code>可以查看安装是否成功和版本号情况</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# helm version
+Client: &amp;version.Version{SemVer:"v2.12.0", GitCommit:"d325d2a9c179b33af1a024cdb5a4472b6288016a", GitTreeState:"clean"}
+Server: &amp;version.Version{SemVer:"v2.12.0", GitCommit:"d325d2a9c179b33af1a024cdb5a4472b6288016a", GitTreeState:"clean"}
+</code></pre></div></div>
+
+<h3 id="权限配置">权限配置</h3>
+<p>默认安装的 tiller 权限很小，我们执行下面的脚本给它加最大权限，这样方便我们可以用 helm 部署应用到任意 namespace 下:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create serviceaccount --namespace=kube-system tiller
+
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+
+kubectl patch deploy --namespace=kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+</code></pre></div></div>
+]]></content>
+      <categories>
+        
+          <category> Kubernetes </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> Kubernetes </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[容器化迁移规范]]></title>
+      <url>/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard/</url>
+      <content type="html"><![CDATA[<h2 id="服务器选择">服务器选择</h2>
+<p>用户自行采购服务器主机，服务器规格要求如下：</p>
+<ul>
+  <li>操作系统：CentOS 7或RHEL 7</li>
+  <li>规格：为了流畅使用Kubernetes功能，主机规格至少达到2 Cpu + 2GB内存</li>
+  <li>区域：不限，根据用户业务自定</li>
+  <li>带宽：不限，根据用户业务自定</li>
+  <li>安全组：需要放开如下Kubernetes集群使用到的端口
+    <ul>
+      <li>Kubernetes API server：6443*</li>
+      <li>etcd server client API：2379-2380</li>
+      <li>Kubelet API：10250</li>
+      <li>kube-scheduler：10251</li>
+      <li>kube-controller-manager：10252</li>
+      <li>NodePort Services：30000-32767</li>
+    </ul>
+  </li>
+  <li>其他：保证主机的MAC地址和product_uuid在集群内是唯一的；服务器主机之间的网络可以完全正常访问</li>
+</ul>
+
+<h2 id="集群搭建">集群搭建</h2>
+<p>集群由至少一台Master加若干Node节点组成，如果需要实现更高可靠性，可以增加更多服务器。Kubernetes提供了较高的灵活性，后续根据业务扩张情况弹性增加服务器也十分方便。
+选定好Master之后，即可使用我们提供的工具搭建集群了。</p>
+
+<h2 id="应用镜像制作">应用镜像制作</h2>
+<p>容器化的关键步骤之一就是将应用的部署过程制作成镜像，通过分发镜像完成应用的快速实例化、自动化部署的目的。
+制作镜像需要关注如下几个关键要素：</p>
+
+<h3 id="系统环境">系统环境</h3>
+<p>选择应用需要使用的基础镜像，基础镜像通常是各种Linux发行版的Docker镜像比如ubuntu、Debian、centos等，也有已安装好相应软件的基础镜像，如NGINX、Python、redis等。根据用户的需求自行选择对应的系统及版本。
+常用的基础镜像可以在官方仓库（https://hub.docker.com/explore）或其他源（<a href="https://dev.aliyun.com">开发者平台</a>）查询获取。</p>
+
+<h3 id="应用依赖">应用依赖</h3>
+<p>通过依赖清单的方式明确的声明所有的依赖项，并且在运行过程中，使用依赖隔离工具来确保程序不会调用系统中存在但清单中未声明的依赖项。这样可以简化环境配置流程，并保证应用的生产和开发环境更加一致。
+具体到语言上来说例如Ruby 的 Bundler 使用 Gemfile 作为依赖项声明清单，使用 bundle exec 来进行依赖隔离。Python 中则可分别使用两种工具： Pip 用作依赖声明， Virtualenv 用作依赖隔离。甚至 C 语言也有类似工具， Autoconf 用作依赖声明，静态链接库用作依赖隔离。无论用什么工具，依赖声明和依赖隔离建议一起使用。</p>
+
+<h3 id="分离有状态与无状态服务">分离有状态与无状态服务</h3>
+<p>有状态的服务牵扯到存储卷挂载等问题很难在水平方向（服务器主机层面）上进行迁移，所以任何需要持久化的数据都应存储在后端服务（比如数据库），而非直接和服务端耦合在一起，而且数据库等有状态服务也不适合做进镜像内，制作进镜像的部分应该都为无状态且无共享的。
+具体来说，通过使用云数据库或者其他方式，把有状态的模块进行服务化，服务端代码只需要引用地址或访问相应API即可使用相关资源。如此实现之后，服务端镜像化之后可以自由地在各个主机上进行实例化，不受数据持续化等问题的制约。</p>
+
+<h3 id="记录部署过程">记录部署过程</h3>
+<p>进行一次应用部署，并将部署过程中的如下指令操作记录下来：</p>
+<ul>
+  <li>软件安装</li>
+  <li>配置操作</li>
+  <li>选择暴露的端口</li>
+</ul>
+
+<p>以下面这个Dockerfile为例：</p>
+<ul>
+  <li>通过ENV指令设置环境变量</li>
+  <li>通过ADD指令将本地文件拷贝到容器里</li>
+  <li>通过RUN指令执行命令行操作，这里主要是yum install进行依赖软件包安装</li>
+  <li>通过EXPOSE指令指定需要暴露的服务端口</li>
+  <li>通过ENTRYPOINT指令设置容器运行起来后需要执行的程序或命令</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM daocloud.io/centos:7 
+MAINTAINER mate
+ 
+ENV TZ "Asia/Shanghai" 
+ENV TERM xterm 
+
+ADD aliyun-mirror.repo /etc/yum.repos.d/CentOS-Base.repo 
+ADD aliyun-epel.repo /etc/yum.repos.d/epel.repo 
+RUN yum install -y curl wget tar bzip2 unzip vim-enhanced passwd sudo yum-utils hostname net-tools rsync man &amp;&amp; \ 
+	yum install -y gcc gcc-c++ git make automake cmake patch logrotate python-devel libpng-devel libjpeg-devel &amp;&amp; \ 
+	yum install -y --enablerepo=epel pwgen python-pip &amp;&amp; \ 
+	yum clean all 
+RUN pip install supervisor
+ 
+ADD supervisord.conf /etc/supervisord.conf 
+RUN mkdir -p /etc/supervisor.conf.d &amp;&amp; mkdir -p /var/log/supervisor 
+EXPOSE 22 
+ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"] 
+</code></pre></div></div>
+
+<p>备注：
+制作镜像过程中，配置可以通过ENV直接设置到环境变量中，但如果是运行的程序依赖的配置需要文件化，类似样例中的supervisord.conf配置文件，那么此文件最好</p>
+
+<h3 id="编写dockerfile">编写Dockerfile</h3>
+<p>更加详细具体的Dockerfile的语法格式、编写规范可以参考如下资料：<br />
+<a href="https://docs.docker.com/engine/reference/builder/">| Docker Documentation</a>
+http://www.docker.org.cn/dockerppt/114.html</p>
+]]></content>
+      <categories>
+        
+          <category> 容器 </category>
+        
+      </categories>
+      <tags>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[基于云原生技术的产品开发原则]]></title>
+      <url>/%E6%9E%B6%E6%9E%84/2018/11/25/Cloud-Native-Development-Principle/</url>
+      <content type="html"><![CDATA[<h2 id="传统开发模式困局">传统开发模式困局</h2>
+<ul>
+  <li>
+    <p>开发、测试、运维无法一体化，上线周期长
+开发、测试、线上多套环境需要进行单独维护，容易造成不一致影响各阶段的工作开展，进而引发一些线上故障等问题</p>
+  </li>
+  <li>
+    <p>传统应用开发资源利用率低
+考虑业务扩容、峰值等情况，需要冗余一定服务器之类的资源，手工维护这些资源很难做到实时且均衡的水平</p>
+  </li>
+  <li>
+    <p>单体应用架构无法满足应用快速上线和迭代要求
+业务代码和系统代码高度耦合造成整体可用性较低，影响产品演进，新功能迭代、问题排查等工作深受制约</p>
+  </li>
+</ul>
+
+<h2 id="云原生的三大特征">云原生的三大特征：</h2>
+<ul>
+  <li>容器化封装：以容器为基础，提高整体开发水平，形成代码和组件重用，简化云原生应用程序的维护。在容器中运行应用程序和进程，并作为应用程序部署的独立单元，实现高水平资源隔离。</li>
+  <li>自动化管理：通过集中式的编排调度系统来动态的管理和调度，提高系统和资源利用率降低运维成本。</li>
+  <li>面向微服务：明确服务间的依赖互相解耦，通过松耦合的方式提升应用的整体敏捷性。</li>
+</ul>
+
+<p>一个优秀的云原生产品，从产品设计阶段就应该考虑这三方面因素，下面逐条进行分析。</p>
+
+<h2 id="云原生产品开发原则">云原生产品开发原则</h2>
+<p>产品容器化过程中需要注意如下几个方面：</p>
+<h3 id="显示声明依赖关系">显示声明依赖关系</h3>
+<p>通过依赖清单的方式明确的声明所有的依赖项，并且在运行过程中，使用依赖隔离工具来确保程序不会调用系统中存在但清单中未声明的依赖项。这样可以简化环境配置流程，并保证应用的生产和开发环境更加一致。
+具体到语言上来说例如Ruby 的 Bundler 使用 Gemfile 作为依赖项声明清单，使用 bundle exec 来进行依赖隔离。Python 中则可分别使用两种工具： Pip 用作依赖声明， Virtualenv 用作依赖隔离。甚至 C 语言也有类似工具， Autoconf 用作依赖声明，静态链接库用作依赖隔离。无论用什么工具，依赖声明和依赖隔离建议一起使用。</p>
+
+<h3 id="分离代码与配置">分离代码与配置</h3>
+<p>通常，应用的 配置 在不同 部署 (预发布、生产环境、开发环境等等)间会有很大差异。这其中包括：</p>
+<ul>
+  <li>数据库，Memcached，以及其他 后端服务 的配置</li>
+  <li>第三方服务的证书，如 Amazon S3、Twitter 等</li>
+  <li>每份部署特有的配置，如域名等</li>
+</ul>
+
+<p>将配置直接以常量的形式硬编码于代码中是一个很不优雅的做法，从便利性上来说这样会导致在不同的场景中需要通过修改代码才能满足需求，从安全性上来说会导致代码开源则会泄露部分关键配置数据。</p>
+
+<p>常见的两个推荐方案：</p>
+<ul>
+  <li>使用配置文件进行配置管理，坏处是配置文件和代码库还是较容易产生耦合，并且配置格式常常会和开发语言、框架产生依赖</li>
+  <li>使用环境变量进行配置管理，更为推荐的方案，和代码库完全独立并且开发语言框架无关</li>
+</ul>
+
+<h3 id="与后端服务保持松耦合的关系">与后端服务保持松耦合的关系</h3>
+<p>后端服务是指程序运行所需要的通过网络调用的各种服务，如数据库（MySQL，CouchDB），消息/队列系统（RabbitMQ，Beanstalkd），SMTP 邮件发送服务（Postfix），以及缓存系统（Memcached）等等。</p>
+
+<p>与上一个原则对应，通常建议将后端服务的URL地址或者其他服务定位发现方式存储于配置之中并进行维护，代码直接访问配置即可拿到访问服务的方法，可以做到在不改动代码的情况下，随意的替换各项后端服务。
+这样部署可以按需加载或卸载资源。例如，如果应用的数据库服务由于硬件问题出现异常，管理员可以从最近的备份中恢复一个数据库，卸载当前的数据库，然后加载新的数据库 – 整个过程都不需要修改代码，或者是将本地 MySQL 数据库换成第三方服务（例如 Amazon RDS）。
+如下是一个简单的产品与后端服务关系的样例图：
+<img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/12factor_backing_services.jpg?raw=true" alt="" /></p>
+
+<h3 id="以无状态的进程来运行应用">以无状态的进程来运行应用</h3>
+<ul>
+  <li>无状态服务:就是没有特殊状态的服务,各个请求对于服务器来说统一无差别处理,请求自身携带了所有服务端所需要的所有参数(服务端自身不存储跟请求相关的任何数据,不包括数据库存储信息)</li>
+  <li>有状态服务:与之相反,有状态服务在服务端保留之前请求的信息,用以处理当前请求,比如session等</li>
+</ul>
+
+<p>虽然容器技术支持有状态服务功能（将部分数据随时进行备份，并且在创建一个新的有状态服务时，可以通过备份恢复这些数据，以达到数据持久化的目的），但考虑有状态的服务牵扯到存储卷挂载等问题很难在水平方向（服务器主机层面）上进行迁移，所以容器化场景下一个高效的架构模式是应用的进程都为无状态且无共享，任何需要持久化的数据都存储在后端服务内，比如数据库。
+一些互联网系统依赖于 “粘性 session”， 这是指将用户session中的数据缓存至某进程的内存中，并将同一用户的后续请求路由到同一个进程，但这样在代码重新部署、配置更改或环境变更时仍会导致数据丢失，与前面的服务后端保持松耦合关系原则匹配的建议方案是将Session 中的数据保存在诸如 Memcached 或 Redis 这样的带有过期时间的缓存中。</p>
+
+<h3 id="通过多进程实现并发">通过多进程实现并发</h3>
+<p>通过将业务分为多个进程运行（例如下图web进程来处理HTTP请求，work进程处理后台业务工作等），并且应用程序必须可以在多台物理机器间跨进程工作，可以使系统扩展变得十分轻松，按需增加对应分类的进程数量便可以做到并发性能的提升。
+<img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/12factor_process.jpg?raw=true" alt="" /></p>
+
+<p>注意进程的设计应该符合之前提出的无状态、无共享的原则，这样在扩展时能减少服务器、环境等因素的影响。</p>
+
+<h2 id="总结">总结</h2>
+<p>云原生的第一个目标就是需要将产品应用与底层资源(服务器、系统等)进行解耦，开发者只需关注自己的核心业务即可。虽然现在的开发语言大多标榜着跨平台轻松移植，但实际开发过程中系统版本、底层组件、驱动、补丁等因素最终或多或少都会引发一些问题，所以将环境资源轻量级虚拟化的容器技术目前是最优秀的解决方案。
+而为了充分利用容器化技术的优势，需要将我们的应用进行相应的模块化处理，微服务是一个目前业界使用率较高的架构方式，加上之前云原生的应用开发原则，应用可以灵活地做到跨云环境提供业务服务，垂直、水平的快速扩展。
+<img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/cloud_native_mindmap.jpg?raw=true" alt="" /></p>
+
+<blockquote>
+  <p>参考资料：<br />
+<a href="https://12factor.net/">The Twelve-Factor App</a><br />
+<a href="http://dockone.io/article/2991">云原生架构概述 - DockOne.io</a><br />
+<a href="https://zhuanlan.zhihu.com/p/27196777">云原生（CloudNative）将成为应用云化开发的主流方式 - 知乎</a><br />
+<a href="https://cloud.tencent.com/developer/article/1156697">云原生概念 - 云+社区 - 腾讯云</a></p>
+
+</blockquote>
+]]></content>
+      <categories>
+        
+          <category> 架构 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> 云计算 </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[跨云平台实施方案预研]]></title>
+      <url>/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis/</url>
+      <content type="html"><![CDATA[<h2 id="基于k8s集群搭建">基于K8S集群搭建</h2>
+<p>在不同云厂商或同个云厂商不同区域下创建K8S集群，每个K8S集群中独立运行代理程序，通过代理程序进行镜像部署、服务发现、负载均衡等功能。
+然后再开发一套对K8S集群进行控制管理的系统作为后台，用来进行多个集群的资源管理调度。
+优势：单个K8S集群下的功能可以利用之前拾云平台的现成代码
+缺陷：对多个K8S集群的资源进行重新分配管理需要较巨大的开发工作量</p>
+
+<p>此方案工作量较大且重复。</p>
+
+<h2 id="基于k8s联邦集群搭建">基于K8S联邦集群搭建</h2>
+<p>使用K8S联邦集群的机制，利用K8S定义好的各类资源概念，省去了资源调度、集群间通信、等诸多开发工作量。
+<img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/%E8%B7%A8%E4%BA%91%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84%E6%A1%86%E6%9E%B6%E5%9B%BE.jpg?raw=true" alt="" /></p>
+
+<p>可以将产品分为如下几个模块：</p>
+<ul>
+  <li>
+    <p>服务器适配：
+这层主要内容是通过在云主机上常驻一个agent程序，对接我们管理平台的控制指令，并实时采集系统资源情况。
+可以使用golang开发，具有语法简单性能较高，并且编译生成出服务代理agent程序之后，可以方便地部署在不同的云厂商主机上，不用关心跨厂商主机之间的环境差异等问题。</p>
+  </li>
+  <li>
+    <p>管理平台：
+通过将K8S的各类资源（Cluster、Deployment、ReplicasSet、Service、Ingress等），按照业务逻辑封装成我们自己的系统后台功能（集群管理、部署、冗余、服务、负载均衡等），通过沿用部分原有的后台代码，使用Python语言以Tornado为框架开发一套针对上述资源的RESTful API，可以沿用之前的后台框架设计。
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/TenCloud_Architecture.png" alt="" />
+数据层、镜像、用户、Tornado框架部分可以沿用原有代码，重新开发业务服务部分的集群、部署、服务功能。</p>
+  </li>
+  <li>
+    <p>管理平台操作界面：
+通过对接后台提供的RESTful API，产品化设计后以前端形式展现管理界面。</p>
+  </li>
+</ul>
+
+<h3 id="精简版本">精简版本</h3>
+<p>一个可以考虑的精简版本就是开发一个直接跑在云主机上的脚本式命令行管理系统。封装K8S联邦集群的部署过程、模板化整合K8S联邦集群底层的资源操作。
+精简版本的开发工作量主要集中在：</p>
+<ul>
+  <li>业务模型梳理封装</li>
+  <li>命令解析转换</li>
+</ul>
+
+<p>问题：</p>
+<ul>
+  <li>涉及一些用户第三方授权的操作（如GitHub OAuth认证），在命令行端可能难以实现</li>
+  <li>若想收集K8S以外的主机、任务等信息，还是需要实现一套响应网络请求的框架</li>
+</ul>
+
+<h2 id="基于现有产品搭建">基于现有产品搭建</h2>
+<h3 id="f5">F5</h3>
+<p>行业领导者，F5 解决方案集成了以下各项：</p>
+<ul>
+  <li>公有云提供商，如 AWS、Microsoft Azure 和 Google Cloud Platform。</li>
+  <li>私有云和开源平台，如 OpenStack、VMware 和 OpenShift。</li>
+  <li>自动化工具包，因此您可以使用 Ansible、Puppet 或 HashiCorp 部署应用服务，在 DevOps 方法中为应用服务提供声明接口。</li>
+  <li>容器环境中的微服务（如 Kubernetes 和 Mesos），以便在东西向流量中启用应用服务。</li>
+</ul>
+
+<h3 id="a10-network">A10 Network</h3>
+<p>跨云产品Harmony Controller 
+Harmony平台的理念是随时随地实施策略，它将安全应用服务与内部部署环境、公有云、私有云和混合云衔接在一起。A10 Harmony 控制器具备虚拟化、SaaS 和物理规格，可用于管理多云环境下的安全应用交付服务，并集成多种配置和自动化服务。</p>
+
+<h3 id="redhat">RedHat</h3>
+<p>OpenShift容器平台
+红帽 OpenShift 是一款开源容器应用程序平台，主要以 Docker 容器为基础，并采用 Kubernetes 容器集群管理进行编排。OpenShift可支持多种编程语言和服务，包括 Web 框架、数据库或与移动应用和外部后台的连接器。OpenShift 平台同时支持云原生、无状态的应用程序以及传统、有状态的应用
+程序。
+<img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/Redhat_Openshift_Architecture.jpg?raw=true" alt="" /></p>
+
+<h3 id="rancher">Rancher</h3>
+<p>Rancher为DevOps工程师提供了一个直观的用户界面来管理他们的服务容器，用户不需要深入了解Kubernetes概念就可以开始使用Rancher。 Rancher包含应用商店，支持一键式部署Helm和Compose模板。Rancher通过各种云、本地生态系统产品认证，其中包括安全工具，监控系统，容器仓库以及存储和网络驱动程序。
+<img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/Rancher_Architecture.jpg?raw=true" alt="" /></p>
+
+<p><strong>容器平台能同时对多个Kubernetes集群进行管理，但每个集群上运行的应用和其他集群隔离。</strong></p>
+
+<h3 id="时速云">时速云</h3>
+<p>企业级容器 PaaS 平台 TenxCloud Enterprise (TCE)
+随着业务的发展，客户通常会使用多个不同的节点区域，甚至使用多个不同的基础云服务提供商。时速云的跨云管理解决方案通过创建私有集群，并添加不同IaaS的云主机，可一键将容器镜像发布到不同的IaaS平台上，屏蔽了不同IaaS厂商之间的底层异构问题，极大的降低了IT管理的复杂度，并可轻松实现应用在多个不同的IaaS之间的迁移、容灾以及热备份。</p>
+
+<p>方案特点：</p>
+<ul>
+  <li>一键创建私有Docker主机集群，并支持将云主机、物理机或者虚拟机等添加到私有集群。</li>
+  <li>通过时速云容器云平台统一管理多个不同IaaS上的应用。</li>
+  <li>利用容器技术屏蔽底层基础云服务之间的差异，实现应用在多个云之间的迁移、容灾及热备。</li>
+  <li>私有集群可以无缝使用容器部署、镜像下载、集群 API 等服务。</li>
+</ul>
+
+<h3 id="cloudify">Cloudify</h3>
+<p>Cloudify是一个开源的云应用编排系统，可以让你的应用自动化在各种不同的云上方便地部署。Cloudify重点关注应用自动化，承担了部分业务自动化的工作。从云IaaS、PaaS、SaaS分层看，Cloudify是一个典型的面向应用编排自动化的PaaS平台。</p>
+
+<blockquote>
+  <p>参考资料<br />
+<a href="https://www.redhat.com/cms/managed-files/cl-openshift-container-platform-3.5-datasheet-f7213kc-201704-a4-zh.pdf">红帽 OPENSHIFT 容器平台 3.5</a><br />
+<a href="https://www.jianshu.com/p/0622d7dbbaa7">跨集群服务——如何利用Kubernetes 1.3实现跨区高可用 - 简书</a><br />
+<a href="https://www.cnrancher.com/docs/rancher/v2.x/cn/overview/architecture/">1 - 架构设计 | Rancher Labs</a><br />
+<a href="https://blog.csdn.net/liukuan73/article/details/57082617?utm_source=blogxgwz3">Cloudify：打通应用和基础架构自动化交付的“任督二脉” - liukuan73的专栏 - CSDN博客</a><br />
+<a href="https://cloudify.co/">Cloud &amp; NFV Orchestration Based on TOSCA | Cloudify</a></p>
+</blockquote>
+
+]]></content>
+      <categories>
+        
+          <category> 架构 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> 云计算 </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[跨云应用管理方案分析]]></title>
+      <url>/%E6%9E%B6%E6%9E%84/2018/11/14/Platform-Aurchitecture-Cross-Cloud/</url>
+      <content type="html"><![CDATA[<p>跨云应用管理方案分析</p>
+<h2 id="需求背景">需求背景</h2>
+<p>随着技术的不断发展，越来越多的产品通过使用分布式架构，来解决服务器压力、数据可靠性的问题。为了更聚焦于自己的核心业务，许多企业会直接采用各类云厂商的服务或方案，降低门槛与成本。
+但是对于那些业务灵活、数据敏感的企业及产品，使用的云计算服务就需要具有跨云厂商、灵活伸缩、快速切换等功能，保证在服务变更、功能调整等场景下业务受到较小冲击。</p>
+
+<h2 id="相关技术">相关技术</h2>
+<h3 id="云计算">云计算</h3>
+<p>云计算是一种信息技术（IT）模式，可以随时访问共享的可配置系统资源池和更高级的服务，这些服务通常可以通过互联网以最少的管理工作快速供应。云计算依靠资源共享来实现连贯性和规模经济，类似于公用事业。</p>
+
+<h3 id="容器化">容器化</h3>
+<p>容器占用资源少、部署快，每个应用可以被打包成一个容器镜像，每个应用与容器间成一对一关系也使容器有更大优势，使用容器可以在build或release的阶段，为应用创建容器镜像，因为每个应用不需要与其余的应用堆栈组合，也不依赖于生产环境基础结构，这使得从研发到测试、生产能提供一致环境。类似地，容器比虚机轻量、更“透明”，这更便于监控和管理。</p>
+
+<h3 id="kubernetes">Kubernetes</h3>
+<p>又称K8S，是Google开源的一个容器编排引擎，它支持自动化部署、大规模可伸缩、应用容器化管理。在生产环境中部署一个应用程序时，通常要部署该应用的多个实例以便对应用请求进行负载均衡。
+在K8S中，我们可以创建多个容器，每个容器里面运行一个应用实例，然后通过内置的负载均衡策略，实现对这一组应用实例的管理、发现、访问，而这些细节都不需要运维人员去进行复杂的手工配置和处理。</p>
+
+<h2 id="k8s集群">K8S集群</h2>
+<p>K8S通过将多个主机组成集群并在上层再进行一次虚拟化，使得资源可以充分被利用并灵活地调度。
+但是K8S集群是基于局域网建立的，所以若使用云主机的话，单个集群通常无法跨单个云厂商的多个区域，更不用说支持不同的云厂商。这个对于容灾、迁移、管理方面都是很大的制约。</p>
+
+<h2 id="k8s联邦集群federation">K8S联邦集群（Federation）</h2>
+<p>K8S提供了联邦集群的机制，将分布在多个区域或者多个云厂商的K8S集群整合成一个大的集群，统一管理与调度。</p>
+
+<h3 id="优点">优点</h3>
+<ul>
+  <li>低延迟：让多个区域中的集群通过向距离它们最近的用户提供服务来最大限度地减少延迟。</li>
+  <li>故障隔离：最好有多个小型集群而不是一个单独的大型集群来进行故障隔离。</li>
+  <li>可扩展性：单个K8S集群具有可扩展性限制。</li>
+  <li>混合云：可以在不同的云提供商或本地数据中心上拥有多个群集。</li>
+</ul>
+
+<h3 id="实现">实现</h3>
+<p>联邦集群可以轻松管理多个群集，它通过2个主要构件来实现：</p>
+<ul>
+  <li>跨群集同步资源：联邦可以使多个群集中的资源保持同步。 例如，可以确保多个群集中部署相同的程序。</li>
+  <li>跨群集发现：联邦提供了自动配置DNS服务器和对群集后端负载均衡的功能
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/k8s_federation_architecture.jpg" alt="" /></li>
+</ul>
+
+<h3 id="影响">影响</h3>
+<p>虽然联邦有很多有吸引力的用处，但也有一些注意事项：</p>
+<ul>
+  <li>增加网络带宽和成本：联邦控制台监视所有群集以确保当前状态符合预期。如果集群在云提供商或不同云提供商的不同区域(regions)运行，这可能会导致显著的网络成本。</li>
+  <li>减少跨群集隔离：联邦控制台中的错误可能影响所有群集。通过将联邦控制台中的逻辑保持最简，可以缓解这一问题，尽可能将大部分任务都交给K8S集群处理。 设计和实施也在安全方面做了很多考虑，并避免发生错误时多集群停机。</li>
+  <li>成熟度：联邦项目相对较新，不太成熟。 并非所有资源都可用，许多资源仍然是alpha状态。</li>
+</ul>
+
+<h2 id="跨云集群方案">跨云集群方案</h2>
+<h3 id="框架">框架</h3>
+<p><img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/%E8%B7%A8%E4%BA%91%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84%E6%A1%86%E6%9E%B6%E5%9B%BE.jpg" alt="" />
+简单框架原型，镜像功能独立于跨云，暂不列入框架图</p>
+
+<h4 id="业务层">业务层</h4>
+<p>K8S联邦集群可以管理的资源如框架图中所示，基于这些资源我们可以提供如下跨云功能：</p>
+<ul>
+  <li>集群管理</li>
+  <li>部署</li>
+  <li>服务</li>
+  <li>负载均衡</li>
+  <li>资源隔离</li>
+  <li>冗余/可靠性</li>
+  <li>安全</li>
+</ul>
+
+<h4 id="平台层">平台层</h4>
+<p>利用K8S联邦集群的控制平台，运行一个核心管理平台，衔接业务层的各类操作和底层每个云集群的资源控制动作。</p>
+
+<h4 id="服务器层">服务器层</h4>
+<p>通过在各个云集群部署代理应用，获取各个云集群及下属云主机的控制权、资源、日志等等</p>
+
+<h3 id="云主机">云主机</h3>
+<p>云主机可以由客户采购+平台管理或者平台采购+平台管理：</p>
+<ul>
+  <li>客户采购+平台管理：由客户自行采购主机并管理核心业务，我们提供平台或工具进行管理，节省了集群采购开支并降低产品运营、数据相关的政策风险。但是至少需要获得用户的主机管理权限才能进行管理，对于一些业务敏感的企业可能会有抵触。</li>
+  <li>平台采购+平台管理：由我们采购大量主机并搭建平台，类似于给用户提供PaaS服务，增加了主机采购维护的成本和风险，好处在于具有完整的主机控制管理权，可以更自如地部署平台层面的资源调度管理功能。</li>
+</ul>
+
+<h3 id="规格">规格</h3>
+<p>基于K8S v1.12版本，每个集群可以管理的规格如下：</p>
+<ul>
+  <li>不超过5000个nodes</li>
+  <li>不超过150000个pods</li>
+  <li>不超过300000个容器</li>
+  <li>每个node上不超过100个pods</li>
+</ul>
+
+<h2 id="市场竞品分析">市场、竞品分析</h2>
+<p>应用交付(Application Delivery Controller，简称ADC)主要部署于数据中心的应用服务器前端，利用负载均衡、服务器卸载、压缩和缓存、链接复用和防火墙等技术，实现应用的可用性、高效性和安全性。
+主要厂商：深信服、H3C、F5、A10、Radware和Array等</p>
+
+<h3 id="f5">F5</h3>
+<p>行业领导者，F5 解决方案集成了以下各项：</p>
+<ul>
+  <li>公有云提供商，如 AWS、Microsoft Azure 和 Google Cloud Platform。</li>
+  <li>私有云和开源平台，如 OpenStack、VMware 和 OpenShift。</li>
+  <li>自动化工具包，因此您可以使用 Ansible、Puppet 或 HashiCorp 部署应用服务，在 DevOps 方法中为应用服务提供声明接口。</li>
+  <li>容器环境中的微服务（如 Kubernetes 和 Mesos），以便在东西向流量中启用应用服务。</li>
+</ul>
+
+<h3 id="a10-network">A10 Network</h3>
+<h4 id="harmony-controller">Harmony Controller</h4>
+<p>Harmony 平台的理念是随时随地实施策略，它将安全应用服务与内部部署环境、公有云、私有云和混合云衔接在一起。A10 Harmony 控制器具备虚拟化、SaaS 和物理规格，可用于管理多云环境下的安全应用交付服务，并集成多种配置和自动化服务。</p>
+
+<blockquote>
+  <p>参考资料：<br />
+<a href="https://kubernetes.io/docs/concepts/cluster-administration/federation/">Federation - Kubernetes</a><br />
+<a href="https://kubernetes.io/docs/setup/cluster-large/">Building Large Clusters - Kubernetes</a><br />
+<a href="http://stor.51cto.com/art/201708/546850.htm">A10 Networks来了，给你来点不一样的料 - 51CTO.COM</a><br />
+<a href="http://cloud.it168.com/a2018/0619/3210/000003210034.shtml">专访：多云应用交付新时代下的F5与中国-云计算专区</a><br />
+<a href="http://network.51cto.com/act/f5/ADreport">F5发布2018全球应用交付报告</a></p>
+</blockquote>
+
+]]></content>
+      <categories>
+        
+          <category> 架构 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> Kubernetes </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[GitHub OAuth第三方登录]]></title>
+      <url>/%E5%B7%A5%E5%85%B7/2018/08/12/GitHub-OAuth2-documents/</url>
+      <content type="html"><![CDATA[<h2 id="github-oauth第三方登录">GitHub OAuth第三方登录</h2>
+<h2 id="前言">前言</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OAuth分1.0、1.0A、2.0三个版本，前二者已经淘汰以下所介绍的都是指2.0版本。
+本文将以第三方网站获取GitHub代码仓库为例，简述OAuth的运作流程。
+</code></pre></div></div>
+
+<h2 id="oauth介绍">OAuth介绍</h2>
+<blockquote>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>开放授权（OAuth）是一个开放标准，允许用户让第三方应用访问该用户在某一网站上存储的私密的资源（如照片，视频，联系人列表），而无需将用户名和密码提供给第三方应用  
+  
+OAuth允许用户提供一个令牌，而不是用户名和密码来访问他们存放在特定服务提供者的数据。每一个令牌授权一个特定的网站（例如，视频编辑网站)在特定的时段（例如，接下来的2小时内）内访问特定的资源（例如仅仅是某一相册中的视频）。这样，OAuth让用户可以授权第三方网站访问他们存储在另外服务提供者的某些特定信息，而非所有内容。  
+</code></pre></div>  </div>
+</blockquote>
+
+<blockquote>
+  <p>https://zh.wikipedia.org/wiki/开放授权<br />
+——维基百科</p>
+</blockquote>
+
+<h2 id="oauth原理">OAuth原理</h2>
+<p><img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/1-OAuth2-Authorization-Code-Flow.png?raw=true" alt="" />
+	我们把OAuth2的整个认证过程大致分为三个阶段。第一阶段主要是向用户取得授权许可，对应图中的第1、2、3步；第二阶段主要是申请访问令牌（access_token），对应图中的第4、5步；第三阶段就是使用access_token获取用户数据。</p>
+
+<blockquote>
+  <p>参考资料： <a href="http://insights.thoughtworkers.org/attack-aim-at-oauth2/">移花接木：针对OAuth2的攻击 – ThoughtWorks洞见</a></p>
+</blockquote>
+
+<h2 id="oauth应用实例">OAuth应用实例</h2>
+<p>案例背景：
+我们有这么一个应用——可以让用户绑定GitHub账号，然后使用仓库代码在线构建容器镜像的平台。所以我们要获取用户的GitHub仓库信息用于后续下载代码、构建容器等流程，此处我们就可以使用GitHub OAuth达到这个目的。</p>
+
+<h4 id="在github上创建oauth-app">在GitHub上创建OAuth App</h4>
+<ol>
+  <li>打开 Setting &gt; Developer setting &gt; OAuth applications</li>
+  <li>点击 Register a new application</li>
+  <li>填入基本的app信息</li>
+</ol>
+
+<h4 id="获取对应的client-id与client-secret">获取对应的Client ID与Client Secret</h4>
+<p>OAuth应用创建完成之后，可以在应用信息页面查看到Client ID与Client Secret的值，二者是完成OAuth认证流程的关键。</p>
+
+<h4 id="应用生成获取github授权的链接">应用生成获取GitHub授权的链接</h4>
+<p>然后就来到了我们的应用与GitHub联系的关键点，在应用上可能就是一个简单的绑定GitHub账号的按钮，本质上是一串由关键参数组成的URL，下面我们详细说一下这个URL是如何生成的。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URL样例：
+https://github.com/login/oauth/authorize?client_id=5448811562b83dadc3cf&amp;scope=repo%2Cuser%3Aemail&amp;redirect_uri=http%3A%2F%2Fcd.10.com%2Fapi%2Fgithub%2Foauth%2Fcallback%3Fredirect_url%3Dhttp%253A%252F%252Fwww.baidu.com%26uid%3D99
+</code></pre></div></div>
+
+<p>乍看之下，这个URL杂乱无章无从下手，但其实知晓了原理之后就很好理解了。
+这个URL承载了GItHub OAuth认证的所有步骤，那么回到之前的原理解析，其实这个URL就包含了两个动作：</p>
+<ol>
+  <li>跳转到GitHub界面申请用户授权
+https://github.com/login/oauth/authorize 
+这是GitHub的认证API，传入的参数是client_id, scope, redirect_uri
+    <ul>
+      <li>client_id: 之前步骤中创建OAuth App的时候获取到的字段，传入此参数可以让GitHub知道到底是哪个App在申请用户的授权</li>
+      <li>scope: 需要向用户申请授予的权限，具体规则可参考 <img src="https://developer.github.com/apps/building-oauth-apps/scopes-for-oauth-apps/" alt="GitHub API Doc" /></li>
+      <li>redirect_uri: 如果用户完成授权后则跳转到此页面，在这个页面的请求中GitHub会带上code参数，用于下一步获取token</li>
+    </ul>
+  </li>
+  <li>申请访问令牌
+在上一步拿到GitHub返回的code参数之后，我们就可以去获取具有访问GitHub权限的token了。
+https://github.com/login/oauth/access_token
+获取token的API，传入参数client_id, client_secret, code
+    <ul>
+      <li>client_id: 之前步骤中创建OAuth App的时候获取到的字段，传入此参数可以让GitHub知道到底是哪个App在使用用户的授权</li>
+      <li>client_secret: 之前步骤中创建OAuth App的时候获取到的字段，传入此参数可以让GitHub知道此次操作是否属于该App的合法使用者</li>
+      <li>code: GitHub提供给App的合法认证标志</li>
+    </ul>
+  </li>
+</ol>
+
+<p>从token API的返回值中取出参数access_token，用于我们后续去获取GtiHub资源。</p>
+
+<ol>
+  <li>获取GitHub资源
+我们这里以获取用户下的仓库列表为例，演示如何使用OAuth token，。
+https://api.github.com/user/repos
+这是获取仓库的API，假若token值为123456789abc，那么在GET的请求头中加入<code class="highlighter-rouge">{‘Authorization’: ‘token 123456789abc’}</code>，就可以拿到GitHub数据了。
+返回值：
+    <ul>
+      <li>repos_url: 仓库地址</li>
+      <li>repos_name： 仓库名称</li>
+      <li>http_url ：仓库https地址</li>
+    </ul>
+  </li>
+</ol>
+
+<p>至此，我们就完成了使用OAuth授权、认证、访问资源的全流程，其他接口类似，只要有了token就有了权限可以完成所有资源获取的操作。</p>
+
+]]></content>
+      <categories>
+        
+          <category> 工具 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> GitHub </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[Kubernetes部署WordPress项目相关yaml文件]]></title>
+      <url>/%E5%AE%B9%E5%99%A8/2018/08/02/Kubernetes%E9%83%A8%E7%BD%B2WordPress%E9%A1%B9%E7%9B%AE%E7%9B%B8%E5%85%B3yaml%E6%96%87%E4%BB%B6/</url>
+      <content type="html"><![CDATA[<h1 id="kubernetes部署wordpress项目相关yaml文件">Kubernetes部署WordPress项目相关yaml文件</h1>
+<h2 id="mysql">MySQL</h2>
+<h3 id="部署">部署</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &amp;id001
+    app: wordpress-demo-mysql
+    app_id: '262'
+    internal_name: wordpress-demo-mysql.wordpress-demo-mysql
+  name: wordpress-demo-mysql.wordpress-demo-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *id001
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      containers:
+      - image: 47.75.159.100:5000/wordpress-demo/wordpress-demo-mysql-pure:5.7
+        name: mysql
+        ports:
+        - containerPort: 3306
+          name: mysql
+          protocol: TCP
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: sqsm1234
+</code></pre></div></div>
+
+<h3 id="服务">服务</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app_id: '261'
+    internal_name: wordpress-demo.wordpress-demo-mysql
+  name: wordpress-demo-mysql
+spec:
+  ports:
+  - name: mysql
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: wordpress-demo-mysql
+    app_id: '262'
+  type: ClusterIP
+</code></pre></div></div>
+
+<h2 id="wordpress">WordPress</h2>
+<h3 id="部署-1">部署</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &amp;id001
+    app: wordpress-demo-web
+    app_id: '266'
+    internal_name: wordpress-demo-web.wordpress-demo-web
+  name: wordpress-demo-web.wordpress-demo-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *id001
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      containers:
+      - image: 47.75.159.100:5000/wordpress-web-apche/wordpress-web-apche:4.9.7
+        name: web
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: wordpress-demo-mysql
+        - name: WORDPRESS_DB_PASSWORD
+          value: sqsm1234
+</code></pre></div></div>
+
+<h3 id="服务-1">服务</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app_id: '261'
+    internal_name: wordpress-demo.wordpress-demo-web
+  name: wordpress-demo-web
+spec:
+  ports:
+  - name: http
+    port: 6767
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: wordpress-demo-web
+    app_id: '266'
+  type: ClusterIP
+</code></pre></div></div>
+]]></content>
+      <categories>
+        
+          <category> 容器 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> Kubernetes </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[修改Kubernetes的NodePort范围]]></title>
+      <url>/%E5%AE%B9%E5%99%A8/2018/05/20/Modify-the-Kubernetes-NodePort-config/</url>
+      <content type="html"><![CDATA[<h2 id="问题">问题</h2>
+<p>在我们的实际使用过程中，如果想让服务能从外部访问，就会使用到NodePort服务类型。默认的选择了NodePort类型之后，端口是从30000-32767范围内随机分配，就算用户自行指定其他端口号，也会报如下错误：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The Service "test" is invalid: spec.ports[0].nodePort: Invalid value: 7712: provided port is not in the valid range. The range of valid ports is 30000-32767
+</code></pre></div></div>
+
+<p>而我们实际的应用场景中，肯定有需要指定端口号的情况，例如服务要绑定域名只能用默认的80端口，而Kubernetes这样的不灵活限制了我们的使用。好在只需要修改API Server一个配置就可以调整NodePort的范围。</p>
+
+<h2 id="api-server简介">API Server简介</h2>
+<p>API Server提供了Kubernetes各类资源对象的增删查改等HTTP Rest接口，是整个系统的数据总线和数据中心。</p>
+
+<p>kubernetes API Server的功能：</p>
+<ul>
+  <li>提供了集群管理的REST API接口(包括认证授权、数据校验以及集群状态变更)；</li>
+  <li>提供其他模块之间的数据交互和通信的枢纽（其他模块通过API Server查询或修改数据，只有API Server才直接操作etcd）;</li>
+  <li>是资源配额控制的入口；</li>
+  <li>拥有完备的集群安全机制.</li>
+</ul>
+
+<h2 id="api-server启动参数说明">API Server启动参数说明</h2>
+<p>下面是一些典型的API Server参数说明，其中service-node-port-range就是我们需要关注修改的配置字段了。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--etcd-servers：指定etcd服务的URL
+--insecure-bind-address：apiserver绑定主机的非安全IP地址，设置0.0.0.0表示监听所有IP
+--insecure-port：apiserver绑定主机的非安全端口号，默认为8080
+--service-cluster-ip-range：Kubernetes集群中Service的虚拟IP地址段范围，以CIDR格式表示，该IP范围不能与物理机的真实IP段有重合
+--service-node-port-range：Kubernetes集群中Service可映射的物理机端口范围，默认为30000-32767
+--admission-control：Kubernetes集群的准入控制设置爱，个控制模块以插件的形式生效
+</code></pre></div></div>
+
+<h2 id="修改方案">修改方案</h2>
+<p>修改API Server的配置，配置文件路径/etc/kubernetes/manifests/kube-apiserver.yaml，新增一行–service-node-port-range=80-32767</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>spec:
+  containers:
+  - command:
+    - kube-apiserver
+    - --service-account-key-file=/etc/kubernetes/pki/sa.pub
+    - --secure-port=6443
+    - --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt
+    - --requestheader-extra-headers-prefix=X-Remote-Extra-
+    - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+    - --requestheader-username-headers=X-Remote-User
+    - --requestheader-group-headers=X-Remote-Group
+    - --service-cluster-ip-range=10.96.0.0/12
+    - --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+    - --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key
+    - --insecure-port=0
+    - --enable-bootstrap-token-auth=true
+    - --allow-privileged=true
+    - --requestheader-allowed-names=front-proxy-client
+    - --advertise-address=172.31.59.193
+    - --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
+    - --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,DefaultTolerationSeconds,NodeRestriction,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota
+    - --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
+    - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
+    - --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
+    - --client-ca-file=/etc/kubernetes/pki/ca.crt
+    - --authorization-mode=Node,RBAC
+    - --etcd-servers=https://127.0.0.1:2379
+    - --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt
+    - --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
+    - --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key
+    - --service-node-port-range=80-32767
+</code></pre></div></div>
+
+<p>配置修改之后Kubernetes会自动重新加载生效，不需要我们再做其他操作了，现在新创建的服务可以使用80端口对外通信了。</p>
+
+<blockquote>
+  <p>参考资料<br />
+<a href="https://www.cnblogs.com/Cherry-Linux/p/7841273.html">二、安装并配置Kubernetes Master节点 - Federico - 博客园</a></p>
+</blockquote>
+
+<p>#Kubernetes#</p>
+]]></content>
+      <categories>
+        
+          <category> 容器 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> Kubernetes </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[高性能云平台技术框架模型]]></title>
+      <url>/%E6%9E%B6%E6%9E%84/2018/05/05/Tencloud-Architecture/</url>
+      <content type="html"><![CDATA[<p><img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/TenCloud_Architecture.png?raw=true" alt="TenCloud_Architecture" /></p>
+
+<hr />
+<h2 id="数据层">数据层</h2>
+<h3 id="数据库">数据库</h3>
+<p>MySQL：对于需要长期固化的底层数据使用MySQL进行存储</p>
+<h3 id="缓存">缓存</h3>
+<p>Redis：对于刷新频率、实时性较高的数据，使用Redis进行存储，达到快速读写的目的</p>
+<h3 id="文件存储">文件存储</h3>
+<p>此外用户上传的文件；构建镜像配置的dockerfile；部署和创建服务时生成的yaml文件，直接使用文件的形式存储在服务器的对应目录下</p>
+
+<hr />
+<h2 id="服务层">服务层</h2>
+<h3 id="服务器框架">服务器框架</h3>
+<p>Tornado：业务逻辑的处理使用Tornado框架进行搭建，非阻塞式的优点充分利用了服务器性能。将代码分离为Service和Handler层，清晰地界定了数据处理和业务逻辑处理两大块内容</p>
+<h4 id="service">Service</h4>
+<p>用来处理和数据层的交互，通过将底层的IO操作封装为各类Service接口，使得业务开发的过程更加专注独立。</p>
+<h4 id="handler">Handler</h4>
+<p>业务逻辑的处理区域。同时Tornado框架提供的路由注册机制直接将内部函数和外部API地址对应起来，极大的降低了网络请求的开发复杂度。</p>
+
+<hr />
+<h3 id="组件">组件</h3>
+<p>内部封装了大量的模块化组件，用以提高开发效率</p>
+<h4 id="log">Log</h4>
+<p>日志模块业务处理过程中方便快速、简单地记录各类日志，日志分为Debug、Info、Warn、Error、Stats五类，归档于不同的目录之下。</p>
+<h4 id="ssh">SSH</h4>
+<p>因为业务中有大量的需要实时访问服务器进行命令行配置的情况，远程访问模块让开发者只需要提供服务器登录数据和所需执行的命令就可以达到目的。同时还提供了异步、同步两种执行方式以便开发者灵活使用。</p>
+<h4 id="decorator">Decorator</h4>
+<p>装饰器，在不改变原函数的情况下给函数增加功能。框架内部封装了大量装饰器用以提高开发效率，例如用以判断用户登录情况的装饰器、用以通过权限控制用户操作的装饰器等等</p>
+<h4 id="data-api">Data API</h4>
+<p>对底层数据的操作通过这类组件进行封装，包含访问MySQL和Redis、连接池等动作</p>
+
+<hr />
+<h3 id="业务服务">业务服务</h3>
+<p>业务功能主要分为下面4块</p>
+<h4 id="项目应用">项目/应用</h4>
+<h4 id="集群服务器">集群/服务器</h4>
+<h4 id="镜像">镜像</h4>
+<h4 id="用户权限">用户/权限</h4>
+
+<hr />
+<h2 id="服务器管理agent">服务器管理Agent</h2>
+<p>通过go语言开发并编译成可执行文件，运行于需要加入系统管理的服务器上，主要有如下两块功能</p>
+<h3 id="服务器注册">服务器注册</h3>
+<p>用户在系统中加入自己的服务器时，Agent会自动上报注册信息，若鉴权条件满足则允许注册</p>
+<h3 id="数据采集">数据采集</h3>
+<p>服务器上的各类业务资源，通过Agent上报给后端服务器进行计算、存储及分析，是系统核心数据的来源</p>
+
+<hr />
+<h2 id="基础支撑层">基础支撑层</h2>
+<h3 id="任务调度">任务调度</h3>
+<p>Supervisor：根据配置监控进程状态，自动重启异常退出进行的一套进程管理系统。这样的话，业务服务部署好之后管理员可以不用再提心吊胆进程挂了、业务阻塞之类的问题。</p>
+<h3 id="接口文档">接口文档</h3>
+<p>APIDOC：一款可以有源代码中的注释直接自动生成api接口文档的工具，生成的接口文档可以直接通过web访问，可读性也很高，大大简化开发人员彼此间的交流成本。</p>
+
+<hr />
+<h2 id="网络层">网络层</h2>
+<h3 id="负载均衡">负载均衡</h3>
+<p>NGINX：高性能的HTTP和反向代理服务，作为web服务器可以用较少的资源提供更高的并发连接。</p>
+
+<hr />
+<h2 id="前端">前端</h2>
+<h3 id="web">Web</h3>
+<h3 id="ios">iOS</h3>
+<h3 id="android">Android</h3>
+
+<hr />
+]]></content>
+      <categories>
+        
+          <category> 架构 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> Python </tag>
+        
+          <tag> 云计算 </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[IP资源耗尽导致pod反复创建失败问题]]></title>
+      <url>/%E5%AE%B9%E5%99%A8/2018/04/25/IP%E8%B5%84%E6%BA%90%E8%80%97%E5%B0%BD%E5%AF%BC%E8%87%B4pod%E5%8F%8D%E5%A4%8D%E5%88%9B%E5%BB%BA%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/</url>
+      <content type="html"><![CDATA[<h1 id="ip资源耗尽导致pod反复创建失败问题">IP资源耗尽导致pod反复创建失败问题</h1>
+<h2 id="现象">现象</h2>
+<p>Pod一直处于ContainerCreating状态</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get pod -o wide
+NAME                                                   READY     STATUS              RESTARTS   AGE       IP            NODE
+abc.fgg-75b769789d-7dmjs                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+abc.fgg-75b769789d-f8pq2                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+abc.fgg-75b769789d-hzwrs                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+abc.fgg-75b769789d-jrzbp                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+abc.sdfdcard-67676989bd-7p7wf                          0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+default-http-backend-5c6d95c48-bpk54                   0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+game2.tgame-7bd6d45df8-n2v6h                           0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+game2.tgame-7bd6d45df8-tbdl7                           0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+ido.ido-57489d4b67-mrxs2                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+ido.ido-57489d4b67-v2rvq                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+nginx-ingress-controller-6c9fcdf8d9-dt8b6              0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+shireapp.game2048-d64d84d54-6vvqg                      0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+shireapp.game2048-d64d84d54-qd9v8                      0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+shireapp.game2048-d64d84d54-t9sbz                      0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+</code></pre></div></div>
+
+<p>实际登录到对应的node上通过docker ps -a 可以看出，pod每次一创建好就自动退出了。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2node2 ~]# docker ps -a
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS                              PORTS               NAMES
+eaa05cd8d957        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up 1 second                                             k8s_POD_shireapp.game2048-d64d84d54-t9sbz_default_710c5423-9170-11e8-8f3a-00163e02a461_669
+5e5e9a2ddf4a        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up Less than a second                                   k8s_POD_abc.fgg-75b769789d-jrzbp_default_6fe70cb6-9170-11e8-8f3a-00163e02a461_0
+1616c64af8a4        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_tiller-deploy-f9b8476d-g7kmz_kube-system_71a5379c-9170-11e8-8f3a-00163e02a461_0
+bf3a2a9ee6a6        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_abc.fgg-75b769789d-7dmjs_default_6fea9885-9170-11e8-8f3a-00163e02a461_0
+76a842cfb349        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_shireapp.game2048-d64d84d54-6vvqg_default_70de87f5-9170-11e8-8f3a-00163e02a461_0
+e9567a176938        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up Less than a second                                   k8s_POD_nginx-ingress-controller-6c9fcdf8d9-dt8b6_default_70cf42da-9170-11e8-8f3a-00163e02a461_0
+0b473d52f0dd        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_default-http-backend-5c6d95c48-bpk54_default_7008f65d-9170-11e8-8f3a-00163e02a461_0
+dc6bba6381f3        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up Less than a second                                   k8s_POD_tencloud.tenweb-7d8cf8cfcb-72xkw_default_7167e2f7-9170-11e8-8f3a-00163e02a461_0
+9576fa02316e        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) 1 second ago                                 k8s_POD_game2.tgame-7bd6d45df8-n2v6h_default_707b5e19-9170-11e8-8f3a-00163e02a461_0
+51cb0374901c        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_tencloud.tenweb-7d8cf8cfcb-khkwm_default_713a1d0c-9170-11e8-8f3a-00163e02a461_0
+7a04cf4d52f5        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) 1 second ago                                 k8s_POD_ido.ido-57489d4b67-mrxs2_default_701fd1de-9170-11e8-8f3a-00163e02a461_0
+20ba60a0a1b5        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_tencloud.tenweb-7d8cf8cfcb-xqb2t_default_716f801c-9170-11e8-8f3a-00163e02a461_0
+5ab4ca633497        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) 1 second ago                                 k8s_POD_ido.ido-57489d4b67-v2rvq_default_70b0c326-9170-11e8-8f3a-00163e02a461_0
+0a6a308e9563        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_abc.fgg-75b769789d-f8pq2_default_7018ea67-9170-11e8-8f3a-00163e02a461_0
+bebc2a958740        k8s.gcr.io/pause-amd64:3.1   "/pause"                 8 seconds ago       Exited (0) 3 seconds ago                                k8s_POD_abc.fgg-75b769789d-hzwrs_default_6fe3a9fd-9170-11e8-8f3a-00163e02a461_688
+20454492a325        k8s.gcr.io/pause-amd64:3.1   "/pause"                 8 seconds ago       Exited (0) 3 seconds ago                                k8s_POD_abc.sdfdcard-67676989bd-7p7wf_default_70014929-9170-11e8-8f3a-00163e02a461_680
+</code></pre></div></div>
+
+<h2 id="原因">原因</h2>
+<p>根据kubectl describe查看到的原因，可以看出可用的IP资源已经被消耗殆尽，导致pod无法正常创建启动。</p>
+
+<p>使用kubectl describe pod <pod-name> 可以看到错误的原因：</pod-name></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Normal   SandboxChanged          2m (x12 over 3m)    kubelet, k8scluster2node2  Pod sandbox changed, it will be killed and re-created.
+  Warning  FailedCreatePodSandBox  2m (x10 over 3m)    kubelet, k8scluster2node2  Failed create pod sandbox: rpc error: code = Unknown desc = NetworkPlugin cni failed to set up pod "abc.fgg-75b769789d-7dmjs_default" network: failed to allocate for range 0: no IP addresses available in range set: 10.244.7.1-10.244.7.254
+</code></pre></div></div>
+
+<h2 id="解决办法">解决办法</h2>
+<p>进入到/var/lib/cni/networks/cbr0目录下，执行下面命令可以释放那些可能是kubelet leak的IP资源：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for hash in $(tail -n +1 * | grep '^[A-Za-z0-9]*$' | cut -c 1-8); do if [ -z $(docker ps -a | grep $hash | awk '{print $1}') ]; then grep -irl $hash ./; fi; done | xargs rm
+</code></pre></div></div>
+
+<p>IP释放完成之后，pod正常创建启动。</p>
+]]></content>
+      <categories>
+        
+          <category> 容器 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> Kubernetes </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[高性能框架方案]]></title>
+      <url>/%E6%9E%B6%E6%9E%84/2018/04/18/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6/</url>
+      <content type="html"><![CDATA[<h1 id="高性能框架方案">高性能框架方案</h1>
+<ul>
+  <li>WEB框架</li>
+  <li>任务调度</li>
+  <li>消息队列</li>
+  <li>存储</li>
+</ul>
+
+<h2 id="web框架">WEB框架</h2>
+<h3 id="django">Django</h3>
+<p>Django是走大而全的方向，注重高效开发，它最出名的是其全自动化的管理后台：只需要使用起ORM，做简单的对象定义，它就能自动生成数据库结构、以及全功能的管理后台。</p>
+
+<h3 id="flask">Flask</h3>
+<p>轻量级Web应用框架</p>
+
+<h3 id="tornado">Tornado</h3>
+<p>轻量级web框架，功能少而精，注重性能优越。可以作为HTTP服务器，支持异步编程与WebSocket。
+Tornado采用异步IO，可以轻松达到每秒上千个请求的效率。AIO的思想是当我们在等待结果的时候不阻塞，转而我们给框架一个回调函数作为参数，让框架在收到结果的时候再通过回调函数继续操作。这样，服务器就可以在等待结果的时候被解放去接受其他客户端的请求了。</p>
+
+<h6 id="什么场景下使用并发编程">什么场景下使用并发编程？</h6>
+<p>并发编程等待目的是让程序“同时”执行多个任何。如果程序是计算密集型的，并发程序并没有优势，反而由于任何的切换是的效率降低。但如果程序是I/O密集型的，比如经常读写文件，访问数据库等，则情况就不同了。由于I/O操作的速度远远没有CPU计算速度快，所以让程序阻塞与I/O操作将浪费大量的CPU时间。如果程序有多个执行线程，则当前被I/O操作所阻塞的执行线程可主动放弃CPU（或者由操作系统来调度）,并执行权转移到其他线程。这样一来，CPU就可以用来做更加有意义的事情，而不是等待I/O操作完成，因此CPU的利用率显著提升。</p>
+
+<blockquote>
+  <p><a href="http://www.sohu.com/a/208627562_100033985">Tornado异步原理详析</a></p>
+</blockquote>
+
+<h2 id="任务调度">任务调度</h2>
+<ul>
+  <li>Celery
+Celery 是Python开发的分布式任务队列。它支持使用任务队列的方式在分布的机器/进程/线程上执行任务调度。Celery侧重于实时操作，用于生产系统每天处理数以百万计的任务。Celery的工作就是管理分配任务到不同的服务器，并且取得结果.
+Celery本身不提供消息存储服务，它使用第三方消息服务来传递任务。目前支持 RabbitMQ(推荐), Redis(不可靠),MongoDB (experimental), Amazon SQS (experimental),CouchDB (experimental), SQLAlchemy (experimental),Django ORM (experimental)等。</li>
+</ul>
+
+<h2 id="消息队列">消息队列</h2>
+<p>消息队列（Message Queue）是一种跨进程的通信机制，用于上下游传递消息。在互联网架构中，MQ是一种非常常见的上下游“逻辑解耦+物理解耦”的消息通信服务。使用了MQ之后，消息发送上游只需要依赖MQ，逻辑上和物理上都不用依赖其他服务。
+在面向服务架构中通过消息代理，使用生产者-消费者模式在服务间进行异步通信是一种比较好的思想。因为服务间依赖由强耦合变成了松耦合。消息代理都会提供持久化机制，在消费者负载高或者掉线的情况下会把消息保存起来，不会丢失。就是说生产者和消费者不需要同时在线，这是传统的请求-应答模式比较难做到的，需要一个中间件来专门做这件事。其次消息代理可以根据消息本身做简单的路由策略，消费者可以根据这个来做负载均衡，业务分离等。缺点也有，就是需要额外搭建消息代理集群（但优点是大于缺点的 ） 。</p>
+<blockquote>
+  <p>https://www.zhihu.com/question/22480085/answer/121566103</p>
+</blockquote>
+
+<ul>
+  <li>
+    <p>Kafka
+ Kafka是一种高吞吐量的分布式发布订阅消息系统，它可以处理消费者规模的网站中的所有动作流数据</p>
+  </li>
+  <li>
+    <p>RabbitMQ
+消息中间件，配合Celery使用。在项目中，将一些无需即时返回且耗时的操作提取出来，进行了异步处理，而这种异步处理的方式大大的节省了服务器的请求响应时间，从而提高了系统的吞吐量。</p>
+  </li>
+</ul>
+
+<h2 id="存储">存储</h2>
+<ul>
+  <li>MySQL</li>
+</ul>
+
+<p>总体框架图：
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/%E9%AB%98%E6%80%A7%E8%83%BD%E6%80%BB%E4%BD%93%E6%A1%86%E6%9E%B6%E5%9B%BE.png" alt="" /></p>
+
+]]></content>
+      <categories>
+        
+          <category> 架构 </category>
+        
+      </categories>
+      <tags>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[Kubernetes集群节点主机名称变化导致无法注册]]></title>
+      <url>/%E5%AE%B9%E5%99%A8/2018/04/13/node-register-failed-by-hostname-changed/</url>
+      <content type="html"><![CDATA[<h2 id="现象及原因">现象及原因</h2>
+<p>使用阿里云主机通常会通过命令hostname -b <name>修改主机名称便于后续使用和维护，但是在主机重启之后，通常又会被恢复成初始分配的默认名称。  
+作为Kubernetes集群节点的情况下，这样的名称会变化的主机往往会导致已注册的节点重启后无法注册，通过kubelet日志可以看出，报错原因为主机当前名称和原始名称不同，导致节点无法注册到API server。</name></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7月 04 09:46:50 k8scluster2master kubelet[1573]: I0704 09:46:50.750118    1573 kubelet_node_status.go:82] Attempting to register node izj6cgkv35o1qg19b4t96iz
+7月 04 09:46:50 k8scluster2master kubelet[1573]: E0704 09:46:50.751935    1573 kubelet_node_status.go:106] Unable to register node "izj6cgkv35o1qg19b4t96iz" with API server: nodes "izj6cgkv35o1qg19b4t96iz" is forbidden: node "k8scluster2master" cannot modify node "izj6cgkv35o1qg19b4t96iz"
+</code></pre></div></div>
+
+<h2 id="解决思路">解决思路</h2>
+<p>在节点加入集群的动作中，因为默认会使用当前主机名称作为节点名称，所以节点注册之后如果主机名称发生变化会导致注册失败。那我们如果能指定主机每次注册的时候不使用当前主机名称，而是都使用相同的名称，就可以解决这类问题。</p>
+
+<h2 id="kubelet">Kubelet</h2>
+<p>基于之前的思路到底是否可行，在这里我们先了解一下主机注册到Kubernetes集群中的原理以及其中的重要组件Kubelet。<br />
+Kubelet组件运行在Node节点上，维持运行中的Pods以及提供kuberntes运行时环境，主要完成以下使命：</p>
+<ol>
+  <li>监视分配给该Node节点的pods</li>
+  <li>挂载pod所需要的volumes</li>
+  <li>下载pod的secret</li>
+  <li>通过docker/rkt来运行pod中的容器</li>
+  <li>周期的执行pod中为容器定义的liveness探针</li>
+  <li>上报pod的状态给系统的其他组件</li>
+  <li>上报Node的状态</li>
+</ol>
+
+<p>其中有一个很关键的就是Kubelet负责上报节点的信息到API server，那么按照我们预想的解决办法，若能控制这部分上报的信息就可以做到无论主机名称怎么变化，注册的节点名称还是不变的。</p>
+
+<h2 id="查看kubelet配置">查看Kubelet配置</h2>
+<p>先查看一下当前机器的kubelet配置文件，可以通过下面这条名称获取，其中/etc/systemd/system/kubelet.service.d/10-kubeadm.conf就是配置文件了。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# service kubelet status
+Redirecting to /bin/systemctl status kubelet.service
+● kubelet.service - kubelet: The Kubernetes Node Agent
+   Loaded: loaded (/etc/systemd/system/kubelet.service; enabled; vendor preset: disabled)
+  Drop-In: /etc/systemd/system/kubelet.service.d
+           └─10-kubeadm.conf
+   Active: active (running) since 三 2018-07-04 10:09:44 CST; 6min ago
+     Docs: http://kubernetes.io/docs/
+ Main PID: 20871 (kubelet)
+   CGroup: /system.slice/kubelet.service
+           └─20871 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --pod-manifest-path=/et...
+
+</code></pre></div></div>
+
+<p>让我们查看一下配置文件中的具体内容，可以看到这里指定了很多参数用以控制kubelet的运行状态。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+[Service]
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
+Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
+Environment="KUBELET_DNS_ARGS=--cluster-dns=10.96.0.10 --cluster-domain=cluster.local"
+Environment="KUBELET_AUTHZ_ARGS=--authorization-mode=Webhook --client-ca-file=/etc/kubernetes/pki/ca.crt"
+Environment="KUBELET_CADVISOR_ARGS=--cadvisor-port=0"
+Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=systemd"
+Environment="KUBELET_CERTIFICATE_ARGS=--rotate-certificates=true --cert-dir=/var/lib/kubelet/pki"
+ExecStart=
+ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CGROUP_ARGS $KUBELET_CERTIFICATE_ARGS $KUBELET_EXTRA_ARGS
+</code></pre></div></div>
+
+<p>查阅相关资料，可以找到一个参数就是符合我们的预想，用来指定主机注册时的节点名称的：—hostname-override<br />
+那么我们就指定当前主机注册时的节点名称为k8scluster2master，试试看效果如何。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+[Service]
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
+Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
+Environment="KUBELET_DNS_ARGS=--cluster-dns=10.96.0.10 --cluster-domain=cluster.local"
+Environment="KUBELET_AUTHZ_ARGS=--authorization-mode=Webhook --client-ca-file=/etc/kubernetes/pki/ca.crt"
+Environment="KUBELET_CADVISOR_ARGS=--cadvisor-port=0"
+Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=systemd"
+Environment="KUBELET_CERTIFICATE_ARGS=--rotate-certificates=true --cert-dir=/var/lib/kubelet/pki"
+Environment="KUBELET_NODE_NAME_ARGS=--hostname-override=k8scluster2master"
+ExecStart=
+ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CGROUP_ARGS $KUBELET_CERTIFICATE_ARGS $KUBELET_EXTRA_ARGS $KUBELET_NODE_NAME_ARGS
+</code></pre></div></div>
+
+<h2 id="重新加载配置">重新加载配置</h2>
+<p>执行如下命令使新增参数生效并检查新增参数是否已经生效</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>执行如下命令使新增参数生效
+# systemctl stop kubelet
+# systemctl daemon-reload
+# systemctl start kubelet
+
+检查新增参数是否已经生效
+# ps -ef | grep kubelet
+</code></pre></div></div>
+
+<h2 id="节点成功注册">节点成功注册</h2>
+<p>修改完配置并重新加载之后，让主机再次加入集群，一会之后可以看到节点已经成功注册，大功告成。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get node
+NAME                STATUS    ROLES     AGE       VERSION
+k8scluster2master   Ready     master    74d       v1.10.1
+k8scluster2node1    Ready     &lt;none&gt;    74d       v1.10.1
+k8scluster2node2    Ready     &lt;none&gt;    74d       v1.10.1
+</code></pre></div></div>
+
+<h2 id="参考资料">参考资料</h2>
+<blockquote>
+  <p><a href="https://blog.csdn.net/jettery/article/details/78891733">Kubelet组件解析 - CSDN博客</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        
+          <category> 容器 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> Kubernetes </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[CentOS部署Kubernetes集群]]></title>
+      <url>/%E5%AE%B9%E5%99%A8/2018/03/31/CentOS%E9%83%A8%E7%BD%B2Kubernetes%E9%9B%86%E7%BE%A4/</url>
+      <content type="html"><![CDATA[<h1 id="centos部署kubernetes集群">CentOS部署Kubernetes集群</h1>
+<h2 id="相关组件版本">相关组件版本</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">名称</th>
+      <th style="text-align: left">版本号</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">CentOS</td>
+      <td style="text-align: left">7.4.1708</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">docker</td>
+      <td style="text-align: left">1.13.1</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">kubeadm</td>
+      <td style="text-align: left">1.10.1</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">kubectl</td>
+      <td style="text-align: left">1.9.3</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="安装docker">安装Docker</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum install -y docker
+systemctl enable docker &amp;&amp; systemctl start docker
+</code></pre></div></div>
+
+<h2 id="设置节点名称">设置节点名称</h2>
+<p>Kubernetes集群中的所有节点名称不能相同，所以在创建集群前先修改好各个节点的名称防止冲突。<br />
+<code class="highlighter-rouge">hostname -b 名称</code></p>
+
+<h2 id="安装kubernetes组件">安装Kubernetes组件</h2>
+<h3 id="配置yum镜像源文件">配置yum镜像源文件</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+EOF
+</code></pre></div></div>
+
+<h3 id="关闭防火墙">关闭防火墙</h3>
+<p><code class="highlighter-rouge">setenforce 0</code></p>
+
+<h3 id="安装组件">安装组件</h3>
+<p><code class="highlighter-rouge"> yum install -y kubelet kubeadm kubectl </code></p>
+
+<h3 id="启动服务">启动服务</h3>
+<p><code class="highlighter-rouge"> systemctl enable kubelet &amp;&amp; systemctl start kubelet </code></p>
+
+<p>最后通过命令<code class="highlighter-rouge">running sysctl net.bridge.bridge-nf-call-iptables=1</code>将/proc/sys/net/bridge/bridge-nf-call-iptables设置为1，否则后续Master创建集群和Node加入集群会产生错误。</p>
+
+<h2 id="master创建集群">Master创建集群</h2>
+<h3 id="选择cni">选择CNI</h3>
+<p>Kubernetes集群的正常使用依赖于CNI(Container Network Interface)。
+常见的CNI有如下几种：</p>
+<ul>
+  <li>Calico</li>
+  <li>Canal</li>
+  <li>Flannel</li>
+  <li>Kube-router</li>
+  <li>Romana</li>
+  <li>Weave Net
+在这个部署场景中我们选用Flannel</li>
+</ul>
+
+<h3 id="初始化集群">初始化集群</h3>
+<p><code class="highlighter-rouge">kubeadmin init --pod-network-cidr=10.244.0.0/16 </code><br />
+为了保证Flannel可以正常工作，需要在Kubeadm init时加上“—pod-network-cidr=10.244.0.0/16 ”参数，使用其余CNI对应的参数各不相同，详情请参考<a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network">官方文档</a></p>
+
+<p>若输出以下类似内容则代表集群已经初始化成功了：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your Kubernetes master has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+You can now join any number of machines by running the following on each node
+as root:
+
+  kubeadm join 172.31.59.194:6443 --token 0vfzv1.vw6oxga0xhc1lzm5 --discovery-token-ca-cert-hash sha256:39b0319100e9997cb859ef6967a00c93de3ef8e535a7dc3d6e4ed510a5b97e6c
+</code></pre></div></div>
+
+<p>注意其中的kubeadm join内容，保存好以便后续Node节点加入集群使用。</p>
+
+<h3 id="配置环境参数">配置环境参数</h3>
+<p>留意kubeadm init成功之后的回显，其中提醒了我们使用集群前需要做的相应配置。<br />
+<code class="highlighter-rouge">mkdir -p $HOME/.kube</code><br />
+<code class="highlighter-rouge">sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</code><br />
+<code class="highlighter-rouge">sudo chown $(id -u):$(id -g) $HOME/.kube/config</code></p>
+
+<h3 id="安装cni">安装CNI</h3>
+<p>我们使用Flannel作为这个集群的CNI，所以使用如下命令安装Flannel：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+</code></pre></div></div>
+
+<p>其余类型的CNI的安装方式可以参照<a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network">官方文档</a></p>
+
+<h2 id="node加入集群">Node加入集群</h2>
+<p>现在可以将已经安装好Kubernetes组件的主机作为Node节点加入我们已经创建好的集群中了。
+使用类似如下kubeadm join命令完成Node节点的加入（token来自于之前Master上kubeadm init的结果）：<br />
+<code class="highlighter-rouge">kubeadm join 172.31.59.194:6443 --token 0vfzv1.vw6oxga0xhc1lzm5 --discovery-token-ca-cert-hash sha256:39b0319100e9997cb859ef6967a00c93de3ef8e535a7dc3d6e4ed510a5b97e6c</code></p>
+
+<h2 id="查看集群状态">查看集群状态</h2>
+<p>到此，我们的集群已经创建完成，可以在Master上通过如下命令查看集群成员：<br />
+<code class="highlighter-rouge">kubectl get nodes</code></p>
+
+<p>结果类似如下格式，若各节点状态都已经为Ready则代表集群建立完成：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@izj6cfshug9pwgb71j3t10z ~]# kubectl get node
+NAME                      STATUS    ROLES     AGE       VERSION
+izj6cfshug9pwgb71j3t10z   Ready     master    58m       v1.10.1
+k8scluster1node1          Ready     &lt;none&gt;    24m       v1.10.1
+k8scluster1node2          Ready     &lt;none&gt;    1m        v1.10.1
+</code></pre></div></div>
+
+]]></content>
+      <categories>
+        
+          <category> 容器 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> Kubernetes </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[批量删除docker内已停止的容器与镜像]]></title>
+      <url>/kubernetes/2018/01/25/batch-delete-docker/</url>
+      <content type="html"><![CDATA[<h1 id="批量删除docker内已停止的容器与镜像">批量删除docker内已停止的容器与镜像</h1>
+
+<p>Docker的使用过程中，常常出现大量已经退出的或启动失败的容器，这时候如果要逐个删除的话费时费力，好在还有如下几种方法进行批量删除，节省时间大大提高工作效率。</p>
+
+<h2 id="方法一">方法一</h2>
+<p>显示所有的容器，过滤出Exited状态的容器，取出这些容器的ID，<br />
+<code class="highlighter-rouge">sudo docker ps -a|grep Exited|awk '{print $1}'</code></p>
+
+<p>查询所有的容器，过滤出Exited状态的容器，列出容器ID，删除这些容器</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo docker rm `docker ps -a|grep Exited|awk '{print $1}'`
+</code></pre></div></div>
+
+<h2 id="方法二">方法二</h2>
+<p>删除所有未运行的容器（已经运行的删除不了，未运行的就一起被删除了）<br />
+<code class="highlighter-rouge">sudo docker rm $(sudo docker ps -a -q)</code></p>
+
+<h2 id="方法三">方法三</h2>
+<p>根据容器的状态，删除Exited状态的容器<br />
+<code class="highlighter-rouge">sudo docker rm $(sudo docker ps -qf status=exited)</code></p>
+
+<h2 id="方法四">方法四</h2>
+<p>Docker 1.13版本以后，可以使用 docker containers prune 命令，删除孤立的容器。<br />
+<code class="highlighter-rouge">sudo docker container prune</code></p>
+
+<h2 id="删除所有镜像">删除所有镜像</h2>
+<p><code class="highlighter-rouge">sudo docker rmi $(docker images -q)</code></p>
+]]></content>
+      <categories>
+        
+          <category> Kubernetes </category>
+        
+      </categories>
+      <tags>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[Resume]]></title>
+      <url>/2017/11/18/Resume/</url>
+      <content type="html"><![CDATA[<h1 id="简历">简历</h1>
+
+<h3 id="个人信息">个人信息</h3>
+<blockquote>
+  <p>姓名 : 陈硕<br />
+性别 : 男<br />
+年龄 : 27<br />
+联系电话 : 13055790027<br />
+联系邮箱 : cs06@163.com<br />
+GitHub : https://github.com/ShoreCN<br />
+教育背景 : 福州大学 本科 2008-2012<br />
+工作经验 : 5年</p>
+</blockquote>
+
+<hr />
+<h3 id="工作经验">工作经验</h3>
+<blockquote>
+  <p><strong>2012年7月~2015年5月 : 华为技术有限公司交换机产品部</strong>　　　　(交换机系统层研发工程师)<br />
+任职华为数通交换机团队核心开发（c语言、vxworks/Linux、SDN）人员，负责交换机系统层开发工作。<br />
+主要成果：</p>
+  <ul>
+    <li>交换机容灾方案（堆叠集群管理）</li>
+    <li>业界首创的敏捷架构、虚拟化技术（SVF）方案</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p><strong>2015年6月~2017年10月 : 华为技术有限公司云解决方案部</strong>　　　　(云管理解决方案团队PL)<br />
+负责云管理方案的需求分析设计和核心框架开发（python、云计算）工作<br />
+负责项目交付，包含团队组建、技术把关和事务管理等<br />
+主要成果：</p>
+  <ul>
+    <li>敏捷园区公有云解决方案</li>
+  </ul>
+</blockquote>
+
+<hr />
+
+<h3 id="技能情况">技能情况</h3>
+<p><img src="https://github.com/ShoreCN/Resume/blob/master/img/skill1113.jpg?raw=true" alt="" /></p>
+
+<hr />
+<h3 id="个人介绍">个人介绍</h3>
+<blockquote>
+  <ul>
+    <li>崇尚技术，学习能力强，爱好自我折腾，追求高效率</li>
+    <li>性格沉稳，善于思考，工作认真踏实、精益求精  </li>
+    <li>具备良好的团队精神，拒绝个人主义  </li>
+  </ul>
+</blockquote>
+
+]]></content>
+      <categories>
+        
+      </categories>
+      <tags>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[Highlight Test]]></title>
+      <url>/test/2017/07/19/highlight-test/</url>
+      <content type="html"><![CDATA[<p>This is a highlight test.</p>
+
+<h1 id="normal-block">Normal block</h1>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alert('Hello World!');
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>print 'helloworld'
+</code></pre></div></div>
+
+<h1 id="highlight-block">Highlight block</h1>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">alert</span><span class="p">(</span> <span class="s1">'Hello, world!'</span> <span class="p">);</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="s">'helloworld'</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">foo</span>
+  <span class="nb">puts</span> <span class="s1">'foo'</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">foo</span>
+  <span class="nb">puts</span> <span class="s1">'foo'</span>
+<span class="k">end</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">foo</span>
+  <span class="nb">puts</span> <span class="s1">'foo'</span>
+<span class="k">end</span></pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">foo</span><span class="p">(</span><span class="kt">int</span> <span class="n">arg1</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+  <span class="n">foo</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Hello World"</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+]]></content>
+      <categories>
+        
+          <category> Test </category>
+        
+      </categories>
+      <tags>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+</search>

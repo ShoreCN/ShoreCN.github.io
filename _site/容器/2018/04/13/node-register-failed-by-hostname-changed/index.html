@@ -1,0 +1,925 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Kubernetes," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Shore Space" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="现象及原因 使用阿里云主机通常会通过命令hostname -b 修改主机名称便于后续使用和维护，但是在主机重启之后，通常又会被恢复成初始分配的默认名称。 作为Kubernetes集群节点的情况下，这样的名称会变化的主机往往会导致已注册的节点重启后无法注册，通过kubelet日志可以看出，报错原因为主机当前名称和原始名称不同，导致节点无法注册到API server。 7月 04 09:46:50 k8scluster2master kubelet[1573]: I0704 09:46:50.750118 1573 kubelet_node_status.go:82] Attempting to register node izj6cgkv35o1qg19b4t96iz 7月 04 09:46:50 k8scluster2master kubelet[1573]: E0704 09:46:50.751935 1573 kubelet_node_status.go:106] Unable to register node &quot;izj6cgkv35o1qg19b4t96iz&quot; with API server: nodes &quot;izj6cgkv35o1qg19b4t96iz&quot; is forbidden: node &quot;k8scluster2master&quot; cannot modify node &quot;izj6cgkv35o1qg19b4t96iz&quot;">
+<meta name="keywords" content="Kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群节点主机名称变化导致无法注册">
+<meta property="og:url" content="http://localhost:4000/%E5%AE%B9%E5%99%A8/2018/04/13/node-register-failed-by-hostname-changed/">
+<meta property="og:site_name" content="Shore Space">
+<meta property="og:description" content="现象及原因 使用阿里云主机通常会通过命令hostname -b 修改主机名称便于后续使用和维护，但是在主机重启之后，通常又会被恢复成初始分配的默认名称。 作为Kubernetes集群节点的情况下，这样的名称会变化的主机往往会导致已注册的节点重启后无法注册，通过kubelet日志可以看出，报错原因为主机当前名称和原始名称不同，导致节点无法注册到API server。 7月 04 09:46:50 k8scluster2master kubelet[1573]: I0704 09:46:50.750118 1573 kubelet_node_status.go:82] Attempting to register node izj6cgkv35o1qg19b4t96iz 7月 04 09:46:50 k8scluster2master kubelet[1573]: E0704 09:46:50.751935 1573 kubelet_node_status.go:106] Unable to register node &quot;izj6cgkv35o1qg19b4t96iz&quot; with API server: nodes &quot;izj6cgkv35o1qg19b4t96iz&quot; is forbidden: node &quot;k8scluster2master&quot; cannot modify node &quot;izj6cgkv35o1qg19b4t96iz&quot;">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes集群节点主机名称变化导致无法注册">
+<meta name="twitter:description" content="现象及原因 使用阿里云主机通常会通过命令hostname -b 修改主机名称便于后续使用和维护，但是在主机重启之后，通常又会被恢复成初始分配的默认名称。 作为Kubernetes集群节点的情况下，这样的名称会变化的主机往往会导致已注册的节点重启后无法注册，通过kubelet日志可以看出，报错原因为主机当前名称和原始名称不同，导致节点无法注册到API server。 7月 04 09:46:50 k8scluster2master kubelet[1573]: I0704 09:46:50.750118 1573 kubelet_node_status.go:82] Attempting to register node izj6cgkv35o1qg19b4t96iz 7月 04 09:46:50 k8scluster2master kubelet[1573]: E0704 09:46:50.751935 1573 kubelet_node_status.go:106] Unable to register node &quot;izj6cgkv35o1qg19b4t96iz&quot; with API server: nodes &quot;izj6cgkv35o1qg19b4t96iz&quot; is forbidden: node &quot;k8scluster2master&quot; cannot modify node &quot;izj6cgkv35o1qg19b4t96iz&quot;">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/"/>
+
+
+
+
+
+  <title>Kubernetes集群节点主机名称变化导致无法注册</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shore Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/%E5%AE%B9%E5%99%A8/2018/04/13/node-register-failed-by-hostname-changed/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shore">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shore Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            Kubernetes集群节点主机名称变化导致无法注册
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T08:23:23+08:00">
+                2018-04-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/category/#/%E5%AE%B9%E5%99%A8" itemprop="url" rel="index">
+                    <span itemprop="name">容器</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="现象及原因">现象及原因</h2>
+<p>使用阿里云主机通常会通过命令hostname -b <name>修改主机名称便于后续使用和维护，但是在主机重启之后，通常又会被恢复成初始分配的默认名称。  
+作为Kubernetes集群节点的情况下，这样的名称会变化的主机往往会导致已注册的节点重启后无法注册，通过kubelet日志可以看出，报错原因为主机当前名称和原始名称不同，导致节点无法注册到API server。</name></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7月 04 09:46:50 k8scluster2master kubelet[1573]: I0704 09:46:50.750118    1573 kubelet_node_status.go:82] Attempting to register node izj6cgkv35o1qg19b4t96iz
+7月 04 09:46:50 k8scluster2master kubelet[1573]: E0704 09:46:50.751935    1573 kubelet_node_status.go:106] Unable to register node "izj6cgkv35o1qg19b4t96iz" with API server: nodes "izj6cgkv35o1qg19b4t96iz" is forbidden: node "k8scluster2master" cannot modify node "izj6cgkv35o1qg19b4t96iz"
+</code></pre></div></div>
+
+<h2 id="解决思路">解决思路</h2>
+<p>在节点加入集群的动作中，因为默认会使用当前主机名称作为节点名称，所以节点注册之后如果主机名称发生变化会导致注册失败。那我们如果能指定主机每次注册的时候不使用当前主机名称，而是都使用相同的名称，就可以解决这类问题。</p>
+
+<h2 id="kubelet">Kubelet</h2>
+<p>基于之前的思路到底是否可行，在这里我们先了解一下主机注册到Kubernetes集群中的原理以及其中的重要组件Kubelet。<br />
+Kubelet组件运行在Node节点上，维持运行中的Pods以及提供kuberntes运行时环境，主要完成以下使命：</p>
+<ol>
+  <li>监视分配给该Node节点的pods</li>
+  <li>挂载pod所需要的volumes</li>
+  <li>下载pod的secret</li>
+  <li>通过docker/rkt来运行pod中的容器</li>
+  <li>周期的执行pod中为容器定义的liveness探针</li>
+  <li>上报pod的状态给系统的其他组件</li>
+  <li>上报Node的状态</li>
+</ol>
+
+<p>其中有一个很关键的就是Kubelet负责上报节点的信息到API server，那么按照我们预想的解决办法，若能控制这部分上报的信息就可以做到无论主机名称怎么变化，注册的节点名称还是不变的。</p>
+
+<h2 id="查看kubelet配置">查看Kubelet配置</h2>
+<p>先查看一下当前机器的kubelet配置文件，可以通过下面这条名称获取，其中/etc/systemd/system/kubelet.service.d/10-kubeadm.conf就是配置文件了。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# service kubelet status
+Redirecting to /bin/systemctl status kubelet.service
+● kubelet.service - kubelet: The Kubernetes Node Agent
+   Loaded: loaded (/etc/systemd/system/kubelet.service; enabled; vendor preset: disabled)
+  Drop-In: /etc/systemd/system/kubelet.service.d
+           └─10-kubeadm.conf
+   Active: active (running) since 三 2018-07-04 10:09:44 CST; 6min ago
+     Docs: http://kubernetes.io/docs/
+ Main PID: 20871 (kubelet)
+   CGroup: /system.slice/kubelet.service
+           └─20871 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --pod-manifest-path=/et...
+
+</code></pre></div></div>
+
+<p>让我们查看一下配置文件中的具体内容，可以看到这里指定了很多参数用以控制kubelet的运行状态。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+[Service]
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
+Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
+Environment="KUBELET_DNS_ARGS=--cluster-dns=10.96.0.10 --cluster-domain=cluster.local"
+Environment="KUBELET_AUTHZ_ARGS=--authorization-mode=Webhook --client-ca-file=/etc/kubernetes/pki/ca.crt"
+Environment="KUBELET_CADVISOR_ARGS=--cadvisor-port=0"
+Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=systemd"
+Environment="KUBELET_CERTIFICATE_ARGS=--rotate-certificates=true --cert-dir=/var/lib/kubelet/pki"
+ExecStart=
+ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CGROUP_ARGS $KUBELET_CERTIFICATE_ARGS $KUBELET_EXTRA_ARGS
+</code></pre></div></div>
+
+<p>查阅相关资料，可以找到一个参数就是符合我们的预想，用来指定主机注册时的节点名称的：—hostname-override<br />
+那么我们就指定当前主机注册时的节点名称为k8scluster2master，试试看效果如何。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+[Service]
+Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
+Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
+Environment="KUBELET_NETWORK_ARGS=--network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin"
+Environment="KUBELET_DNS_ARGS=--cluster-dns=10.96.0.10 --cluster-domain=cluster.local"
+Environment="KUBELET_AUTHZ_ARGS=--authorization-mode=Webhook --client-ca-file=/etc/kubernetes/pki/ca.crt"
+Environment="KUBELET_CADVISOR_ARGS=--cadvisor-port=0"
+Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=systemd"
+Environment="KUBELET_CERTIFICATE_ARGS=--rotate-certificates=true --cert-dir=/var/lib/kubelet/pki"
+Environment="KUBELET_NODE_NAME_ARGS=--hostname-override=k8scluster2master"
+ExecStart=
+ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $KUBELET_NETWORK_ARGS $KUBELET_DNS_ARGS $KUBELET_AUTHZ_ARGS $KUBELET_CADVISOR_ARGS $KUBELET_CGROUP_ARGS $KUBELET_CERTIFICATE_ARGS $KUBELET_EXTRA_ARGS $KUBELET_NODE_NAME_ARGS
+</code></pre></div></div>
+
+<h2 id="重新加载配置">重新加载配置</h2>
+<p>执行如下命令使新增参数生效并检查新增参数是否已经生效</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>执行如下命令使新增参数生效
+# systemctl stop kubelet
+# systemctl daemon-reload
+# systemctl start kubelet
+
+检查新增参数是否已经生效
+# ps -ef | grep kubelet
+</code></pre></div></div>
+
+<h2 id="节点成功注册">节点成功注册</h2>
+<p>修改完配置并重新加载之后，让主机再次加入集群，一会之后可以看到节点已经成功注册，大功告成。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get node
+NAME                STATUS    ROLES     AGE       VERSION
+k8scluster2master   Ready     master    74d       v1.10.1
+k8scluster2node1    Ready     &lt;none&gt;    74d       v1.10.1
+k8scluster2node2    Ready     &lt;none&gt;    74d       v1.10.1
+</code></pre></div></div>
+
+<h2 id="参考资料">参考资料</h2>
+<blockquote>
+  <p><a href="https://blog.csdn.net/jettery/article/details/78891733">Kubelet组件解析 - CSDN博客</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/tag/#/Kubernetes" rel="tag"># Kubernetes</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/%E6%9E%B6%E6%9E%84/2018/04/18/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6/" rel="next" title="高性能框架方案">
+                <i class="fa fa-chevron-left"></i> 高性能框架方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/%E5%AE%B9%E5%99%A8/2018/03/31/CentOS%E9%83%A8%E7%BD%B2Kubernetes%E9%9B%86%E7%BE%A4/" rel="prev" title="CentOS部署Kubernetes集群">
+                CentOS部署Kubernetes集群 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/assets/images/avatar.gif"
+               alt="Shore" />
+          <p class="site-author-name" itemprop="name">Shore</p>
+           
+              <p class="site-description motion-element" itemprop="description">C/Python/通信/SDN/云计算</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShoreCN" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/shore-80" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#现象及原因"> <span class="nav-number">1</span> <span class="nav-text">现象及原因</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#解决思路"> <span class="nav-number">2</span> <span class="nav-text">解决思路</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#kubelet"> <span class="nav-number">3</span> <span class="nav-text">Kubelet</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#查看kubelet配置"> <span class="nav-number">4</span> <span class="nav-text">查看Kubelet配置</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#重新加载配置"> <span class="nav-number">5</span> <span class="nav-text">重新加载配置</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#节点成功注册"> <span class="nav-number">6</span> <span class="nav-text">节点成功注册</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#参考资料"> <span class="nav-number">7</span> <span class="nav-text">参考资料</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child">
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shore</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://jekyllrb.com">Jekyll</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
+

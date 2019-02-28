@@ -1,0 +1,884 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Kubernetes," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Shore Space" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="IP资源耗尽导致pod反复创建失败问题 现象 Pod一直处于ContainerCreating状态 [root@k8scluster2master ~]# kubectl get pod -o wide NAME READY STATUS RESTARTS AGE IP NODE abc.fgg-75b769789d-7dmjs 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.fgg-75b769789d-f8pq2 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.fgg-75b769789d-hzwrs 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.fgg-75b769789d-jrzbp 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.sdfdcard-67676989bd-7p7wf 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 default-http-backend-5c6d95c48-bpk54 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 game2.tgame-7bd6d45df8-n2v6h 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 game2.tgame-7bd6d45df8-tbdl7 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 ido.ido-57489d4b67-mrxs2 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 ido.ido-57489d4b67-v2rvq 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 nginx-ingress-controller-6c9fcdf8d9-dt8b6 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 shireapp.game2048-d64d84d54-6vvqg 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 shireapp.game2048-d64d84d54-qd9v8 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 shireapp.game2048-d64d84d54-t9sbz 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2">
+<meta name="keywords" content="Kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IP资源耗尽导致pod反复创建失败问题">
+<meta property="og:url" content="http://localhost:4000/%E5%AE%B9%E5%99%A8/2018/04/25/IP%E8%B5%84%E6%BA%90%E8%80%97%E5%B0%BD%E5%AF%BC%E8%87%B4pod%E5%8F%8D%E5%A4%8D%E5%88%9B%E5%BB%BA%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/">
+<meta property="og:site_name" content="Shore Space">
+<meta property="og:description" content="IP资源耗尽导致pod反复创建失败问题 现象 Pod一直处于ContainerCreating状态 [root@k8scluster2master ~]# kubectl get pod -o wide NAME READY STATUS RESTARTS AGE IP NODE abc.fgg-75b769789d-7dmjs 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.fgg-75b769789d-f8pq2 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.fgg-75b769789d-hzwrs 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.fgg-75b769789d-jrzbp 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.sdfdcard-67676989bd-7p7wf 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 default-http-backend-5c6d95c48-bpk54 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 game2.tgame-7bd6d45df8-n2v6h 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 game2.tgame-7bd6d45df8-tbdl7 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 ido.ido-57489d4b67-mrxs2 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 ido.ido-57489d4b67-v2rvq 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 nginx-ingress-controller-6c9fcdf8d9-dt8b6 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 shireapp.game2048-d64d84d54-6vvqg 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 shireapp.game2048-d64d84d54-qd9v8 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 shireapp.game2048-d64d84d54-t9sbz 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IP资源耗尽导致pod反复创建失败问题">
+<meta name="twitter:description" content="IP资源耗尽导致pod反复创建失败问题 现象 Pod一直处于ContainerCreating状态 [root@k8scluster2master ~]# kubectl get pod -o wide NAME READY STATUS RESTARTS AGE IP NODE abc.fgg-75b769789d-7dmjs 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.fgg-75b769789d-f8pq2 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.fgg-75b769789d-hzwrs 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.fgg-75b769789d-jrzbp 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 abc.sdfdcard-67676989bd-7p7wf 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 default-http-backend-5c6d95c48-bpk54 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 game2.tgame-7bd6d45df8-n2v6h 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 game2.tgame-7bd6d45df8-tbdl7 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 ido.ido-57489d4b67-mrxs2 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 ido.ido-57489d4b67-v2rvq 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 nginx-ingress-controller-6c9fcdf8d9-dt8b6 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 shireapp.game2048-d64d84d54-6vvqg 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 shireapp.game2048-d64d84d54-qd9v8 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2 shireapp.game2048-d64d84d54-t9sbz 0/1 ContainerCreating 0 1h &amp;lt;none&amp;gt; k8scluster2node2">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/"/>
+
+
+
+
+
+  <title>IP资源耗尽导致pod反复创建失败问题</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shore Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/%E5%AE%B9%E5%99%A8/2018/04/25/IP%E8%B5%84%E6%BA%90%E8%80%97%E5%B0%BD%E5%AF%BC%E8%87%B4pod%E5%8F%8D%E5%A4%8D%E5%88%9B%E5%BB%BA%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shore">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shore Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            IP资源耗尽导致pod反复创建失败问题
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-25T07:31:06+08:00">
+                2018-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/category/#/%E5%AE%B9%E5%99%A8" itemprop="url" rel="index">
+                    <span itemprop="name">容器</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="ip资源耗尽导致pod反复创建失败问题">IP资源耗尽导致pod反复创建失败问题</h1>
+<h2 id="现象">现象</h2>
+<p>Pod一直处于ContainerCreating状态</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get pod -o wide
+NAME                                                   READY     STATUS              RESTARTS   AGE       IP            NODE
+abc.fgg-75b769789d-7dmjs                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+abc.fgg-75b769789d-f8pq2                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+abc.fgg-75b769789d-hzwrs                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+abc.fgg-75b769789d-jrzbp                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+abc.sdfdcard-67676989bd-7p7wf                          0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+default-http-backend-5c6d95c48-bpk54                   0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+game2.tgame-7bd6d45df8-n2v6h                           0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+game2.tgame-7bd6d45df8-tbdl7                           0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+ido.ido-57489d4b67-mrxs2                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+ido.ido-57489d4b67-v2rvq                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+nginx-ingress-controller-6c9fcdf8d9-dt8b6              0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+shireapp.game2048-d64d84d54-6vvqg                      0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+shireapp.game2048-d64d84d54-qd9v8                      0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+shireapp.game2048-d64d84d54-t9sbz                      0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
+</code></pre></div></div>
+
+<p>实际登录到对应的node上通过docker ps -a 可以看出，pod每次一创建好就自动退出了。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2node2 ~]# docker ps -a
+CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS                              PORTS               NAMES
+eaa05cd8d957        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up 1 second                                             k8s_POD_shireapp.game2048-d64d84d54-t9sbz_default_710c5423-9170-11e8-8f3a-00163e02a461_669
+5e5e9a2ddf4a        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up Less than a second                                   k8s_POD_abc.fgg-75b769789d-jrzbp_default_6fe70cb6-9170-11e8-8f3a-00163e02a461_0
+1616c64af8a4        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_tiller-deploy-f9b8476d-g7kmz_kube-system_71a5379c-9170-11e8-8f3a-00163e02a461_0
+bf3a2a9ee6a6        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_abc.fgg-75b769789d-7dmjs_default_6fea9885-9170-11e8-8f3a-00163e02a461_0
+76a842cfb349        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_shireapp.game2048-d64d84d54-6vvqg_default_70de87f5-9170-11e8-8f3a-00163e02a461_0
+e9567a176938        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up Less than a second                                   k8s_POD_nginx-ingress-controller-6c9fcdf8d9-dt8b6_default_70cf42da-9170-11e8-8f3a-00163e02a461_0
+0b473d52f0dd        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_default-http-backend-5c6d95c48-bpk54_default_7008f65d-9170-11e8-8f3a-00163e02a461_0
+dc6bba6381f3        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up Less than a second                                   k8s_POD_tencloud.tenweb-7d8cf8cfcb-72xkw_default_7167e2f7-9170-11e8-8f3a-00163e02a461_0
+9576fa02316e        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) 1 second ago                                 k8s_POD_game2.tgame-7bd6d45df8-n2v6h_default_707b5e19-9170-11e8-8f3a-00163e02a461_0
+51cb0374901c        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_tencloud.tenweb-7d8cf8cfcb-khkwm_default_713a1d0c-9170-11e8-8f3a-00163e02a461_0
+7a04cf4d52f5        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) 1 second ago                                 k8s_POD_ido.ido-57489d4b67-mrxs2_default_701fd1de-9170-11e8-8f3a-00163e02a461_0
+20ba60a0a1b5        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_tencloud.tenweb-7d8cf8cfcb-xqb2t_default_716f801c-9170-11e8-8f3a-00163e02a461_0
+5ab4ca633497        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) 1 second ago                                 k8s_POD_ido.ido-57489d4b67-v2rvq_default_70b0c326-9170-11e8-8f3a-00163e02a461_0
+0a6a308e9563        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Exited (0) Less than a second ago                       k8s_POD_abc.fgg-75b769789d-f8pq2_default_7018ea67-9170-11e8-8f3a-00163e02a461_0
+bebc2a958740        k8s.gcr.io/pause-amd64:3.1   "/pause"                 8 seconds ago       Exited (0) 3 seconds ago                                k8s_POD_abc.fgg-75b769789d-hzwrs_default_6fe3a9fd-9170-11e8-8f3a-00163e02a461_688
+20454492a325        k8s.gcr.io/pause-amd64:3.1   "/pause"                 8 seconds ago       Exited (0) 3 seconds ago                                k8s_POD_abc.sdfdcard-67676989bd-7p7wf_default_70014929-9170-11e8-8f3a-00163e02a461_680
+</code></pre></div></div>
+
+<h2 id="原因">原因</h2>
+<p>根据kubectl describe查看到的原因，可以看出可用的IP资源已经被消耗殆尽，导致pod无法正常创建启动。</p>
+
+<p>使用kubectl describe pod <pod-name> 可以看到错误的原因：</pod-name></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Normal   SandboxChanged          2m (x12 over 3m)    kubelet, k8scluster2node2  Pod sandbox changed, it will be killed and re-created.
+  Warning  FailedCreatePodSandBox  2m (x10 over 3m)    kubelet, k8scluster2node2  Failed create pod sandbox: rpc error: code = Unknown desc = NetworkPlugin cni failed to set up pod "abc.fgg-75b769789d-7dmjs_default" network: failed to allocate for range 0: no IP addresses available in range set: 10.244.7.1-10.244.7.254
+</code></pre></div></div>
+
+<h2 id="解决办法">解决办法</h2>
+<p>进入到/var/lib/cni/networks/cbr0目录下，执行下面命令可以释放那些可能是kubelet leak的IP资源：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for hash in $(tail -n +1 * | grep '^[A-Za-z0-9]*$' | cut -c 1-8); do if [ -z $(docker ps -a | grep $hash | awk '{print $1}') ]; then grep -irl $hash ./; fi; done | xargs rm
+</code></pre></div></div>
+
+<p>IP释放完成之后，pod正常创建启动。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/tag/#/Kubernetes" rel="tag"># Kubernetes</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/%E6%9E%B6%E6%9E%84/2018/05/05/Tencloud-Architecture/" rel="next" title="高性能云平台技术框架模型">
+                <i class="fa fa-chevron-left"></i> 高性能云平台技术框架模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/%E6%9E%B6%E6%9E%84/2018/04/18/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6/" rel="prev" title="高性能框架方案">
+                高性能框架方案 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/assets/images/avatar.gif"
+               alt="Shore" />
+          <p class="site-author-name" itemprop="name">Shore</p>
+           
+              <p class="site-description motion-element" itemprop="description">C/Python/通信/SDN/云计算</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShoreCN" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/shore-80" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-1"> <a class="nav-link" href="#ip资源耗尽导致pod反复创建失败问题"> <span class="nav-number">1</span> <span class="nav-text">IP资源耗尽导致pod反复创建失败问题</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-2"> <a class="nav-link" href="#现象"> <span class="nav-number">1.1</span> <span class="nav-text">现象</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#原因"> <span class="nav-number">1.2</span> <span class="nav-text">原因</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#解决办法"> <span class="nav-number">1.3</span> <span class="nav-text">解决办法</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child">
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shore</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://jekyllrb.com">Jekyll</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
+

@@ -1,0 +1,900 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python,云计算," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Shore Space" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="">
+<meta name="keywords" content="Python, 云计算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高性能云平台技术框架模型">
+<meta property="og:url" content="http://localhost:4000/%E6%9E%B6%E6%9E%84/2018/05/05/Tencloud-Architecture/">
+<meta property="og:site_name" content="Shore Space">
+<meta property="og:description" content="">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/TenCloud_Architecture.png?raw=true">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高性能云平台技术框架模型">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/TenCloud_Architecture.png?raw=true">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/"/>
+
+
+
+
+
+  <title>高性能云平台技术框架模型</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shore Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/%E6%9E%B6%E6%9E%84/2018/05/05/Tencloud-Architecture/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shore">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shore Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            高性能云平台技术框架模型
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-05T07:29:53+08:00">
+                2018-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/category/#/%E6%9E%B6%E6%9E%84" itemprop="url" rel="index">
+                    <span itemprop="name">架构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/TenCloud_Architecture.png?raw=true" alt="TenCloud_Architecture" /></p>
+
+<hr />
+<h2 id="数据层">数据层</h2>
+<h3 id="数据库">数据库</h3>
+<p>MySQL：对于需要长期固化的底层数据使用MySQL进行存储</p>
+<h3 id="缓存">缓存</h3>
+<p>Redis：对于刷新频率、实时性较高的数据，使用Redis进行存储，达到快速读写的目的</p>
+<h3 id="文件存储">文件存储</h3>
+<p>此外用户上传的文件；构建镜像配置的dockerfile；部署和创建服务时生成的yaml文件，直接使用文件的形式存储在服务器的对应目录下</p>
+
+<hr />
+<h2 id="服务层">服务层</h2>
+<h3 id="服务器框架">服务器框架</h3>
+<p>Tornado：业务逻辑的处理使用Tornado框架进行搭建，非阻塞式的优点充分利用了服务器性能。将代码分离为Service和Handler层，清晰地界定了数据处理和业务逻辑处理两大块内容</p>
+<h4 id="service">Service</h4>
+<p>用来处理和数据层的交互，通过将底层的IO操作封装为各类Service接口，使得业务开发的过程更加专注独立。</p>
+<h4 id="handler">Handler</h4>
+<p>业务逻辑的处理区域。同时Tornado框架提供的路由注册机制直接将内部函数和外部API地址对应起来，极大的降低了网络请求的开发复杂度。</p>
+
+<hr />
+<h3 id="组件">组件</h3>
+<p>内部封装了大量的模块化组件，用以提高开发效率</p>
+<h4 id="log">Log</h4>
+<p>日志模块业务处理过程中方便快速、简单地记录各类日志，日志分为Debug、Info、Warn、Error、Stats五类，归档于不同的目录之下。</p>
+<h4 id="ssh">SSH</h4>
+<p>因为业务中有大量的需要实时访问服务器进行命令行配置的情况，远程访问模块让开发者只需要提供服务器登录数据和所需执行的命令就可以达到目的。同时还提供了异步、同步两种执行方式以便开发者灵活使用。</p>
+<h4 id="decorator">Decorator</h4>
+<p>装饰器，在不改变原函数的情况下给函数增加功能。框架内部封装了大量装饰器用以提高开发效率，例如用以判断用户登录情况的装饰器、用以通过权限控制用户操作的装饰器等等</p>
+<h4 id="data-api">Data API</h4>
+<p>对底层数据的操作通过这类组件进行封装，包含访问MySQL和Redis、连接池等动作</p>
+
+<hr />
+<h3 id="业务服务">业务服务</h3>
+<p>业务功能主要分为下面4块</p>
+<h4 id="项目应用">项目/应用</h4>
+<h4 id="集群服务器">集群/服务器</h4>
+<h4 id="镜像">镜像</h4>
+<h4 id="用户权限">用户/权限</h4>
+
+<hr />
+<h2 id="服务器管理agent">服务器管理Agent</h2>
+<p>通过go语言开发并编译成可执行文件，运行于需要加入系统管理的服务器上，主要有如下两块功能</p>
+<h3 id="服务器注册">服务器注册</h3>
+<p>用户在系统中加入自己的服务器时，Agent会自动上报注册信息，若鉴权条件满足则允许注册</p>
+<h3 id="数据采集">数据采集</h3>
+<p>服务器上的各类业务资源，通过Agent上报给后端服务器进行计算、存储及分析，是系统核心数据的来源</p>
+
+<hr />
+<h2 id="基础支撑层">基础支撑层</h2>
+<h3 id="任务调度">任务调度</h3>
+<p>Supervisor：根据配置监控进程状态，自动重启异常退出进行的一套进程管理系统。这样的话，业务服务部署好之后管理员可以不用再提心吊胆进程挂了、业务阻塞之类的问题。</p>
+<h3 id="接口文档">接口文档</h3>
+<p>APIDOC：一款可以有源代码中的注释直接自动生成api接口文档的工具，生成的接口文档可以直接通过web访问，可读性也很高，大大简化开发人员彼此间的交流成本。</p>
+
+<hr />
+<h2 id="网络层">网络层</h2>
+<h3 id="负载均衡">负载均衡</h3>
+<p>NGINX：高性能的HTTP和反向代理服务，作为web服务器可以用较少的资源提供更高的并发连接。</p>
+
+<hr />
+<h2 id="前端">前端</h2>
+<h3 id="web">Web</h3>
+<h3 id="ios">iOS</h3>
+<h3 id="android">Android</h3>
+
+<hr />
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/tag/#/Python" rel="tag"># Python</a>
+          
+            
+            <a href="/tag/#/%E4%BA%91%E8%AE%A1%E7%AE%97" rel="tag"># 云计算</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/%E5%AE%B9%E5%99%A8/2018/05/20/Modify-the-Kubernetes-NodePort-config/" rel="next" title="修改Kubernetes的NodePort范围">
+                <i class="fa fa-chevron-left"></i> 修改Kubernetes的NodePort范围
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/%E5%AE%B9%E5%99%A8/2018/04/25/IP%E8%B5%84%E6%BA%90%E8%80%97%E5%B0%BD%E5%AF%BC%E8%87%B4pod%E5%8F%8D%E5%A4%8D%E5%88%9B%E5%BB%BA%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" rel="prev" title="IP资源耗尽导致pod反复创建失败问题">
+                IP资源耗尽导致pod反复创建失败问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/assets/images/avatar.gif"
+               alt="Shore" />
+          <p class="site-author-name" itemprop="name">Shore</p>
+           
+              <p class="site-description motion-element" itemprop="description">C/Python/通信/SDN/云计算</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShoreCN" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/shore-80" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#数据层"> <span class="nav-number">1</span> <span class="nav-text">数据层</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#数据库"> <span class="nav-number">1.1</span> <span class="nav-text">数据库</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#缓存"> <span class="nav-number">1.2</span> <span class="nav-text">缓存</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#文件存储"> <span class="nav-number">1.3</span> <span class="nav-text">文件存储</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#服务层"> <span class="nav-number">2</span> <span class="nav-text">服务层</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#服务器框架"> <span class="nav-number">2.1</span> <span class="nav-text">服务器框架</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-4"> <a class="nav-link" href="#service"> <span class="nav-number">2.1.1</span> <span class="nav-text">Service</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#handler"> <span class="nav-number">2.1.2</span> <span class="nav-text">Handler</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#组件"> <span class="nav-number">2.2</span> <span class="nav-text">组件</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-4"> <a class="nav-link" href="#log"> <span class="nav-number">2.2.1</span> <span class="nav-text">Log</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#ssh"> <span class="nav-number">2.2.2</span> <span class="nav-text">SSH</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#decorator"> <span class="nav-number">2.2.3</span> <span class="nav-text">Decorator</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#data-api"> <span class="nav-number">2.2.4</span> <span class="nav-text">Data API</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#业务服务"> <span class="nav-number">2.3</span> <span class="nav-text">业务服务</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-4"> <a class="nav-link" href="#项目应用"> <span class="nav-number">2.3.1</span> <span class="nav-text">项目/应用</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#集群服务器"> <span class="nav-number">2.3.2</span> <span class="nav-text">集群/服务器</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#镜像"> <span class="nav-number">2.3.3</span> <span class="nav-text">镜像</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#用户权限"> <span class="nav-number">2.3.4</span> <span class="nav-text">用户/权限</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#服务器管理agent"> <span class="nav-number">3</span> <span class="nav-text">服务器管理Agent</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#服务器注册"> <span class="nav-number">3.1</span> <span class="nav-text">服务器注册</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#数据采集"> <span class="nav-number">3.2</span> <span class="nav-text">数据采集</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#基础支撑层"> <span class="nav-number">4</span> <span class="nav-text">基础支撑层</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#任务调度"> <span class="nav-number">4.1</span> <span class="nav-text">任务调度</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#接口文档"> <span class="nav-number">4.2</span> <span class="nav-text">接口文档</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#网络层"> <span class="nav-number">5</span> <span class="nav-text">网络层</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#负载均衡"> <span class="nav-number">5.1</span> <span class="nav-text">负载均衡</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#前端"> <span class="nav-number">6</span> <span class="nav-text">前端</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#web"> <span class="nav-number">6.1</span> <span class="nav-text">Web</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#ios"> <span class="nav-number">6.2</span> <span class="nav-text">iOS</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#android"> <span class="nav-number">6.3</span> <span class="nav-text">Android</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child">
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shore</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://jekyllrb.com">Jekyll</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
+

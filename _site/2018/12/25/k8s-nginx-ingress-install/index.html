@@ -1,0 +1,1005 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Kubernetes," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Shore Space" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1 概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。">
+<meta name="keywords" content="Kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用NGINX Ingress进行Kubernetes集群负载均衡">
+<meta property="og:url" content="http://localhost:4000/2018/12/25/k8s-nginx-ingress-install/">
+<meta property="og:site_name" content="Shore Space">
+<meta property="og:description" content="1 概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用NGINX Ingress进行Kubernetes集群负载均衡">
+<meta name="twitter:description" content="1 概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/"/>
+
+
+
+
+
+  <title>使用NGINX Ingress进行Kubernetes集群负载均衡</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shore Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/2018/12/25/k8s-nginx-ingress-install/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shore">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shore Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            使用NGINX Ingress进行Kubernetes集群负载均衡
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-25T08:23:23+08:00">
+                2018-12-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-概述">1 概述</h2>
+<p>Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。</p>
+
+<h2 id="2-安装">2 安装</h2>
+<p>Ingress的安装方式有两种</p>
+<ul>
+  <li>
+    <p>通过Kubernetes配置文件安装<br />
+Ingress相关的yaml文件归档在如下地址：<a href="https://github.com/nginxinc/kubernetes-ingress/tree/master/deployments">kubernetes-ingress/deployments at master · nginxinc/kubernetes-ingress · GitHub</a>
+可以通过下载相关文件后使用kubectl apply直接进行部署，参阅指导文档<a href="https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/installation.md">kubernetes-ingress/installation.md at master · nginxinc/kubernetes-ingress · GitHub</a>，此处不予赘述</p>
+  </li>
+  <li>
+    <p>通过Helm安装<br />
+本文主要介绍通过Helm安装使用Ingress，所以开始前请确保已经安装好Helm了。</p>
+  </li>
+</ul>
+
+<h3 id="21-选择服务暴露方式">2.1 选择服务暴露方式</h3>
+<p>Ingress对外部提供服务通常选择如下两种方式：</p>
+<ul>
+  <li>
+    <p>LoadBalancer<br />
+需要云厂商支持并购买，为每个LoadBalancer类型的Service分配公网IP地址</p>
+  </li>
+  <li>
+    <p>hostPort<br />
+hostPort是直接将容器的端口与所调度的节点上的端口连接起来，这样用户就可以通过宿主机的IP加上端口号来访问Pod了，如:</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: influxdb
+spec:
+  containers:
+    - name: influxdb
+      image: influxdb
+      ports:
+        - containerPort: 8086
+          hostPort: 8086
+</code></pre></div></div>
+<blockquote>
+  <p>hostPort的方案有个缺点，因为Pod重新调度的时候该Pod被调度到的宿主机可能会变动，这样就变化后用户必须自己维护一个Pod与所在宿主机的对应关系。</p>
+</blockquote>
+
+<h3 id="22-使用loadbalancer提供服务">2.2 使用LoadBalancer提供服务</h3>
+<p>这种方式部署起来十分简单，因为stable/nginx-ingress这个helm包默认就是使用这种方式部署。确保在云厂商上已经开通了LoadBalancer服务之后，执行如下命令进行一键安装：<br />
+<code class="highlighter-rouge">helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress</code></p>
+
+<p>部署完成后查看结果：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl get svc -n kube-system
+NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
+nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   80:30113/TCP,443:32564/TCP   21h
+</code></pre></div></div>
+
+<h3 id="23-使用hostport提供服务">2.3 使用hostPort提供服务</h3>
+<p>之前有提到hostPort的缺点在于Pod被调度变化到其他宿主机时需要手动维护。那么我们通过DaemonSet将Nginx 的 Ingress Controller Pod指定到特定宿主机上面来解决这个问题，牺牲了一定的可靠性，但就可以不再操心如何手工维护服务的地址变化问题了，二者的利弊取舍可以根据使用场景进行评估。</p>
+
+<h4 id="231-选择边缘节点">2.3.1 选择边缘节点</h4>
+<p>边缘节点：监听外部流量进入集群内部的节点
+这里我们选择集群内部的一个节点作为边缘节点，注意这个节点需要有外部可以访问的公网地址并且80、443端口没有被其他应用占用。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get nodes
+NAME                      STATUS   ROLES    AGE   VERSION
+izj6cfiv0zhc0j2k7ruyhsz   Ready    &lt;none&gt;   16d   v1.13.0
+k8s-cluster1-master       Ready    master   16d   v1.13.0
+</code></pre></div></div>
+<p>以这个集群为例，我们选择izj6cfiv0zhc0j2k7ruyhsz作为边缘节点</p>
+
+<h4 id="232-为边缘节点添加标签">2.3.2 为边缘节点添加标签</h4>
+<p>我们使用如下指令给这个节点加上一个内容为node:edge的label，后续在DaemonSet部署时根据label进行绑定即可。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node=edge
+node "izj6cfiv0zhc0j2k7ruyhsz" labeled
+</code></pre></div></div>
+
+<p>删除标签可以使用如下命令</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node-
+node "izj6cfiv0zhc0j2k7ruyhsz" labeled
+</code></pre></div></div>
+
+<h4 id="233-使用helm安装ingress">2.3.3 使用helm安装ingress</h4>
+<p>配置好边缘节点之后即可以使用Helm安装ingress了，安装命令如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm install stable/nginx-ingress \
+  --namespace kube-system \
+  --name nginx-ingress \
+  --set controller.kind=DaemonSet \
+  --set controller.daemonset.useHostPort=true \
+  --set controller.nodeSelector.node=edge \
+  --set controller.service.type=ClusterIP
+</code></pre></div></div>
+
+<p>参数解释：</p>
+<ul>
+  <li>namespace  可选项，配置后可指定ingress安装的命令空间，默认为default</li>
+  <li>name  生成的资源名称</li>
+  <li>set controller.kind=DaemonSet  选择部署方式为DaemonSet</li>
+  <li>set controller.daemonset.useHostPort=true  开启hostPort功能，可以直接通过节点访问ingress服务</li>
+  <li>controller.nodeSelector.node=edge  提供对外提供服务的节点筛选方式，需要和之前配置的节点label匹配，例如之前配置的node=edge，这里也需要填上一样的键值</li>
+  <li>set controller.service.type=ClusterIP  内部服务的类型</li>
+</ul>
+
+<p>安装完成之后检查一下对应pod是否都正常运行了</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get pods -n kube-system | grep nginx-ingress
+nginx-ingress-controller-hv8h9                   1/1     Running   0          15d
+nginx-ingress-default-backend-56d99b86fb-4jlxn   1/1     Running   0          15d
+</code></pre></div></div>
+
+<h2 id="3-配置">3 配置</h2>
+<h3 id="31-创建测试服务">3.1 创建测试服务</h3>
+<p>Ingress安装完成之后，就可以配置相应规则来对外暴露服务了。我们可以创建一个服务来测试
+创建一个my-nginx.yaml，内容为</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    name: http
+  selector:
+    run: my-nginx
+</code></pre></div></div>
+
+<p>通过<code class="highlighter-rouge">kubectl apply -f my-nginx.yaml</code>进行创建，通过<code class="highlighter-rouge">kubectl get service</code>可以看到my-nginx服务已经创建成功</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get svc
+NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+kubernetes                           ClusterIP   10.96.0.1        &lt;none&gt;        443/TCP          17d
+my-nginx                             ClusterIP   10.100.181.157   &lt;none&gt;        80/TCP,443/TCP   13d
+</code></pre></div></div>
+
+<h3 id="32-创建ingress规则">3.2 创建ingress规则</h3>
+<p>创建完成服务之后，我们就可以通过配置ingress规则来暴露服务了，</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my-nginx
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: www.10cloud.tk
+    http:
+      paths:
+      - path: /web
+        backend:
+          serviceName: my-nginx
+          servicePort: 80
+  tls:
+  - hosts:
+    - www.10cloud.tk
+    secretName: www-10cloud-tk-tls
+</code></pre></div></div>
+
+<p>参数解释</p>
+<ul>
+  <li>kubernetes.io/ingress.class: “nginx”<br />
+通过定义kubernetes.io/ingress.class 这个annotation可以在有多个ingress controller的情况下能够让请求被我们安装的这个处理</li>
+  <li>nginx.ingress.kubernetes.io/rewrite-target: /<br />
+配置位置重定向，作用是使Ingress以根路径转发到后端，避免访问路径错误配置而导致的404错误。参数详细说明参照<a href="https://github.com/kubernetes/ingress-nginx/tree/master/docs/examples/rewrite">ingress-nginx/docs/examples/rewrite at master · kubernetes/ingress-nginx · GitHub</a></li>
+  <li>host<br />
+域名地址</li>
+  <li>path<br />
+外部访问的相对地址</li>
+  <li>backend<br />
+通过配置服务名称和服务端口来指定和path绑定的后端服务</li>
+  <li>tls<br />
+创建了证书之后，可以通过tls绑定已创建的secret来实现https安全访问功能</li>
+</ul>
+
+<p>至此，我们的Ingress创建完成并且通过配置服务与域名的关系，实现了外部访问的功能，通过域名<code class="highlighter-rouge">chenshuo.tk/web</code>即看到nginx的内容，说明通过域名已经可以访问集群内的服务了</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome to nginx!
+If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
+
+For online documentation and support please refer to nginx.org.
+Commercial support is available at nginx.com.
+
+Thank you for using nginx.
+</code></pre></div></div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/tag/#/Kubernetes" rel="tag"># Kubernetes</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS/" rel="next" title="在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客">
+                <i class="fa fa-chevron-left"></i> 在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/kubernetes/2018/12/11/Helm-install/" rel="prev" title="Linux系统下Helm（Kubernetes包管理器）的安装使用">
+                Linux系统下Helm（Kubernetes包管理器）的安装使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/assets/images/avatar.gif"
+               alt="Shore" />
+          <p class="site-author-name" itemprop="name">Shore</p>
+           
+              <p class="site-description motion-element" itemprop="description">C/Python/通信/SDN/云计算</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShoreCN" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/shore-80" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#1-概述"> <span class="nav-number">1</span> <span class="nav-text">1 概述</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#2-安装"> <span class="nav-number">2</span> <span class="nav-text">2 安装</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#21-选择服务暴露方式"> <span class="nav-number">2.1</span> <span class="nav-text">2.1 选择服务暴露方式</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#22-使用loadbalancer提供服务"> <span class="nav-number">2.2</span> <span class="nav-text">2.2 使用LoadBalancer提供服务</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#23-使用hostport提供服务"> <span class="nav-number">2.3</span> <span class="nav-text">2.3 使用hostPort提供服务</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-4"> <a class="nav-link" href="#231-选择边缘节点"> <span class="nav-number">2.3.1</span> <span class="nav-text">2.3.1 选择边缘节点</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#232-为边缘节点添加标签"> <span class="nav-number">2.3.2</span> <span class="nav-text">2.3.2 为边缘节点添加标签</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#233-使用helm安装ingress"> <span class="nav-number">2.3.3</span> <span class="nav-text">2.3.3 使用helm安装ingress</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#3-配置"> <span class="nav-number">3</span> <span class="nav-text">3 配置</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#31-创建测试服务"> <span class="nav-number">3.1</span> <span class="nav-text">3.1 创建测试服务</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#32-创建ingress规则"> <span class="nav-number">3.2</span> <span class="nav-text">3.2 创建ingress规则</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child">
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shore</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://jekyllrb.com">Jekyll</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
+

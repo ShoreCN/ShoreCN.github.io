@@ -1,0 +1,928 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="云计算," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Shore Space" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="基于K8S集群搭建 在不同云厂商或同个云厂商不同区域下创建K8S集群，每个K8S集群中独立运行代理程序，通过代理程序进行镜像部署、服务发现、负载均衡等功能。 然后再开发一套对K8S集群进行控制管理的系统作为后台，用来进行多个集群的资源管理调度。 优势：单个K8S集群下的功能可以利用之前拾云平台的现成代码 缺陷：对多个K8S集群的资源进行重新分配管理需要较巨大的开发工作量">
+<meta name="keywords" content="云计算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="跨云平台实施方案预研">
+<meta property="og:url" content="http://localhost:4000/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis/">
+<meta property="og:site_name" content="Shore Space">
+<meta property="og:description" content="基于K8S集群搭建 在不同云厂商或同个云厂商不同区域下创建K8S集群，每个K8S集群中独立运行代理程序，通过代理程序进行镜像部署、服务发现、负载均衡等功能。 然后再开发一套对K8S集群进行控制管理的系统作为后台，用来进行多个集群的资源管理调度。 优势：单个K8S集群下的功能可以利用之前拾云平台的现成代码 缺陷：对多个K8S集群的资源进行重新分配管理需要较巨大的开发工作量">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/%E8%B7%A8%E4%BA%91%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84%E6%A1%86%E6%9E%B6%E5%9B%BE.jpg?raw=true">
+<meta property="og:image" content="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/TenCloud_Architecture.png">
+<meta property="og:image" content="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/Redhat_Openshift_Architecture.jpg?raw=true">
+<meta property="og:image" content="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/Rancher_Architecture.jpg?raw=true">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="跨云平台实施方案预研">
+<meta name="twitter:description" content="基于K8S集群搭建 在不同云厂商或同个云厂商不同区域下创建K8S集群，每个K8S集群中独立运行代理程序，通过代理程序进行镜像部署、服务发现、负载均衡等功能。 然后再开发一套对K8S集群进行控制管理的系统作为后台，用来进行多个集群的资源管理调度。 优势：单个K8S集群下的功能可以利用之前拾云平台的现成代码 缺陷：对多个K8S集群的资源进行重新分配管理需要较巨大的开发工作量">
+<meta name="twitter:image" content="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/%E8%B7%A8%E4%BA%91%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84%E6%A1%86%E6%9E%B6%E5%9B%BE.jpg?raw=true">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/"/>
+
+
+
+
+
+  <title>跨云平台实施方案预研</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Shore Space</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shore">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="assets/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shore Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            跨云平台实施方案预研
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-20T23:45:20+08:00">
+                2018-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/category/#/%E6%9E%B6%E6%9E%84" itemprop="url" rel="index">
+                    <span itemprop="name">架构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基于k8s集群搭建">基于K8S集群搭建</h2>
+<p>在不同云厂商或同个云厂商不同区域下创建K8S集群，每个K8S集群中独立运行代理程序，通过代理程序进行镜像部署、服务发现、负载均衡等功能。
+然后再开发一套对K8S集群进行控制管理的系统作为后台，用来进行多个集群的资源管理调度。
+优势：单个K8S集群下的功能可以利用之前拾云平台的现成代码
+缺陷：对多个K8S集群的资源进行重新分配管理需要较巨大的开发工作量</p>
+
+<p>此方案工作量较大且重复。</p>
+
+<h2 id="基于k8s联邦集群搭建">基于K8S联邦集群搭建</h2>
+<p>使用K8S联邦集群的机制，利用K8S定义好的各类资源概念，省去了资源调度、集群间通信、等诸多开发工作量。
+<img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/%E8%B7%A8%E4%BA%91%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84%E6%A1%86%E6%9E%B6%E5%9B%BE.jpg?raw=true" alt="" /></p>
+
+<p>可以将产品分为如下几个模块：</p>
+<ul>
+  <li>
+    <p>服务器适配：
+这层主要内容是通过在云主机上常驻一个agent程序，对接我们管理平台的控制指令，并实时采集系统资源情况。
+可以使用golang开发，具有语法简单性能较高，并且编译生成出服务代理agent程序之后，可以方便地部署在不同的云厂商主机上，不用关心跨厂商主机之间的环境差异等问题。</p>
+  </li>
+  <li>
+    <p>管理平台：
+通过将K8S的各类资源（Cluster、Deployment、ReplicasSet、Service、Ingress等），按照业务逻辑封装成我们自己的系统后台功能（集群管理、部署、冗余、服务、负载均衡等），通过沿用部分原有的后台代码，使用Python语言以Tornado为框架开发一套针对上述资源的RESTful API，可以沿用之前的后台框架设计。
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/TenCloud_Architecture.png" alt="" />
+数据层、镜像、用户、Tornado框架部分可以沿用原有代码，重新开发业务服务部分的集群、部署、服务功能。</p>
+  </li>
+  <li>
+    <p>管理平台操作界面：
+通过对接后台提供的RESTful API，产品化设计后以前端形式展现管理界面。</p>
+  </li>
+</ul>
+
+<h3 id="精简版本">精简版本</h3>
+<p>一个可以考虑的精简版本就是开发一个直接跑在云主机上的脚本式命令行管理系统。封装K8S联邦集群的部署过程、模板化整合K8S联邦集群底层的资源操作。
+精简版本的开发工作量主要集中在：</p>
+<ul>
+  <li>业务模型梳理封装</li>
+  <li>命令解析转换</li>
+</ul>
+
+<p>问题：</p>
+<ul>
+  <li>涉及一些用户第三方授权的操作（如GitHub OAuth认证），在命令行端可能难以实现</li>
+  <li>若想收集K8S以外的主机、任务等信息，还是需要实现一套响应网络请求的框架</li>
+</ul>
+
+<h2 id="基于现有产品搭建">基于现有产品搭建</h2>
+<h3 id="f5">F5</h3>
+<p>行业领导者，F5 解决方案集成了以下各项：</p>
+<ul>
+  <li>公有云提供商，如 AWS、Microsoft Azure 和 Google Cloud Platform。</li>
+  <li>私有云和开源平台，如 OpenStack、VMware 和 OpenShift。</li>
+  <li>自动化工具包，因此您可以使用 Ansible、Puppet 或 HashiCorp 部署应用服务，在 DevOps 方法中为应用服务提供声明接口。</li>
+  <li>容器环境中的微服务（如 Kubernetes 和 Mesos），以便在东西向流量中启用应用服务。</li>
+</ul>
+
+<h3 id="a10-network">A10 Network</h3>
+<p>跨云产品Harmony Controller 
+Harmony平台的理念是随时随地实施策略，它将安全应用服务与内部部署环境、公有云、私有云和混合云衔接在一起。A10 Harmony 控制器具备虚拟化、SaaS 和物理规格，可用于管理多云环境下的安全应用交付服务，并集成多种配置和自动化服务。</p>
+
+<h3 id="redhat">RedHat</h3>
+<p>OpenShift容器平台
+红帽 OpenShift 是一款开源容器应用程序平台，主要以 Docker 容器为基础，并采用 Kubernetes 容器集群管理进行编排。OpenShift可支持多种编程语言和服务，包括 Web 框架、数据库或与移动应用和外部后台的连接器。OpenShift 平台同时支持云原生、无状态的应用程序以及传统、有状态的应用
+程序。
+<img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/Redhat_Openshift_Architecture.jpg?raw=true" alt="" /></p>
+
+<h3 id="rancher">Rancher</h3>
+<p>Rancher为DevOps工程师提供了一个直观的用户界面来管理他们的服务容器，用户不需要深入了解Kubernetes概念就可以开始使用Rancher。 Rancher包含应用商店，支持一键式部署Helm和Compose模板。Rancher通过各种云、本地生态系统产品认证，其中包括安全工具，监控系统，容器仓库以及存储和网络驱动程序。
+<img src="https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/Rancher_Architecture.jpg?raw=true" alt="" /></p>
+
+<p><strong>容器平台能同时对多个Kubernetes集群进行管理，但每个集群上运行的应用和其他集群隔离。</strong></p>
+
+<h3 id="时速云">时速云</h3>
+<p>企业级容器 PaaS 平台 TenxCloud Enterprise (TCE)
+随着业务的发展，客户通常会使用多个不同的节点区域，甚至使用多个不同的基础云服务提供商。时速云的跨云管理解决方案通过创建私有集群，并添加不同IaaS的云主机，可一键将容器镜像发布到不同的IaaS平台上，屏蔽了不同IaaS厂商之间的底层异构问题，极大的降低了IT管理的复杂度，并可轻松实现应用在多个不同的IaaS之间的迁移、容灾以及热备份。</p>
+
+<p>方案特点：</p>
+<ul>
+  <li>一键创建私有Docker主机集群，并支持将云主机、物理机或者虚拟机等添加到私有集群。</li>
+  <li>通过时速云容器云平台统一管理多个不同IaaS上的应用。</li>
+  <li>利用容器技术屏蔽底层基础云服务之间的差异，实现应用在多个云之间的迁移、容灾及热备。</li>
+  <li>私有集群可以无缝使用容器部署、镜像下载、集群 API 等服务。</li>
+</ul>
+
+<h3 id="cloudify">Cloudify</h3>
+<p>Cloudify是一个开源的云应用编排系统，可以让你的应用自动化在各种不同的云上方便地部署。Cloudify重点关注应用自动化，承担了部分业务自动化的工作。从云IaaS、PaaS、SaaS分层看，Cloudify是一个典型的面向应用编排自动化的PaaS平台。</p>
+
+<blockquote>
+  <p>参考资料<br />
+<a href="https://www.redhat.com/cms/managed-files/cl-openshift-container-platform-3.5-datasheet-f7213kc-201704-a4-zh.pdf">红帽 OPENSHIFT 容器平台 3.5</a><br />
+<a href="https://www.jianshu.com/p/0622d7dbbaa7">跨集群服务——如何利用Kubernetes 1.3实现跨区高可用 - 简书</a><br />
+<a href="https://www.cnrancher.com/docs/rancher/v2.x/cn/overview/architecture/">1 - 架构设计 | Rancher Labs</a><br />
+<a href="https://blog.csdn.net/liukuan73/article/details/57082617?utm_source=blogxgwz3">Cloudify：打通应用和基础架构自动化交付的“任督二脉” - liukuan73的专栏 - CSDN博客</a><br />
+<a href="https://cloudify.co/">Cloud &amp; NFV Orchestration Based on TOSCA | Cloudify</a></p>
+</blockquote>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/tag/#/%E4%BA%91%E8%AE%A1%E7%AE%97" rel="tag"># 云计算</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/%E6%9E%B6%E6%9E%84/2018/11/25/Cloud-Native-Development-Principle/" rel="next" title="基于云原生技术的产品开发原则">
+                <i class="fa fa-chevron-left"></i> 基于云原生技术的产品开发原则
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/%E6%9E%B6%E6%9E%84/2018/11/14/Platform-Aurchitecture-Cross-Cloud/" rel="prev" title="跨云应用管理方案分析">
+                跨云应用管理方案分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/assets/images/avatar.gif"
+               alt="Shore" />
+          <p class="site-author-name" itemprop="name">Shore</p>
+           
+              <p class="site-description motion-element" itemprop="description">C/Python/通信/SDN/云计算</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShoreCN" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/shore-80" target="_blank" title="Zhihu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Zhihu
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#基于k8s集群搭建"> <span class="nav-number">1</span> <span class="nav-text">基于K8S集群搭建</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#基于k8s联邦集群搭建"> <span class="nav-number">2</span> <span class="nav-text">基于K8S联邦集群搭建</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#精简版本"> <span class="nav-number">2.1</span> <span class="nav-text">精简版本</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#基于现有产品搭建"> <span class="nav-number">3</span> <span class="nav-text">基于现有产品搭建</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#f5"> <span class="nav-number">3.1</span> <span class="nav-text">F5</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#a10-network"> <span class="nav-number">3.2</span> <span class="nav-text">A10 Network</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#redhat"> <span class="nav-number">3.3</span> <span class="nav-text">RedHat</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#rancher"> <span class="nav-number">3.4</span> <span class="nav-text">Rancher</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#时速云"> <span class="nav-number">3.5</span> <span class="nav-text">时速云</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#cloudify"> <span class="nav-number">3.6</span> <span class="nav-text">Cloudify</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child">
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Shore</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://jekyllrb.com">Jekyll</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
+
