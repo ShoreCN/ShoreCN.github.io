@@ -39,16 +39,16 @@ export JEKYLL_VERSION=3.8
 docker run --rm --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:$JEKYLL_VERSION jekyll build
 ```
 
-~可以看到新生成一个_site目录，就是刚刚构建出来的网页文件~
+可以看到新生成一个_site目录，就是刚刚构建出来的网页文件
 
 ### 开启服务
 Jekyll 同时也集成了一个网页服务，通过server命令即可开启。
 `docker run --rm --volume="$PWD:/srv/jekyll" -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll server`
 
-~通过-p参数指定了对外暴露的的服务器端口为4000~
+通过-p参数指定了对外暴露的的服务器端口为4000
 
 至此，我们就可以通过服务器的IP加端口（例如http://1.2.3.4:4000）访问刚刚创建好的静态博客系统了。
-
+![jekyllstartuppage](https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/jekyllStartupPage.png)
 
 
 > 参考资料  

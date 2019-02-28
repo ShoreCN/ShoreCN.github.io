@@ -119,9 +119,11 @@
 <meta property="og:site_name" content="Shore Space">
 <meta property="og:description" content="Jekyll简介 Jekyll 是一个简单且完全免费的静态博客站点生成工具，类似WordPress。但是和WordPress又有很大的不同，原因是jekyll只是一个只用 Markdown (或 Textile)、Liquid、HTML &amp;amp; CSS 就可以生成静态网页的工具，不需要数据库支持。但是可以配合第三方服务,例如Disqus。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/jekyllStartupPage.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客">
 <meta name="twitter:description" content="Jekyll简介 Jekyll 是一个简单且完全免费的静态博客站点生成工具，类似WordPress。但是和WordPress又有很大的不同，原因是jekyll只是一个只用 Markdown (或 Textile)、Liquid、HTML &amp;amp; CSS 就可以生成静态网页的工具，不需要数据库支持。但是可以配合第三方服务,例如Disqus。">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/jekyllStartupPage.png">
 
 
 <script type="text/javascript" id="hexo.configurations">
@@ -392,14 +394,7 @@
 <h4 id="docker安装">Docker安装</h4>
 <p>Docker的安装资料已经十分丰富了，参见官网指导即可。</p>
 <blockquote>
-  <table>
-    <tbody>
-      <tr>
-        <td>[Get Docker CE for Ubuntu</td>
-        <td>Docker Documentation](https://docs.docker.com/install/linux/docker-ce/ubuntu/)</td>
-      </tr>
-    </tbody>
-  </table>
+  <p><a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Get Docker CE for Ubuntu</a></p>
 </blockquote>
 
 <h4 id="jekyll安装">Jekyll安装</h4>
@@ -419,15 +414,16 @@ git clone https://github.com/barryclark/jekyll-now.git .
 docker run --rm --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:$JEKYLL_VERSION jekyll build
 </code></pre></div></div>
 
-<p>~可以看到新生成一个_site目录，就是刚刚构建出来的网页文件~</p>
+<p>可以看到新生成一个_site目录，就是刚刚构建出来的网页文件</p>
 
 <h3 id="开启服务">开启服务</h3>
-<p>Jekyll 同时也集成了一个网页服务，通过serve命令即可开启。
-<code class="highlighter-rouge">docker run --rm --volume="$PWD:/srv/jekyll" -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll serve</code></p>
+<p>Jekyll 同时也集成了一个网页服务，通过server命令即可开启。
+<code class="highlighter-rouge">docker run --rm --volume="$PWD:/srv/jekyll" -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll server</code></p>
 
-<p>~通过-p参数指定了对外暴露的的服务器端口为4000~</p>
+<p>通过-p参数指定了对外暴露的的服务器端口为4000</p>
 
-<p>至此，我们就可以通过服务器的IP加端口（例如http://1.2.3.4:4000）访问刚刚创建好的静态博客系统了。</p>
+<p>至此，我们就可以通过服务器的IP加端口（例如http://1.2.3.4:4000）访问刚刚创建好的静态博客系统了。
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/jekyllStartupPage.png" alt="jekyllstartuppage" /></p>
 
 <blockquote>
   <p>参考资料<br />

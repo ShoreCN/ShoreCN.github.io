@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/atom.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-02-28T11:20:28+08:00</updated><id>http://localhost:4000/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/SDN/云计算</subtitle><author><name>Shore</name></author><entry><title type="html">在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客</title><link href="http://localhost:4000/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS/" rel="alternate" type="text/html" title="在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客" /><published>2019-02-26T06:46:49+08:00</published><updated>2019-02-26T06:46:49+08:00</updated><id>http://localhost:4000/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS</id><content type="html" xml:base="http://localhost:4000/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS/">&lt;h2 id=&quot;jekyll简介&quot;&gt;Jekyll简介&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/atom.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-02-28T14:47:38+08:00</updated><id>http://localhost:4000/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/SDN/云计算</subtitle><author><name>Shore</name></author><entry><title type="html">在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客</title><link href="http://localhost:4000/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS/" rel="alternate" type="text/html" title="在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客" /><published>2019-02-26T06:46:49+08:00</published><updated>2019-02-26T06:46:49+08:00</updated><id>http://localhost:4000/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS</id><content type="html" xml:base="http://localhost:4000/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS/">&lt;h2 id=&quot;jekyll简介&quot;&gt;Jekyll简介&lt;/h2&gt;
 &lt;p&gt;Jekyll 是一个简单且完全免费的静态博客站点生成工具，类似WordPress。但是和WordPress又有很大的不同，原因是jekyll只是一个只用 Markdown (或 Textile)、Liquid、HTML &amp;amp; CSS 就可以生成静态网页的工具，不需要数据库支持。但是可以配合第三方服务,例如Disqus。&lt;/p&gt;
 
 &lt;h2 id=&quot;docker简介&quot;&gt;Docker简介&lt;/h2&gt;
@@ -12,14 +12,7 @@
 &lt;h4 id=&quot;docker安装&quot;&gt;Docker安装&lt;/h4&gt;
 &lt;p&gt;Docker的安装资料已经十分丰富了，参见官网指导即可。&lt;/p&gt;
 &lt;blockquote&gt;
-  &lt;table&gt;
-    &lt;tbody&gt;
-      &lt;tr&gt;
-        &lt;td&gt;[Get Docker CE for Ubuntu&lt;/td&gt;
-        &lt;td&gt;Docker Documentation](https://docs.docker.com/install/linux/docker-ce/ubuntu/)&lt;/td&gt;
-      &lt;/tr&gt;
-    &lt;/tbody&gt;
-  &lt;/table&gt;
+  &lt;p&gt;&lt;a href=&quot;https://docs.docker.com/install/linux/docker-ce/ubuntu/&quot;&gt;Get Docker CE for Ubuntu&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h4 id=&quot;jekyll安装&quot;&gt;Jekyll安装&lt;/h4&gt;
@@ -39,15 +32,16 @@ git clone https://github.com/barryclark/jekyll-now.git .
 docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -it jekyll/jekyll:$JEKYLL_VERSION jekyll build
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;~可以看到新生成一个_site目录，就是刚刚构建出来的网页文件~&lt;/p&gt;
+&lt;p&gt;可以看到新生成一个_site目录，就是刚刚构建出来的网页文件&lt;/p&gt;
 
 &lt;h3 id=&quot;开启服务&quot;&gt;开启服务&lt;/h3&gt;
-&lt;p&gt;Jekyll 同时也集成了一个网页服务，通过serve命令即可开启。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll serve&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Jekyll 同时也集成了一个网页服务，通过server命令即可开启。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll server&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;~通过-p参数指定了对外暴露的的服务器端口为4000~&lt;/p&gt;
+&lt;p&gt;通过-p参数指定了对外暴露的的服务器端口为4000&lt;/p&gt;
 
-&lt;p&gt;至此，我们就可以通过服务器的IP加端口（例如http://1.2.3.4:4000）访问刚刚创建好的静态博客系统了。&lt;/p&gt;
+&lt;p&gt;至此，我们就可以通过服务器的IP加端口（例如http://1.2.3.4:4000）访问刚刚创建好的静态博客系统了。
+&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/jekyllStartupPage.png&quot; alt=&quot;jekyllstartuppage&quot; /&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;参考资料&lt;br /&gt;
