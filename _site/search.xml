@@ -8,7 +8,7 @@
 <p>Amazon CloudFront 是一项快速内容分发网络 (CDN) 服务，可以安全地以低延迟和高传输速度向全球客户分发数据、视频、应用程序和 API。</p>
 
 <h2 id="使用场景">使用场景</h2>
-<p>Amazon CloudFront的使用场景不仅于如</p>
+<p>Amazon CloudFront可以使用在如下场景中:</p>
 <ul>
   <li>静态资源缓存
     <ul>
@@ -17,7 +17,7 @@
   </li>
   <li>动态内容和API加速
     <ul>
-      <li></li>
+      <li>可用于保护并加速您的 WebSocket 流量及 API 调用。与客户端的 TLS 连接将在附近的边缘站点终止，然后，CloudFront 将使用经过优化的 AWS 主干网络路径安全地访问您的 API 服务器。</li>
     </ul>
   </li>
   <li>直播/视频加速
