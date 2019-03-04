@@ -50,7 +50,7 @@ Amazon CloudFront的使用场景不仅于如
 
 ### 使用内容分发
 
-![](369BB765-0C54-485F-9F57-5085FA6556EF.png)
+![](https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/2019-03-02-AWS-cloudfront-basic-deployment.png)
 创建完内容分发配置之后,等待其状态变为已部署就可以使用了.
 AWS CloudFront会重新分配一个域名,用户使用这个域名进行内容分发即可达到用户的最优访问效果了.
 
