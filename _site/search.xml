@@ -2,6 +2,120 @@
 <search>
   
     <entry>
+      <title><![CDATA[在Google云平台上通过Docker快速搭建ShadowSocks服务]]></title>
+      <url>/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/</url>
+      <content type="html"><![CDATA[<h2 id="准备">准备</h2>
+<ul>
+  <li>已激活的Google云账号</li>
+  <li>支付方式已经配置成功</li>
+</ul>
+
+<h2 id="创建实例">创建实例</h2>
+<p>通过Google Cloud Platform左上角的导航菜单进入“Compute Engine - VM实例视图”创建VM实例
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/1.png" alt="" /></p>
+
+<h3 id="选择区域与配置">选择区域与配置</h3>
+<p>目前谷歌云支持18个区域,列表如下:</p>
+<ul>
+  <li>Taiwan(asia-east1)</li>
+  <li>Hong Kong(asia-east2)</li>
+  <li>Singapore(asia-southeast1)</li>
+  <li>Tokyo(asia-northeast1)</li>
+  <li>Montreal, Canada(northamerica-northeast1)</li>
+  <li>Los Angeles, USA(us-west2)</li>
+  <li>South Carolina, USA(us-east1)</li>
+  <li>Northern Virginia, USA(us-east4)</li>
+  <li>Sydney(australia-southeast1)</li>
+  <li>Mumbai(asia-south1)</li>
+  <li>Belgium(europe-west1)</li>
+  <li>Netherlands(europe-west4)</li>
+  <li>Hamina, Finland(europe-north1)</li>
+  <li>London, UK(europe-west2)</li>
+  <li>Iowa, USA(us-central1)</li>
+  <li>Oregon, USA(us-west1)</li>
+  <li>São Paulo(southamerica-east1)</li>
+  <li>Frankfurt, Germany(europe-west3)</li>
+</ul>
+
+<p>根据业务选择适合自己的区域,通常选用访问延迟较低的区域,可以根据谷歌云主机测速网站<a href="http://www.gcping.com/">GCP ping</a>的数据进行选择.
+此处以台湾服务器为例
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/2.png" alt="" /></p>
+
+<h3 id="可选是否使用容器功能">(可选)是否使用容器功能</h3>
+<p>Google云已经全流程支持容器功能,可以在创建实例的时候就进行容器配置
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/3.png" alt="" /></p>
+
+<h3 id="选择映像">选择映像</h3>
+<p>如果使用容器化部署的话,系统会自动启用容器定制系统,用户就无需自己再选择映像了.
+若没有使用到云平台配套的容器功能,用户可以根据需求选择合适自己的映像(即镜像)
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/4.png" alt="" /></p>
+
+<h3 id="防火墙配置">防火墙配置</h3>
+<p>勾选允许HTTP和HTTPS流量的选项
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/5.png" alt="" /></p>
+
+<h2 id="连接实例">连接实例</h2>
+<p>Google Cloud提供了浏览器登录、SSH登录等多种方式,选择合适自己的即可.</p>
+
+<h2 id="手工使用docker部署shadowsocks服务">手工使用Docker部署ShadowSocks服务</h2>
+<p>使用Google Cloud自带的容器功能可以省去一些安装配置动作.
+但是手工部署可以带来更高的灵活性,用户可以选择更多的可选配置.
+安装完docker相关组件之后,使用如下命令即可部署SS服务:
+<code class="highlighter-rouge">docker run -dt --name ss -p &lt;host_port&gt;:&lt;docker_port&gt; mritd/shadowsocks -s "-s 0.0.0.0 -p &lt;s&gt; -m chacha20-ietf-poly1305 -k &lt;password&gt; --fast-open"</code></p>
+
+<p>参数说明:</p>
+<ul>
+  <li>-d: 后台运行容器，并返回容器ID；</li>
+  <li>-t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用；</li>
+  <li>-p: 根据“服务器端口:容器端口”格式顺序配置端口映射关系</li>
+  <li>-s: 用户自行指定参数
+    <ul>
+      <li>-s  服务主机IP</li>
+      <li>-p 对外暴露的服务端口</li>
+      <li>-m 选择加密方式,这里选择chacha20-ietf-poly1305</li>
+      <li>-k 配置密码</li>
+    </ul>
+  </li>
+</ul>
+
+<p>命令执行完成之后可以通过<code class="highlighter-rouge">docker ps</code>命令查看容器是否正常运行,
+使用<code class="highlighter-rouge">ps -ef | grep ss</code>命令可以查看ShadowSocks服务是否正常运行.</p>
+
+<p>至此,用户就可以根据自己使用的终端安装对应的客户端使用ShadowSocks服务了.</p>
+
+<h2 id="常见问题">常见问题</h2>
+<ul>
+  <li>ShadowSocks安装及配置没有错误的情况下，客户端为何还是无法使用服务？
+使用云服务器出现这种情况很可能是因为云厂商的网络安全策略限制所致，请确保相应的网络端口都已经打开。此处以谷歌云为例，导航菜单-VPC网络-防火墙规则-创建防火墙规则-填写允许访问的协议和端口。
+<img src="https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/6.png" alt="" /></li>
+</ul>
+
+<blockquote>
+  <p>tips 如何快速判断是因为网络端口没有放开导致的服务不可用？<br />
+有时用户无法确定到底是软件安装配置还是网络端口问题导致的服务不可用。只需如下一条命令即可快速启用一个web服务<code class="highlighter-rouge">docker run -p &lt;hostPort&gt;:80 -d nginx</code>，通过访问hostIP:hostPort查看网页是否能够正常访问即可判断端口是否正常放开。</p>
+</blockquote>
+
+]]></content>
+      <categories>
+        
+          <category> 云计算 </category>
+        
+          <category> 容器 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> ShadowSocks </tag>
+        
+          <tag> Docker </tag>
+        
+          <tag> Google </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
       <title><![CDATA[AWS CloudFront CDN加速功能初步应用]]></title>
       <url>/%E6%9E%B6%E6%9E%84/2019/03/03/AWS-cloudfront-basic-deployment/</url>
       <content type="html"><![CDATA[<h2 id="简介">简介</h2>
