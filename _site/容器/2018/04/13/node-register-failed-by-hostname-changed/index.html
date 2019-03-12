@@ -115,7 +115,7 @@
 <meta name="keywords" content="Kubernetes">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes集群节点主机名称变化导致无法注册">
-<meta property="og:url" content="http://localhost:4000/%E5%AE%B9%E5%99%A8/2018/04/13/node-register-failed-by-hostname-changed/">
+<meta property="og:url" content="/%E5%AE%B9%E5%99%A8/2018/04/13/node-register-failed-by-hostname-changed/">
 <meta property="og:site_name" content="Shore Space">
 <meta property="og:description" content="现象及原因 使用阿里云主机通常会通过命令hostname -b 修改主机名称便于后续使用和维护，但是在主机重启之后，通常又会被恢复成初始分配的默认名称。 作为Kubernetes集群节点的情况下，这样的名称会变化的主机往往会导致已注册的节点重启后无法注册，通过kubelet日志可以看出，报错原因为主机当前名称和原始名称不同，导致节点无法注册到API server。 7月 04 09:46:50 k8scluster2master kubelet[1573]: I0704 09:46:50.750118 1573 kubelet_node_status.go:82] Attempting to register node izj6cgkv35o1qg19b4t96iz 7月 04 09:46:50 k8scluster2master kubelet[1573]: E0704 09:46:50.751935 1573 kubelet_node_status.go:106] Unable to register node &quot;izj6cgkv35o1qg19b4t96iz&quot; with API server: nodes &quot;izj6cgkv35o1qg19b4t96iz&quot; is forbidden: node &quot;k8scluster2master&quot; cannot modify node &quot;izj6cgkv35o1qg19b4t96iz&quot;">
 <meta property="og:locale" content="zh-Hans">
@@ -148,7 +148,7 @@
 
 
 
-  <link rel="canonical" href="http://localhost:4000/"/>
+  <link rel="canonical" href=""/>
 
 
 
@@ -280,7 +280,7 @@
   
 
   <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://localhost:4000/%E5%AE%B9%E5%99%A8/2018/04/13/node-register-failed-by-hostname-changed/">
+    <link itemprop="mainEntityOfPage" href="/%E5%AE%B9%E5%99%A8/2018/04/13/node-register-failed-by-hostname-changed/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Shore">
