@@ -51,7 +51,7 @@ https://github.com/login/oauth/authorize?client_id=5448811562b83dadc3cf&scope=re
 https://github.com/login/oauth/authorize 
 这是GitHub的认证API，传入的参数是client_id, scope, redirect_uri 
 - client_id: 之前步骤中创建OAuth App的时候获取到的字段，传入此参数可以让GitHub知道到底是哪个App在申请用户的授权
-- scope: 需要向用户申请授予的权限，具体规则可参考 ![GitHub API Doc](https://developer.github.com/apps/building-oauth-apps/scopes-for-oauth-apps/)
+- scope: 需要向用户申请授予的权限，具体规则可参考 [GitHub API Doc](https://developer.github.com/apps/building-oauth-apps/scopes-for-oauth-apps/)
 - redirect_uri: 如果用户完成授权后则跳转到此页面，在这个页面的请求中GitHub会带上code参数，用于下一步获取token
 
 2. 申请访问令牌
