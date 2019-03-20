@@ -1,4 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-12T15:41:36+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">在Google云平台上通过Docker快速搭建ShadowSocks服务</title><link href="/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/" rel="alternate" type="text/html" title="在Google云平台上通过Docker快速搭建ShadowSocks服务" /><published>2019-03-06T06:46:49+08:00</published><updated>2019-03-06T06:46:49+08:00</updated><id>/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker</id><content type="html" xml:base="/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/">&lt;h2 id=&quot;准备&quot;&gt;准备&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-20T10:05:13+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">macOS上修复word/excel等office文件乱码问题</title><link href="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/" rel="alternate" type="text/html" title="macOS上修复word/excel等office文件乱码问题" /><published>2019-03-19T19:14:39+08:00</published><updated>2019-03-19T19:14:39+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/">&lt;h2 id=&quot;原因&quot;&gt;原因&lt;/h2&gt;
+&lt;p&gt;编码问题。因为在Windows系统上面，通常使用的是GBK字符编码方式，但是在macOS的系统上使用的是UTF-8的编码方式。所以常常会遇到从Windows系统上编辑创建的word/excel等office文件，在macOS或iOS上面打开显示为乱码。&lt;/p&gt;
+
+&lt;h2 id=&quot;解决办法&quot;&gt;解决办法&lt;/h2&gt;
+&lt;p&gt;既然明白了问题产生原因是字符编码方式的差异，那么就容易处理了，我们只需要将文件的字符编码方式转换为系统支持的即可。
+macOS或Linux系统下的iconv命令的作用就是进行文件编码方式转换。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;iconv的作用是在多种国际编码格式之间进行文本内码的转换。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Usage: iconv [OPTION...] [-f ENCODING] [-t ENCODING] [INPUTFILE...]
+or:    iconv -l
+
+Converts text from one encoding to another encoding.
+
+Options controlling the input and output format:
+  -f ENCODING, --from-code=ENCODING
+                              the encoding of the input
+  -t ENCODING, --to-code=ENCODING
+                              the encoding of the output
+
+Options controlling conversion problems:
+  -c                          discard unconvertible characters
+  --unicode-subst=FORMATSTRING
+                              substitution for unconvertible Unicode characters
+  --byte-subst=FORMATSTRING   substitution for unconvertible bytes
+  --widechar-subst=FORMATSTRING
+                              substitution for unconvertible wide characters
+
+Options controlling error output:
+  -s, --silent                suppress error messages about conversion problems
+
+Informative output:
+  -l, --list                  list the supported encodings
+  --help                      display this help and exit
+  --version                   output version information and exit
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;通过iconv尝试进行文件编码方式转换，执行命令&lt;code class=&quot;highlighter-rouge&quot;&gt;iconv -s -c -f GBK -t UTF8 input.file &amp;gt; output.file&lt;/code&gt;&lt;br /&gt;
+参数解释：&lt;br /&gt;
+-f 输入文件的编码方式&lt;br /&gt;
+-t 输出文件的编码方式&lt;br /&gt;
+input.file 输入文件名&lt;br /&gt;
+output.file 输出文件名&lt;br /&gt;
+通过执行这条命令，我们打开新生成的输出文件，可以看到文件内容已经正常显示了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;iconv命令支持很多文件编码方式，具体的可以通过命令&lt;code class=&quot;highlighter-rouge&quot;&gt;iconv -l&lt;/code&gt;进行查询。&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><summary type="html">原因 编码问题。因为在Windows系统上面，通常使用的是GBK字符编码方式，但是在macOS的系统上使用的是UTF-8的编码方式。所以常常会遇到从Windows系统上编辑创建的word/excel等office文件，在macOS或iOS上面打开显示为乱码。</summary></entry><entry><title type="html">在Google云平台上通过Docker快速搭建ShadowSocks服务</title><link href="/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/" rel="alternate" type="text/html" title="在Google云平台上通过Docker快速搭建ShadowSocks服务" /><published>2019-03-06T06:46:49+08:00</published><updated>2019-03-06T06:46:49+08:00</updated><id>/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker</id><content type="html" xml:base="/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/">&lt;h2 id=&quot;准备&quot;&gt;准备&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;已激活的Google云账号&lt;/li&gt;
   &lt;li&gt;支付方式已经配置成功&lt;/li&gt;
@@ -838,91 +887,4 @@ Harmony平台的理念是随时随地实施策略，它将安全应用服务与�
 &lt;a href=&quot;http://stor.51cto.com/art/201708/546850.htm&quot;&gt;A10 Networks来了，给你来点不一样的料 - 51CTO.COM&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;http://cloud.it168.com/a2018/0619/3210/000003210034.shtml&quot;&gt;专访：多云应用交付新时代下的F5与中国-云计算专区&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;http://network.51cto.com/act/f5/ADreport&quot;&gt;F5发布2018全球应用交付报告&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="Kubernetes" /><summary type="html">跨云应用管理方案分析 需求背景 随着技术的不断发展，越来越多的产品通过使用分布式架构，来解决服务器压力、数据可靠性的问题。为了更聚焦于自己的核心业务，许多企业会直接采用各类云厂商的服务或方案，降低门槛与成本。 但是对于那些业务灵活、数据敏感的企业及产品，使用的云计算服务就需要具有跨云厂商、灵活伸缩、快速切换等功能，保证在服务变更、功能调整等场景下业务受到较小冲击。</summary></entry><entry><title type="html">GitHub OAuth第三方登录</title><link href="/%E5%B7%A5%E5%85%B7/2018/08/12/GitHub-OAuth2-documents/" rel="alternate" type="text/html" title="GitHub OAuth第三方登录" /><published>2018-08-12T07:29:08+08:00</published><updated>2018-08-12T07:29:08+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2018/08/12/GitHub-OAuth2-documents</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2018/08/12/GitHub-OAuth2-documents/">&lt;h2 id=&quot;github-oauth第三方登录&quot;&gt;GitHub OAuth第三方登录&lt;/h2&gt;
-&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OAuth分1.0、1.0A、2.0三个版本，前二者已经淘汰以下所介绍的都是指2.0版本。
-本文将以第三方网站获取GitHub代码仓库为例，简述OAuth的运作流程。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;oauth介绍&quot;&gt;OAuth介绍&lt;/h2&gt;
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;开放授权（OAuth）是一个开放标准，允许用户让第三方应用访问该用户在某一网站上存储的私密的资源（如照片，视频，联系人列表），而无需将用户名和密码提供给第三方应用  
-  
-OAuth允许用户提供一个令牌，而不是用户名和密码来访问他们存放在特定服务提供者的数据。每一个令牌授权一个特定的网站（例如，视频编辑网站)在特定的时段（例如，接下来的2小时内）内访问特定的资源（例如仅仅是某一相册中的视频）。这样，OAuth让用户可以授权第三方网站访问他们存储在另外服务提供者的某些特定信息，而非所有内容。  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;https://zh.wikipedia.org/wiki/开放授权&lt;br /&gt;
-——维基百科&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;oauth原理&quot;&gt;OAuth原理&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&quot;https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/1-OAuth2-Authorization-Code-Flow.png?raw=true&quot; alt=&quot;&quot; /&gt;
-	我们把OAuth2的整个认证过程大致分为三个阶段。第一阶段主要是向用户取得授权许可，对应图中的第1、2、3步；第二阶段主要是申请访问令牌（access_token），对应图中的第4、5步；第三阶段就是使用access_token获取用户数据。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;参考资料： &lt;a href=&quot;http://insights.thoughtworkers.org/attack-aim-at-oauth2/&quot;&gt;移花接木：针对OAuth2的攻击 – ThoughtWorks洞见&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;oauth应用实例&quot;&gt;OAuth应用实例&lt;/h2&gt;
-&lt;p&gt;案例背景：
-我们有这么一个应用——可以让用户绑定GitHub账号，然后使用仓库代码在线构建容器镜像的平台。所以我们要获取用户的GitHub仓库信息用于后续下载代码、构建容器等流程，此处我们就可以使用GitHub OAuth达到这个目的。&lt;/p&gt;
-
-&lt;h4 id=&quot;在github上创建oauth-app&quot;&gt;在GitHub上创建OAuth App&lt;/h4&gt;
-&lt;ol&gt;
-  &lt;li&gt;打开 Setting &amp;gt; Developer setting &amp;gt; OAuth applications&lt;/li&gt;
-  &lt;li&gt;点击 Register a new application&lt;/li&gt;
-  &lt;li&gt;填入基本的app信息&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;获取对应的client-id与client-secret&quot;&gt;获取对应的Client ID与Client Secret&lt;/h4&gt;
-&lt;p&gt;OAuth应用创建完成之后，可以在应用信息页面查看到Client ID与Client Secret的值，二者是完成OAuth认证流程的关键。&lt;/p&gt;
-
-&lt;h4 id=&quot;应用生成获取github授权的链接&quot;&gt;应用生成获取GitHub授权的链接&lt;/h4&gt;
-&lt;p&gt;然后就来到了我们的应用与GitHub联系的关键点，在应用上可能就是一个简单的绑定GitHub账号的按钮，本质上是一串由关键参数组成的URL，下面我们详细说一下这个URL是如何生成的。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;URL样例：
-https://github.com/login/oauth/authorize?client_id=5448811562b83dadc3cf&amp;amp;scope=repo%2Cuser%3Aemail&amp;amp;redirect_uri=http%3A%2F%2Fcd.10.com%2Fapi%2Fgithub%2Foauth%2Fcallback%3Fredirect_url%3Dhttp%253A%252F%252Fwww.baidu.com%26uid%3D99
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;乍看之下，这个URL杂乱无章无从下手，但其实知晓了原理之后就很好理解了。
-这个URL承载了GItHub OAuth认证的所有步骤，那么回到之前的原理解析，其实这个URL就包含了两个动作：&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;跳转到GitHub界面申请用户授权
-https://github.com/login/oauth/authorize 
-这是GitHub的认证API，传入的参数是client_id, scope, redirect_uri
-    &lt;ul&gt;
-      &lt;li&gt;client_id: 之前步骤中创建OAuth App的时候获取到的字段，传入此参数可以让GitHub知道到底是哪个App在申请用户的授权&lt;/li&gt;
-      &lt;li&gt;scope: 需要向用户申请授予的权限，具体规则可参考 &lt;a href=&quot;https://developer.github.com/apps/building-oauth-apps/scopes-for-oauth-apps/&quot;&gt;GitHub API Doc&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;redirect_uri: 如果用户完成授权后则跳转到此页面，在这个页面的请求中GitHub会带上code参数，用于下一步获取token&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;申请访问令牌
-在上一步拿到GitHub返回的code参数之后，我们就可以去获取具有访问GitHub权限的token了。
-https://github.com/login/oauth/access_token
-获取token的API，传入参数client_id, client_secret, code
-    &lt;ul&gt;
-      &lt;li&gt;client_id: 之前步骤中创建OAuth App的时候获取到的字段，传入此参数可以让GitHub知道到底是哪个App在使用用户的授权&lt;/li&gt;
-      &lt;li&gt;client_secret: 之前步骤中创建OAuth App的时候获取到的字段，传入此参数可以让GitHub知道此次操作是否属于该App的合法使用者&lt;/li&gt;
-      &lt;li&gt;code: GitHub提供给App的合法认证标志&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;从token API的返回值中取出参数access_token，用于我们后续去获取GtiHub资源。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;获取GitHub资源
-我们这里以获取用户下的仓库列表为例，演示如何使用OAuth token，。
-https://api.github.com/user/repos
-这是获取仓库的API，假若token值为123456789abc，那么在GET的请求头中加入&lt;code class=&quot;highlighter-rouge&quot;&gt;{‘Authorization’: ‘token 123456789abc’}&lt;/code&gt;，就可以拿到GitHub数据了。
-返回值：
-    &lt;ul&gt;
-      &lt;li&gt;repos_url: 仓库地址&lt;/li&gt;
-      &lt;li&gt;repos_name： 仓库名称&lt;/li&gt;
-      &lt;li&gt;http_url ：仓库https地址&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;至此，我们就完成了使用OAuth授权、认证、访问资源的全流程，其他接口类似，只要有了token就有了权限可以完成所有资源获取的操作。&lt;/p&gt;</content><author><name>Shore</name></author><category term="GitHub" /><summary type="html">GitHub OAuth第三方登录 前言 OAuth分1.0、1.0A、2.0三个版本，前二者已经淘汰以下所介绍的都是指2.0版本。 本文将以第三方网站获取GitHub代码仓库为例，简述OAuth的运作流程。</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="Kubernetes" /><summary type="html">跨云应用管理方案分析 需求背景 随着技术的不断发展，越来越多的产品通过使用分布式架构，来解决服务器压力、数据可靠性的问题。为了更聚焦于自己的核心业务，许多企业会直接采用各类云厂商的服务或方案，降低门槛与成本。 但是对于那些业务灵活、数据敏感的企业及产品，使用的云计算服务就需要具有跨云厂商、灵活伸缩、快速切换等功能，保证在服务变更、功能调整等场景下业务受到较小冲击。</summary></entry></feed>
