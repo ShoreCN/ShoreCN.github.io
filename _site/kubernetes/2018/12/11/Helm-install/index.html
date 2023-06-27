@@ -383,8 +383,8 @@
 
 <h2 id="安装">安装</h2>
 <h3 id="安装客户端helm">安装客户端（Helm）</h3>
-<p>官方提供了多种安装方式，这里选用脚本安装的方法，使用命令<code class="highlighter-rouge">curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash</code>会自动抓取最新的版本完成客户端的安装：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+<p>官方提供了多种安装方式，这里选用脚本安装的方法，使用命令<code class="language-plaintext highlighter-rouge">curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash</code>会自动抓取最新的版本完成客户端的安装：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100  7236  100  7236    0     0  74494      0 --:--:-- --:--:-- --:--:-- 74597
@@ -396,8 +396,8 @@ Run 'helm init' to configure helm.
 </code></pre></div></div>
 
 <h3 id="安装服务端tiller">安装服务端（Tiller）</h3>
-<p>Helm安装完成之后，通过命令行<code class="highlighter-rouge">helm init</code>即可完成服务端Tiller的安装。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# helm init
+<p>Helm安装完成之后，通过命令行<code class="language-plaintext highlighter-rouge">helm init</code>即可完成服务端Tiller的安装。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# helm init
 Creating /root/.helm
 Creating /root/.helm/repository
 Creating /root/.helm/repository/cache
@@ -418,15 +418,15 @@ For more information on securing your installation see: https://docs.helm.sh/usi
 Happy Helming!
 </code></pre></div></div>
 
-<p>使用命令<code class="highlighter-rouge">helm version</code>可以查看安装是否成功和版本号情况</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# helm version
+<p>使用命令<code class="language-plaintext highlighter-rouge">helm version</code>可以查看安装是否成功和版本号情况</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# helm version
 Client: &amp;version.Version{SemVer:"v2.12.0", GitCommit:"d325d2a9c179b33af1a024cdb5a4472b6288016a", GitTreeState:"clean"}
 Server: &amp;version.Version{SemVer:"v2.12.0", GitCommit:"d325d2a9c179b33af1a024cdb5a4472b6288016a", GitTreeState:"clean"}
 </code></pre></div></div>
 
 <h3 id="权限配置">权限配置</h3>
 <p>默认安装的 tiller 权限很小，我们执行下面的脚本给它加最大权限，这样方便我们可以用 helm 部署应用到任意 namespace 下:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create serviceaccount --namespace=kube-system tiller
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create serviceaccount --namespace=kube-system tiller
 
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 
@@ -568,7 +568,7 @@ kubectl patch deploy --namespace=kube-system tiller-deploy -p '{"spec":{"templat
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -590,7 +590,7 @@ kubectl patch deploy --namespace=kube-system tiller-deploy -p '{"spec":{"templat
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -690,7 +690,7 @@ kubectl patch deploy --namespace=kube-system tiller-deploy -p '{"spec":{"templat
   
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

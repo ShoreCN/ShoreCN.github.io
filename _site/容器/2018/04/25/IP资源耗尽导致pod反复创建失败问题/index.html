@@ -381,7 +381,7 @@
         <h1 id="ip资源耗尽导致pod反复创建失败问题">IP资源耗尽导致pod反复创建失败问题</h1>
 <h2 id="现象">现象</h2>
 <p>Pod一直处于ContainerCreating状态</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get pod -o wide
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get pod -o wide
 NAME                                                   READY     STATUS              RESTARTS   AGE       IP            NODE
 abc.fgg-75b769789d-7dmjs                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
 abc.fgg-75b769789d-f8pq2                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
@@ -400,7 +400,7 @@ shireapp.game2048-d64d84d54-t9sbz                      0/1       ContainerCreati
 </code></pre></div></div>
 
 <p>实际登录到对应的node上通过docker ps -a 可以看出，pod每次一创建好就自动退出了。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2node2 ~]# docker ps -a
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2node2 ~]# docker ps -a
 CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS                              PORTS               NAMES
 eaa05cd8d957        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up 1 second                                             k8s_POD_shireapp.game2048-d64d84d54-t9sbz_default_710c5423-9170-11e8-8f3a-00163e02a461_669
 5e5e9a2ddf4a        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up Less than a second                                   k8s_POD_abc.fgg-75b769789d-jrzbp_default_6fe70cb6-9170-11e8-8f3a-00163e02a461_0
@@ -424,13 +424,13 @@ bebc2a958740        k8s.gcr.io/pause-amd64:3.1   "/pause"                 8 seco
 <p>根据kubectl describe查看到的原因，可以看出可用的IP资源已经被消耗殆尽，导致pod无法正常创建启动。</p>
 
 <p>使用kubectl describe pod <pod-name> 可以看到错误的原因：</pod-name></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Normal   SandboxChanged          2m (x12 over 3m)    kubelet, k8scluster2node2  Pod sandbox changed, it will be killed and re-created.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Normal   SandboxChanged          2m (x12 over 3m)    kubelet, k8scluster2node2  Pod sandbox changed, it will be killed and re-created.
   Warning  FailedCreatePodSandBox  2m (x10 over 3m)    kubelet, k8scluster2node2  Failed create pod sandbox: rpc error: code = Unknown desc = NetworkPlugin cni failed to set up pod "abc.fgg-75b769789d-7dmjs_default" network: failed to allocate for range 0: no IP addresses available in range set: 10.244.7.1-10.244.7.254
 </code></pre></div></div>
 
 <h2 id="解决办法">解决办法</h2>
 <p>进入到/var/lib/cni/networks/cbr0目录下，执行下面命令可以释放那些可能是kubelet leak的IP资源：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for hash in $(tail -n +1 * | grep '^[A-Za-z0-9]*$' | cut -c 1-8); do if [ -z $(docker ps -a | grep $hash | awk '{print $1}') ]; then grep -irl $hash ./; fi; done | xargs rm
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for hash in $(tail -n +1 * | grep '^[A-Za-z0-9]*$' | cut -c 1-8); do if [ -z $(docker ps -a | grep $hash | awk '{print $1}') ]; then grep -irl $hash ./; fi; done | xargs rm
 </code></pre></div></div>
 
 <p>IP释放完成之后，pod正常创建启动。</p>
@@ -570,7 +570,7 @@ bebc2a958740        k8s.gcr.io/pause-amd64:3.1   "/pause"                 8 seco
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -592,7 +592,7 @@ bebc2a958740        k8s.gcr.io/pause-amd64:3.1   "/pause"                 8 seco
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -692,7 +692,7 @@ bebc2a958740        k8s.gcr.io/pause-amd64:3.1   "/pause"                 8 seco
   
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

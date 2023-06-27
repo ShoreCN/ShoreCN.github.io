@@ -385,7 +385,7 @@ hostPort是直接将容器的端口与所调度的节点上的端口连接起来
   </li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
 kind: Pod
 metadata:
   name: influxdb
@@ -403,10 +403,10 @@ spec:
 
 <h3 id="22-使用loadbalancer提供服务">2.2 使用LoadBalancer提供服务</h3>
 <p>这种方式部署起来十分简单，因为stable/nginx-ingress这个helm包默认就是使用这种方式部署。确保在云厂商上已经开通了LoadBalancer服务之后，执行如下命令进行一键安装：<br />
-<code class="highlighter-rouge">helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress</code></p>
+<code class="language-plaintext highlighter-rouge">helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress</code></p>
 
 <p>部署完成后查看结果：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl get svc -n kube-system
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl get svc -n kube-system
 NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
 nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   80:30113/TCP,443:32564/TCP   21h
 </code></pre></div></div>
@@ -417,7 +417,7 @@ nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   8
 <h4 id="231-选择边缘节点">2.3.1 选择边缘节点</h4>
 <p>边缘节点：监听外部流量进入集群内部的节点
 这里我们选择集群内部的一个节点作为边缘节点，注意这个节点需要有外部可以访问的公网地址并且80、443端口没有被其他应用占用。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get nodes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get nodes
 NAME                      STATUS   ROLES    AGE   VERSION
 izj6cfiv0zhc0j2k7ruyhsz   Ready    &lt;none&gt;   16d   v1.13.0
 k8s-cluster1-master       Ready    master   16d   v1.13.0
@@ -426,18 +426,18 @@ k8s-cluster1-master       Ready    master   16d   v1.13.0
 
 <h4 id="232-为边缘节点添加标签">2.3.2 为边缘节点添加标签</h4>
 <p>我们使用如下指令给这个节点加上一个内容为node:edge的label，后续在DaemonSet部署时根据label进行绑定即可。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node=edge
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node=edge
 node "izj6cfiv0zhc0j2k7ruyhsz" labeled
 </code></pre></div></div>
 
 <p>删除标签可以使用如下命令</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node-
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node-
 node "izj6cfiv0zhc0j2k7ruyhsz" labeled
 </code></pre></div></div>
 
 <h4 id="233-使用helm安装ingress">2.3.3 使用helm安装ingress</h4>
 <p>配置好边缘节点之后即可以使用Helm安装ingress了，安装命令如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm install stable/nginx-ingress \
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm install stable/nginx-ingress \
   --namespace kube-system \
   --name nginx-ingress \
   --set controller.kind=DaemonSet \
@@ -457,7 +457,7 @@ node "izj6cfiv0zhc0j2k7ruyhsz" labeled
 </ul>
 
 <p>安装完成之后检查一下对应pod是否都正常运行了</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get pods -n kube-system | grep nginx-ingress
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get pods -n kube-system | grep nginx-ingress
 nginx-ingress-controller-hv8h9                   1/1     Running   0          15d
 nginx-ingress-default-backend-56d99b86fb-4jlxn   1/1     Running   0          15d
 </code></pre></div></div>
@@ -466,7 +466,7 @@ nginx-ingress-default-backend-56d99b86fb-4jlxn   1/1     Running   0          15
 <h3 id="31-创建测试服务">3.1 创建测试服务</h3>
 <p>Ingress安装完成之后，就可以配置相应规则来对外暴露服务了。我们可以创建一个服务来测试
 创建一个my-nginx.yaml，内容为</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  apiVersion: extensions/v1beta1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: my-nginx
@@ -498,8 +498,8 @@ spec:
     run: my-nginx
 </code></pre></div></div>
 
-<p>通过<code class="highlighter-rouge">kubectl apply -f my-nginx.yaml</code>进行创建，通过<code class="highlighter-rouge">kubectl get service</code>可以看到my-nginx服务已经创建成功</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get svc
+<p>通过<code class="language-plaintext highlighter-rouge">kubectl apply -f my-nginx.yaml</code>进行创建，通过<code class="language-plaintext highlighter-rouge">kubectl get service</code>可以看到my-nginx服务已经创建成功</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get svc
 NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 kubernetes                           ClusterIP   10.96.0.1        &lt;none&gt;        443/TCP          17d
 my-nginx                             ClusterIP   10.100.181.157   &lt;none&gt;        80/TCP,443/TCP   13d
@@ -507,7 +507,7 @@ my-nginx                             ClusterIP   10.100.181.157   &lt;none&gt;  
 
 <h3 id="32-创建ingress规则">3.2 创建ingress规则</h3>
 <p>创建完成服务之后，我们就可以通过配置ingress规则来暴露服务了，</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: extensions/v1beta1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: my-nginx
@@ -545,8 +545,8 @@ spec:
 创建了证书之后，可以通过tls绑定已创建的secret来实现https安全访问功能</li>
 </ul>
 
-<p>至此，我们的Ingress创建完成并且通过配置服务与域名的关系，实现了外部访问的功能，通过域名<code class="highlighter-rouge">chenshuo.tk/web</code>即看到nginx的内容，说明通过域名已经可以访问集群内的服务了</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome to nginx!
+<p>至此，我们的Ingress创建完成并且通过配置服务与域名的关系，实现了外部访问的功能，通过域名<code class="language-plaintext highlighter-rouge">chenshuo.tk/web</code>即看到nginx的内容，说明通过域名已经可以访问集群内的服务了</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome to nginx!
 If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
 
 For online documentation and support please refer to nginx.org.
@@ -691,7 +691,7 @@ Thank you for using nginx.
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -713,7 +713,7 @@ Thank you for using nginx.
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -813,7 +813,7 @@ Thank you for using nginx.
   
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

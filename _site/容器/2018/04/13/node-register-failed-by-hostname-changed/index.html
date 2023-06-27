@@ -381,7 +381,7 @@
         <h2 id="现象及原因">现象及原因</h2>
 <p>使用阿里云主机通常会通过命令hostname -b <name>修改主机名称便于后续使用和维护，但是在主机重启之后，通常又会被恢复成初始分配的默认名称。  
 作为Kubernetes集群节点的情况下，这样的名称会变化的主机往往会导致已注册的节点重启后无法注册，通过kubelet日志可以看出，报错原因为主机当前名称和原始名称不同，导致节点无法注册到API server。</name></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7月 04 09:46:50 k8scluster2master kubelet[1573]: I0704 09:46:50.750118    1573 kubelet_node_status.go:82] Attempting to register node izj6cgkv35o1qg19b4t96iz
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7月 04 09:46:50 k8scluster2master kubelet[1573]: I0704 09:46:50.750118    1573 kubelet_node_status.go:82] Attempting to register node izj6cgkv35o1qg19b4t96iz
 7月 04 09:46:50 k8scluster2master kubelet[1573]: E0704 09:46:50.751935    1573 kubelet_node_status.go:106] Unable to register node "izj6cgkv35o1qg19b4t96iz" with API server: nodes "izj6cgkv35o1qg19b4t96iz" is forbidden: node "k8scluster2master" cannot modify node "izj6cgkv35o1qg19b4t96iz"
 </code></pre></div></div>
 
@@ -405,7 +405,7 @@ Kubelet组件运行在Node节点上，维持运行中的Pods以及提供kubernte
 
 <h2 id="查看kubelet配置">查看Kubelet配置</h2>
 <p>先查看一下当前机器的kubelet配置文件，可以通过下面这条名称获取，其中/etc/systemd/system/kubelet.service.d/10-kubeadm.conf就是配置文件了。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# service kubelet status
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# service kubelet status
 Redirecting to /bin/systemctl status kubelet.service
 ● kubelet.service - kubelet: The Kubernetes Node Agent
    Loaded: loaded (/etc/systemd/system/kubelet.service; enabled; vendor preset: disabled)
@@ -420,7 +420,7 @@ Redirecting to /bin/systemctl status kubelet.service
 </code></pre></div></div>
 
 <p>让我们查看一下配置文件中的具体内容，可以看到这里指定了很多参数用以控制kubelet的运行状态。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 [Service]
 Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
 Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
@@ -436,7 +436,7 @@ ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $K
 
 <p>查阅相关资料，可以找到一个参数就是符合我们的预想，用来指定主机注册时的节点名称的：—hostname-override<br />
 那么我们就指定当前主机注册时的节点名称为k8scluster2master，试试看效果如何。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 [Service]
 Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
 Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
@@ -453,7 +453,7 @@ ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $K
 
 <h2 id="重新加载配置">重新加载配置</h2>
 <p>执行如下命令使新增参数生效并检查新增参数是否已经生效</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>执行如下命令使新增参数生效
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>执行如下命令使新增参数生效
 # systemctl stop kubelet
 # systemctl daemon-reload
 # systemctl start kubelet
@@ -464,7 +464,7 @@ ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $K
 
 <h2 id="节点成功注册">节点成功注册</h2>
 <p>修改完配置并重新加载之后，让主机再次加入集群，一会之后可以看到节点已经成功注册，大功告成。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get node
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get node
 NAME                STATUS    ROLES     AGE       VERSION
 k8scluster2master   Ready     master    74d       v1.10.1
 k8scluster2node1    Ready     &lt;none&gt;    74d       v1.10.1
@@ -611,7 +611,7 @@ k8scluster2node2    Ready     &lt;none&gt;    74d       v1.10.1
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -633,7 +633,7 @@ k8scluster2node2    Ready     &lt;none&gt;    74d       v1.10.1
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -733,7 +733,7 @@ k8scluster2node2    Ready     &lt;none&gt;    74d       v1.10.1
   
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

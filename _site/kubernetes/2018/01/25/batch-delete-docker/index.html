@@ -384,26 +384,26 @@
 
 <h2 id="方法一">方法一</h2>
 <p>显示所有的容器，过滤出Exited状态的容器，取出这些容器的ID，<br />
-<code class="highlighter-rouge">sudo docker ps -a|grep Exited|awk '{print $1}'</code></p>
+<code class="language-plaintext highlighter-rouge">sudo docker ps -a|grep Exited|awk '{print $1}'</code></p>
 
 <p>查询所有的容器，过滤出Exited状态的容器，列出容器ID，删除这些容器</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo docker rm `docker ps -a|grep Exited|awk '{print $1}'`
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo docker rm `docker ps -a|grep Exited|awk '{print $1}'`
 </code></pre></div></div>
 
 <h2 id="方法二">方法二</h2>
 <p>删除所有未运行的容器（已经运行的删除不了，未运行的就一起被删除了）<br />
-<code class="highlighter-rouge">sudo docker rm $(sudo docker ps -a -q)</code></p>
+<code class="language-plaintext highlighter-rouge">sudo docker rm $(sudo docker ps -a -q)</code></p>
 
 <h2 id="方法三">方法三</h2>
 <p>根据容器的状态，删除Exited状态的容器<br />
-<code class="highlighter-rouge">sudo docker rm $(sudo docker ps -qf status=exited)</code></p>
+<code class="language-plaintext highlighter-rouge">sudo docker rm $(sudo docker ps -qf status=exited)</code></p>
 
 <h2 id="方法四">方法四</h2>
 <p>Docker 1.13版本以后，可以使用 docker containers prune 命令，删除孤立的容器。<br />
-<code class="highlighter-rouge">sudo docker container prune</code></p>
+<code class="language-plaintext highlighter-rouge">sudo docker container prune</code></p>
 
 <h2 id="删除所有镜像">删除所有镜像</h2>
-<p><code class="highlighter-rouge">sudo docker rmi $(docker images -q)</code></p>
+<p><code class="language-plaintext highlighter-rouge">sudo docker rmi $(docker images -q)</code></p>
 
       
     </div>
@@ -533,7 +533,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -555,7 +555,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -655,7 +655,7 @@
   
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

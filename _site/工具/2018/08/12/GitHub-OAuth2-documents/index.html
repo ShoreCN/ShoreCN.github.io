@@ -382,13 +382,13 @@
       
         <h2 id="github-oauth第三方登录">GitHub OAuth第三方登录</h2>
 <h2 id="前言">前言</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OAuth分1.0、1.0A、2.0三个版本，前二者已经淘汰以下所介绍的都是指2.0版本。
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OAuth分1.0、1.0A、2.0三个版本，前二者已经淘汰以下所介绍的都是指2.0版本。
 本文将以第三方网站获取GitHub代码仓库为例，简述OAuth的运作流程。
 </code></pre></div></div>
 
 <h2 id="oauth介绍">OAuth介绍</h2>
 <blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>开放授权（OAuth）是一个开放标准，允许用户让第三方应用访问该用户在某一网站上存储的私密的资源（如照片，视频，联系人列表），而无需将用户名和密码提供给第三方应用  
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>开放授权（OAuth）是一个开放标准，允许用户让第三方应用访问该用户在某一网站上存储的私密的资源（如照片，视频，联系人列表），而无需将用户名和密码提供给第三方应用  
   
 OAuth允许用户提供一个令牌，而不是用户名和密码来访问他们存放在特定服务提供者的数据。每一个令牌授权一个特定的网站（例如，视频编辑网站)在特定的时段（例如，接下来的2小时内）内访问特定的资源（例如仅仅是某一相册中的视频）。这样，OAuth让用户可以授权第三方网站访问他们存储在另外服务提供者的某些特定信息，而非所有内容。  
 </code></pre></div>  </div>
@@ -423,7 +423,7 @@ OAuth允许用户提供一个令牌，而不是用户名和密码来访问他们
 
 <h4 id="应用生成获取github授权的链接">应用生成获取GitHub授权的链接</h4>
 <p>然后就来到了我们的应用与GitHub联系的关键点，在应用上可能就是一个简单的绑定GitHub账号的按钮，本质上是一串由关键参数组成的URL，下面我们详细说一下这个URL是如何生成的。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URL样例：
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URL样例：
 https://github.com/login/oauth/authorize?client_id=5448811562b83dadc3cf&amp;scope=repo%2Cuser%3Aemail&amp;redirect_uri=http%3A%2F%2Fcd.10.com%2Fapi%2Fgithub%2Foauth%2Fcallback%3Fredirect_url%3Dhttp%253A%252F%252Fwww.baidu.com%26uid%3D99
 </code></pre></div></div>
 
@@ -457,7 +457,7 @@ https://github.com/login/oauth/access_token
   <li>获取GitHub资源
 我们这里以获取用户下的仓库列表为例，演示如何使用OAuth token，。
 https://api.github.com/user/repos
-这是获取仓库的API，假若token值为123456789abc，那么在GET的请求头中加入<code class="highlighter-rouge">{‘Authorization’: ‘token 123456789abc’}</code>，就可以拿到GitHub数据了。
+这是获取仓库的API，假若token值为123456789abc，那么在GET的请求头中加入<code class="language-plaintext highlighter-rouge">{‘Authorization’: ‘token 123456789abc’}</code>，就可以拿到GitHub数据了。
 返回值：
     <ul>
       <li>repos_url: 仓库地址</li>
@@ -605,7 +605,7 @@ https://api.github.com/user/repos
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -627,7 +627,7 @@ https://api.github.com/user/repos
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -727,7 +727,7 @@ https://api.github.com/user/repos
   
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

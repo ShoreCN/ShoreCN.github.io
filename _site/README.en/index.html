@@ -318,14 +318,14 @@
 
 <h2 id="installation">Installation</h2>
 
-<p>Check whether you have <code class="highlighter-rouge">Ruby 2.1.0</code> or higher installed:</p>
+<p>Check whether you have <code class="language-plaintext highlighter-rouge">Ruby 2.1.0</code> or higher installed:</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby <span class="nt">--version</span>
 </code></pre></div></div>
 
-<p>Install <code class="highlighter-rouge">Bundler</code>:</p>
+<p>Install <code class="language-plaintext highlighter-rouge">Bundler</code>:</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install bundler
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>bundler
 </code></pre></div></div>
 
 <p>Clone NexT theme:</p>
@@ -336,7 +336,7 @@
 
 <p>Install Jekyll and other dependencies from the GitHub Pages gem:</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle install
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">install</span>
 </code></pre></div></div>
 
 <p>Run your Jekyll site locally:</p>
@@ -361,16 +361,16 @@
 <span class="c1"># language: de</span>
 </code></pre></div></div>
 
-<p>Set <code class="highlighter-rouge">language</code> field as following in site <code class="highlighter-rouge">_config.yml</code> to change to Chinese.</p>
+<p>Set <code class="language-plaintext highlighter-rouge">language</code> field as following in site <code class="language-plaintext highlighter-rouge">_config.yml</code> to change to Chinese.</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">language</span><span class="pi">:</span> <span class="s">zh-Hans</span>
 </code></pre></div></div>
 
 <h3 id="comment-support">Comment support.</h3>
 
-<p>NexT has native support for <code class="highlighter-rouge">DuoShuo</code> and <code class="highlighter-rouge">Disqus</code> comment systems.</p>
+<p>NexT has native support for <code class="language-plaintext highlighter-rouge">DuoShuo</code> and <code class="language-plaintext highlighter-rouge">Disqus</code> comment systems.</p>
 
-<p>Add the following snippets to your <code class="highlighter-rouge">_config.yml</code>:</p>
+<p>Add the following snippets to your <code class="language-plaintext highlighter-rouge">_config.yml</code>:</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">duoshuo</span><span class="pi">:</span>
   <span class="na">enable</span><span class="pi">:</span> <span class="no">true</span>
@@ -400,22 +400,22 @@
   <p>Show a feed link.</p>
 </blockquote>
 
-<p>Set <code class="highlighter-rouge">rss</code> field in theme’s <code class="highlighter-rouge">_config.yml</code>, as the following value:</p>
+<p>Set <code class="language-plaintext highlighter-rouge">rss</code> field in theme’s <code class="language-plaintext highlighter-rouge">_config.yml</code>, as the following value:</p>
 
 <ol>
-  <li><code class="highlighter-rouge">rss: false</code> will totally disable feed link.</li>
+  <li><code class="language-plaintext highlighter-rouge">rss: false</code> will totally disable feed link.</li>
   <li>
-    <p><code class="highlighter-rouge">rss:  </code> use sites’ feed link. This is the default option.</p>
+    <p><code class="language-plaintext highlighter-rouge">rss:  </code> use sites’ feed link. This is the default option.</p>
 
     <p>Follow the installation instruction in the plugin’s README. After the configuration is done for this plugin, the feed link is ready too.</p>
   </li>
-  <li><code class="highlighter-rouge">rss: http://your-feed-url</code> set specific feed link.</li>
+  <li><code class="language-plaintext highlighter-rouge">rss: http://your-feed-url</code> set specific feed link.</li>
 </ol>
 
 <h3 id="up-to-5-code-highlight-themes-built-in">Up to 5 code highlight themes built-in.</h3>
 
 <p>NexT uses <a href="https://github.com/chriskempson/tomorrow-theme">Tomorrow Theme</a> with 5 themes for you to choose from.
-Next use <code class="highlighter-rouge">normal</code> by default. Have a preview about <code class="highlighter-rouge">normal</code> and <code class="highlighter-rouge">night</code>:</p>
+Next use <code class="language-plaintext highlighter-rouge">normal</code> by default. Have a preview about <code class="language-plaintext highlighter-rouge">normal</code> and <code class="language-plaintext highlighter-rouge">night</code>:</p>
 
 <p><img src="http://iissnan.com/nexus/next/tomorrow-normal.png" alt="Tomorrow Normal Preview" />
 <img src="http://iissnan.com/nexus/next/tomorrow-night.png" alt="Tomorrow Night Preview" /></p>
@@ -447,7 +447,7 @@ Next use <code class="highlighter-rouge">normal</code> by default. Have a previe
 <span class="na">fancybox</span><span class="pi">:</span> <span class="no">true</span>
 
 <span class="c1"># Specify the date when the site was setup</span>
-<span class="na">since</span><span class="pi">:</span> <span class="s">2013</span>
+<span class="na">since</span><span class="pi">:</span> <span class="m">2013</span>
 
 </code></pre></div></div>
 
@@ -499,7 +499,7 @@ Next use <code class="highlighter-rouge">normal</code> by default. Have a previe
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -521,7 +521,7 @@ Next use <code class="highlighter-rouge">normal</code> by default. Have a previe
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -596,7 +596,7 @@ Next use <code class="highlighter-rouge">normal</code> by default. Have a previe
   
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

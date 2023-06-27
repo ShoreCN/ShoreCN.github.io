@@ -2,6 +2,223 @@
 <search>
   
     <entry>
+      <title><![CDATA[区块链代币管理]]></title>
+      <url>/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager/</url>
+      <content type="html"><![CDATA[<p>区块链代币管理</p>
+
+<h2 id="背景">背景</h2>
+<p>区块链代币种类繁多, 如何在项目里面合理地管理代币, 这是一个问题.<br />
+通常情况下项目规模不大, 代币种类也不是很多, 可以直接在代码里面硬编码, 前端和后端各自独立维护, 但是这样的话, 项目的可扩展性和维护性就比较差.<br />
+通过设计一个简单的代币管理模块, 可以有效地解决这个问题.</p>
+
+<h2 id="设计思路">设计思路</h2>
+<h3 id="明确需求">明确需求</h3>
+<ol>
+  <li>准确性有保证, 代币数据准确无误;</li>
+  <li>可维护性强, 统一管理代币, 避免重复劳动且容易出错;</li>
+  <li>便捷性较好, 通过设计灵活的接口, 可以适应不同的业务场景.</li>
+  <li>稳定性高, 单数据源容易出现异常时, 代币数据可能会丢失或无法读取;</li>
+  <li>可扩展性好, 代币种类可以动态增加, 代币属性可以动态修改;</li>
+</ol>
+
+<h3 id="设计方案">设计方案</h3>
+<h4 id="数据结构">数据结构</h4>
+<p>代币通常需要包含以下属性:</p>
+<ul>
+  <li>代币名称</li>
+  <li>代币符号</li>
+  <li>代币精度</li>
+  <li>代币合约地址</li>
+  <li>代币图标</li>
+  <li>链类型</li>
+  <li>协议类型</li>
+</ul>
+
+<p>在同一条链上, 代币符号常常无法保证唯一性, 例如: USDT, 代币名称可以保证唯一性, 例如: Tether USD.<br />
+在不同链上, 代币符号也可能相同, 例如: USDT.<br />
+所以我们需要一个唯一的标识来区分不同链上的代币, 这里我们使用代币名称+链类型来作为唯一标识.</p>
+
+<h4 id="数据存储">数据存储</h4>
+<p>代币数据的持久化存储, 通常有以下几种方案:</p>
+<ol>
+  <li>数据库</li>
+  <li>文件</li>
+  <li>缓存
+对于token这类型的数据, 数据库可以选择非关系型数据库, 例如: mongodb, redis等.
+缓存可以选择本地内存缓存, 规模较大的话, 可以选择分布式缓存, 例如: redis, memcached等.</li>
+</ol>
+
+<p>仅使用单数据源的话, 会存在以下问题:</p>
+<ol>
+  <li>单数据源容易出现异常时, 代币数据可能会丢失或无法读取;</li>
+  <li>单数据源无法保证数据的准确性, 例如: 代币数据被恶意篡改, 或者数据更新不同步等;</li>
+</ol>
+
+<p>为了解决这个问题, 我们可以使用多数据源的方案, 例如: 数据库+缓存, 数据库+文件等.</p>
+
+<p>不过多数据源的方案, 会存在数据同步的问题, 例如: 数据库+缓存, 数据库中的数据被修改后, 缓存中的数据没有及时更新, 会导致数据不一致. 通过设计一个简单的数据同步机制, 可以有效地解决这个问题.
+同步机制的设计思路如下:</p>
+<ol>
+  <li>数据库中的数据被修改后, 通过消息队列发送消息;</li>
+  <li>缓存中的数据订阅消息队列, 收到消息后, 更新缓存中的数据;</li>
+</ol>
+
+<h4 id="接口设计">接口设计</h4>
+<p>代币管理系统的接口设计, 通常需要包含以下几个方面:</p>
+<ol>
+  <li>数据初始化</li>
+  <li>数据的读取</li>
+  <li>数据的更新</li>
+  <li>数据的删除</li>
+  <li>数据的同步</li>
+</ol>
+
+<h4 id="对象设计">对象设计</h4>
+
+<h2 id="实现方案">实现方案</h2>
+<h3 id="数据结构-1">数据结构</h3>
+<p>代币数据的基础结构如下:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">@</span><span class="n">dataclass</span>
+<span class="k">class</span> <span class="nc">Token</span><span class="p">:</span>
+    <span class="n">chain</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">token</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">token_addr</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">protocol</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">logo</span><span class="p">:</span> <span class="nb">str</span>
+</code></pre></div></div>
+
+<h3 id="数据存储-1">数据存储</h3>
+<p>代币数据的存储方案如下:</p>
+<ol>
+  <li>数据库: mongodb</li>
+  <li>缓存: LocalCache</li>
+</ol>
+
+<h3 id="接口实现">接口实现</h3>
+<p>代币管理系统的接口设计如下:</p>
+<ol>
+  <li>数据初始化: 从数据库中读取数据, 并写入缓存, 如果数据库中没有数据, 则从读取预先硬编码的代币数据, 并写入数据库和缓存;</li>
+  <li>数据的读取: 从缓存中读取数据, 如果缓存中没有数据, 则从数据库中读取数据, 并写入缓存;</li>
+  <li>数据的更新: 更新数据库中的数据, 并通知缓存更新数据;</li>
+  <li>数据的删除: 删除数据库中的数据, 并通知缓存删除数据;</li>
+  <li>数据的同步: 定时检查数据库和缓存中的数据是否一致, 如果不一致, 则更新缓存中的数据; 定时检查数据库中的数据和外部数据(区块链浏览器,服务提供商等)是否一致, 如果不一致, 则更新数据库中的数据;</li>
+</ol>
+
+<h3 id="对象实现">对象实现</h3>
+<p>以python为例, 代币管理系统的对象如下:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CryptoTokenManager</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">:</span> <span class="n">Database</span><span class="p">,</span> <span class="n">cache</span><span class="p">:</span> <span class="n">Cache</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">cache</span>
+
+    <span class="k">def</span> <span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="s">"""恢复数据
+        外部数据(暂无) &gt; 数据库 &gt; 默认数据 &gt; 内存
+
+        Returns:
+            list: 恢复的数据
+        """</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">get_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">chain</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="s">"""获取token信息
+
+        Args:
+            token (str): token名称
+            chain (str): 链
+
+        Returns:
+            dict: token信息
+        """</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">get_token_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s">''</span><span class="p">,</span> <span class="n">chain</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s">''</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="s">''</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="s">"""获取token列表
+
+        Args:
+            token (str, optional): token名称. Defaults to ''.
+            chain (str, optional): 链. Defaults to ''.
+            protocol (str, optional): 协议. Defaults to ''.
+
+        Returns:
+            list: token列表
+        """</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">add_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""添加token(本地)
+
+        Args:
+            token_info (dict): token信息
+
+        Returns:
+            bool: 是否添加成功
+        """</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">remove_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">chain</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""移除token(本地)
+
+        Args:
+            token (str): token名称
+            chain (str): 链
+        
+        Returns:
+            bool: 是否移除成功
+        """</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""保存至数据库
+
+        Returns:
+            bool: 是否保存成功
+        """</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="nf">check_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""检查数据是否正确
+
+        Returns:
+            bool: 是否正确
+        """</span>
+        <span class="k">pass</span>
+</code></pre></div></div>
+
+<h2 id="思考">思考🤔</h2>
+<h3 id="性能优化">性能优化</h3>
+<p>因为代币数据的读取频率远远大于写入频率, 所以我们可以通过缓存来提高读取性能. 作为一个相对静态的数据, 后续还可以考虑通过CDN来提升网络接口表现.</p>
+
+<h3 id="安全性">安全性</h3>
+<p>代币数据的安全性关键就是保证数据的准确性, 具体来说就是数据的非预期篡改, 例如: 代币数据被恶意篡改, 或者数据更新错误等.<br />
+不过代币管理虽然贯穿了大部分的业务流程, 但是错误的代币地址通常导致的是业务流程的失败, 而不是错误的业务流程(例如资产流向错误目标等), 所以对于安全性的提升可以更加侧重于密钥管理/收款方确认等方面.</p>
+
+<h3 id="后续优化方案">后续优化方案</h3>
+<ul>
+  <li>外部数据同步</li>
+  <li>异常处理</li>
+  <li>告警机制</li>
+  <li>数据存储简化</li>
+</ul>
+
+]]></content>
+      <categories>
+        
+          <category> 架构 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> 区块链 </tag>
+        
+          <tag> Python </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
       <title><![CDATA[macOS上修复word/excel等office文件乱码问题]]></title>
       <url>/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/</url>
       <content type="html"><![CDATA[<h2 id="原因">原因</h2>
@@ -15,7 +232,7 @@ macOS或Linux系统下的iconv命令的作用就是进行文件编码方式转�
   <p>iconv的作用是在多种国际编码格式之间进行文本内码的转换。</p>
 </blockquote>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Usage: iconv [OPTION...] [-f ENCODING] [-t ENCODING] [INPUTFILE...]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Usage: iconv [OPTION...] [-f ENCODING] [-t ENCODING] [INPUTFILE...]
 or:    iconv -l
 
 Converts text from one encoding to another encoding.
@@ -43,7 +260,7 @@ Informative output:
   --version                   output version information and exit
 </code></pre></div></div>
 
-<p>通过iconv尝试进行文件编码方式转换，执行命令<code class="highlighter-rouge">iconv -s -c -f GBK -t UTF8 input.file &gt; output.file</code><br />
+<p>通过iconv尝试进行文件编码方式转换，执行命令<code class="language-plaintext highlighter-rouge">iconv -s -c -f GBK -t UTF8 input.file &gt; output.file</code><br />
 参数解释：<br />
 -f 输入文件的编码方式<br />
 -t 输出文件的编码方式<br />
@@ -52,7 +269,7 @@ output.file 输出文件名<br />
 通过执行这条命令，我们打开新生成的输出文件，可以看到文件内容已经正常显示了。</p>
 
 <blockquote>
-  <p>iconv命令支持很多文件编码方式，具体的可以通过命令<code class="highlighter-rouge">iconv -l</code>进行查询。</p>
+  <p>iconv命令支持很多文件编码方式，具体的可以通过命令<code class="language-plaintext highlighter-rouge">iconv -l</code>进行查询。</p>
 </blockquote>
 
 ]]></content>
@@ -127,7 +344,7 @@ output.file 输出文件名<br />
 <p>使用Google Cloud自带的容器功能可以省去一些安装配置动作.
 但是手工部署可以带来更高的灵活性,用户可以选择更多的可选配置.
 安装完docker相关组件之后,使用如下命令即可部署SS服务:
-<code class="highlighter-rouge">docker run -dt --name ss -p &lt;host_port&gt;:&lt;docker_port&gt; mritd/shadowsocks -s "-s 0.0.0.0 -p &lt;s&gt; -m chacha20-ietf-poly1305 -k &lt;password&gt; --fast-open"</code></p>
+<code class="language-plaintext highlighter-rouge">docker run -dt --name ss -p &lt;host_port&gt;:&lt;docker_port&gt; mritd/shadowsocks -s "-s 0.0.0.0 -p &lt;s&gt; -m chacha20-ietf-poly1305 -k &lt;password&gt; --fast-open"</code></p>
 
 <p>参数说明:</p>
 <ul>
@@ -144,8 +361,8 @@ output.file 输出文件名<br />
   </li>
 </ul>
 
-<p>命令执行完成之后可以通过<code class="highlighter-rouge">docker ps</code>命令查看容器是否正常运行,
-使用<code class="highlighter-rouge">ps -ef | grep ss</code>命令可以查看ShadowSocks服务是否正常运行.</p>
+<p>命令执行完成之后可以通过<code class="language-plaintext highlighter-rouge">docker ps</code>命令查看容器是否正常运行,
+使用<code class="language-plaintext highlighter-rouge">ps -ef | grep ss</code>命令可以查看ShadowSocks服务是否正常运行.</p>
 
 <p>至此,用户就可以根据自己使用的终端安装对应的客户端使用ShadowSocks服务了.</p>
 
@@ -158,7 +375,7 @@ output.file 输出文件名<br />
 
 <blockquote>
   <p>tips 如何快速判断是因为网络端口没有放开导致的服务不可用？<br />
-有时用户无法确定到底是软件安装配置还是网络端口问题导致的服务不可用。只需如下一条命令即可快速启用一个web服务<code class="highlighter-rouge">docker run -p &lt;hostPort&gt;:80 -d nginx</code>，通过访问hostIP:hostPort查看网页是否能够正常访问即可判断端口是否正常放开。</p>
+有时用户无法确定到底是软件安装配置还是网络端口问题导致的服务不可用。只需如下一条命令即可快速启用一个web服务<code class="language-plaintext highlighter-rouge">docker run -p &lt;hostPort&gt;:80 -d nginx</code>，通过访问hostIP:hostPort查看网页是否能够正常访问即可判断端口是否正常放开。</p>
 </blockquote>
 
 ]]></content>
@@ -309,14 +526,14 @@ AWS CloudFront会重新分配一个域名,用户使用这个域名进行内容�
 <h3 id="选择jekyll模板">选择Jekyll模板</h3>
 <p>网上有大量的现成Jekyll模板可以选择，此处以Jekyll-Now为例。
 在服务器上创建一个目录并git clone模板代码：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir jekyllBlog
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir jekyllBlog
 cd jekyllBlog
 git clone https://github.com/barryclark/jekyll-now.git .
 </code></pre></div></div>
 
 <h3 id="构建">构建</h3>
 <p>Jekyll提供了一条build命令将模板编译为静态网页，直接在执行如下Docker命令即可：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export JEKYLL_VERSION=3.8
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export JEKYLL_VERSION=3.8
 docker run --rm --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:$JEKYLL_VERSION jekyll build
 </code></pre></div></div>
 
@@ -324,7 +541,7 @@ docker run --rm --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:$JEKYLL_VERSION je
 
 <h3 id="开启服务">开启服务</h3>
 <p>Jekyll 同时也集成了一个网页服务，通过server命令即可开启。
-<code class="highlighter-rouge">docker run --rm --volume="$PWD:/srv/jekyll" -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll server</code></p>
+<code class="language-plaintext highlighter-rouge">docker run --rm --volume="$PWD:/srv/jekyll" -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll server</code></p>
 
 <p>通过-p参数指定了对外暴露的的服务器端口为4000</p>
 
@@ -380,7 +597,7 @@ hostPort是直接将容器的端口与所调度的节点上的端口连接起来
   </li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
 kind: Pod
 metadata:
   name: influxdb
@@ -398,10 +615,10 @@ spec:
 
 <h3 id="22-使用loadbalancer提供服务">2.2 使用LoadBalancer提供服务</h3>
 <p>这种方式部署起来十分简单，因为stable/nginx-ingress这个helm包默认就是使用这种方式部署。确保在云厂商上已经开通了LoadBalancer服务之后，执行如下命令进行一键安装：<br />
-<code class="highlighter-rouge">helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress</code></p>
+<code class="language-plaintext highlighter-rouge">helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress</code></p>
 
 <p>部署完成后查看结果：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl get svc -n kube-system
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl get svc -n kube-system
 NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
 nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   80:30113/TCP,443:32564/TCP   21h
 </code></pre></div></div>
@@ -412,7 +629,7 @@ nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   8
 <h4 id="231-选择边缘节点">2.3.1 选择边缘节点</h4>
 <p>边缘节点：监听外部流量进入集群内部的节点
 这里我们选择集群内部的一个节点作为边缘节点，注意这个节点需要有外部可以访问的公网地址并且80、443端口没有被其他应用占用。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get nodes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get nodes
 NAME                      STATUS   ROLES    AGE   VERSION
 izj6cfiv0zhc0j2k7ruyhsz   Ready    &lt;none&gt;   16d   v1.13.0
 k8s-cluster1-master       Ready    master   16d   v1.13.0
@@ -421,18 +638,18 @@ k8s-cluster1-master       Ready    master   16d   v1.13.0
 
 <h4 id="232-为边缘节点添加标签">2.3.2 为边缘节点添加标签</h4>
 <p>我们使用如下指令给这个节点加上一个内容为node:edge的label，后续在DaemonSet部署时根据label进行绑定即可。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node=edge
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node=edge
 node "izj6cfiv0zhc0j2k7ruyhsz" labeled
 </code></pre></div></div>
 
 <p>删除标签可以使用如下命令</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node-
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node-
 node "izj6cfiv0zhc0j2k7ruyhsz" labeled
 </code></pre></div></div>
 
 <h4 id="233-使用helm安装ingress">2.3.3 使用helm安装ingress</h4>
 <p>配置好边缘节点之后即可以使用Helm安装ingress了，安装命令如下：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm install stable/nginx-ingress \
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>helm install stable/nginx-ingress \
   --namespace kube-system \
   --name nginx-ingress \
   --set controller.kind=DaemonSet \
@@ -452,7 +669,7 @@ node "izj6cfiv0zhc0j2k7ruyhsz" labeled
 </ul>
 
 <p>安装完成之后检查一下对应pod是否都正常运行了</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get pods -n kube-system | grep nginx-ingress
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get pods -n kube-system | grep nginx-ingress
 nginx-ingress-controller-hv8h9                   1/1     Running   0          15d
 nginx-ingress-default-backend-56d99b86fb-4jlxn   1/1     Running   0          15d
 </code></pre></div></div>
@@ -461,7 +678,7 @@ nginx-ingress-default-backend-56d99b86fb-4jlxn   1/1     Running   0          15
 <h3 id="31-创建测试服务">3.1 创建测试服务</h3>
 <p>Ingress安装完成之后，就可以配置相应规则来对外暴露服务了。我们可以创建一个服务来测试
 创建一个my-nginx.yaml，内容为</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  apiVersion: extensions/v1beta1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: my-nginx
@@ -493,8 +710,8 @@ spec:
     run: my-nginx
 </code></pre></div></div>
 
-<p>通过<code class="highlighter-rouge">kubectl apply -f my-nginx.yaml</code>进行创建，通过<code class="highlighter-rouge">kubectl get service</code>可以看到my-nginx服务已经创建成功</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get svc
+<p>通过<code class="language-plaintext highlighter-rouge">kubectl apply -f my-nginx.yaml</code>进行创建，通过<code class="language-plaintext highlighter-rouge">kubectl get service</code>可以看到my-nginx服务已经创建成功</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# kubectl get svc
 NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 kubernetes                           ClusterIP   10.96.0.1        &lt;none&gt;        443/TCP          17d
 my-nginx                             ClusterIP   10.100.181.157   &lt;none&gt;        80/TCP,443/TCP   13d
@@ -502,7 +719,7 @@ my-nginx                             ClusterIP   10.100.181.157   &lt;none&gt;  
 
 <h3 id="32-创建ingress规则">3.2 创建ingress规则</h3>
 <p>创建完成服务之后，我们就可以通过配置ingress规则来暴露服务了，</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: extensions/v1beta1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: my-nginx
@@ -540,8 +757,8 @@ spec:
 创建了证书之后，可以通过tls绑定已创建的secret来实现https安全访问功能</li>
 </ul>
 
-<p>至此，我们的Ingress创建完成并且通过配置服务与域名的关系，实现了外部访问的功能，通过域名<code class="highlighter-rouge">chenshuo.tk/web</code>即看到nginx的内容，说明通过域名已经可以访问集群内的服务了</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome to nginx!
+<p>至此，我们的Ingress创建完成并且通过配置服务与域名的关系，实现了外部访问的功能，通过域名<code class="language-plaintext highlighter-rouge">chenshuo.tk/web</code>即看到nginx的内容，说明通过域名已经可以访问集群内的服务了</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome to nginx!
 If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
 
 For online documentation and support please refer to nginx.org.
@@ -570,8 +787,8 @@ Thank you for using nginx.
 
 <h2 id="安装">安装</h2>
 <h3 id="安装客户端helm">安装客户端（Helm）</h3>
-<p>官方提供了多种安装方式，这里选用脚本安装的方法，使用命令<code class="highlighter-rouge">curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash</code>会自动抓取最新的版本完成客户端的安装：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+<p>官方提供了多种安装方式，这里选用脚本安装的方法，使用命令<code class="language-plaintext highlighter-rouge">curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash</code>会自动抓取最新的版本完成客户端的安装：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100  7236  100  7236    0     0  74494      0 --:--:-- --:--:-- --:--:-- 74597
@@ -583,8 +800,8 @@ Run 'helm init' to configure helm.
 </code></pre></div></div>
 
 <h3 id="安装服务端tiller">安装服务端（Tiller）</h3>
-<p>Helm安装完成之后，通过命令行<code class="highlighter-rouge">helm init</code>即可完成服务端Tiller的安装。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# helm init
+<p>Helm安装完成之后，通过命令行<code class="language-plaintext highlighter-rouge">helm init</code>即可完成服务端Tiller的安装。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# helm init
 Creating /root/.helm
 Creating /root/.helm/repository
 Creating /root/.helm/repository/cache
@@ -605,15 +822,15 @@ For more information on securing your installation see: https://docs.helm.sh/usi
 Happy Helming!
 </code></pre></div></div>
 
-<p>使用命令<code class="highlighter-rouge">helm version</code>可以查看安装是否成功和版本号情况</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# helm version
+<p>使用命令<code class="language-plaintext highlighter-rouge">helm version</code>可以查看安装是否成功和版本号情况</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8s-cluster1-master ~]# helm version
 Client: &amp;version.Version{SemVer:"v2.12.0", GitCommit:"d325d2a9c179b33af1a024cdb5a4472b6288016a", GitTreeState:"clean"}
 Server: &amp;version.Version{SemVer:"v2.12.0", GitCommit:"d325d2a9c179b33af1a024cdb5a4472b6288016a", GitTreeState:"clean"}
 </code></pre></div></div>
 
 <h3 id="权限配置">权限配置</h3>
 <p>默认安装的 tiller 权限很小，我们执行下面的脚本给它加最大权限，这样方便我们可以用 helm 部署应用到任意 namespace 下:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create serviceaccount --namespace=kube-system tiller
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create serviceaccount --namespace=kube-system tiller
 
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 
@@ -693,7 +910,7 @@ kubectl patch deploy --namespace=kube-system tiller-deploy -p '{"spec":{"templat
   <li>通过ENTRYPOINT指令设置容器运行起来后需要执行的程序或命令</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM daocloud.io/centos:7 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FROM daocloud.io/centos:7 
 MAINTAINER mate
  
 ENV TZ "Asia/Shanghai" 
@@ -1078,13 +1295,13 @@ Harmony平台的理念是随时随地实施策略，它将安全应用服务与�
       <url>/%E5%B7%A5%E5%85%B7/2018/08/12/GitHub-OAuth2-documents/</url>
       <content type="html"><![CDATA[<h2 id="github-oauth第三方登录">GitHub OAuth第三方登录</h2>
 <h2 id="前言">前言</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OAuth分1.0、1.0A、2.0三个版本，前二者已经淘汰以下所介绍的都是指2.0版本。
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OAuth分1.0、1.0A、2.0三个版本，前二者已经淘汰以下所介绍的都是指2.0版本。
 本文将以第三方网站获取GitHub代码仓库为例，简述OAuth的运作流程。
 </code></pre></div></div>
 
 <h2 id="oauth介绍">OAuth介绍</h2>
 <blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>开放授权（OAuth）是一个开放标准，允许用户让第三方应用访问该用户在某一网站上存储的私密的资源（如照片，视频，联系人列表），而无需将用户名和密码提供给第三方应用  
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>开放授权（OAuth）是一个开放标准，允许用户让第三方应用访问该用户在某一网站上存储的私密的资源（如照片，视频，联系人列表），而无需将用户名和密码提供给第三方应用  
   
 OAuth允许用户提供一个令牌，而不是用户名和密码来访问他们存放在特定服务提供者的数据。每一个令牌授权一个特定的网站（例如，视频编辑网站)在特定的时段（例如，接下来的2小时内）内访问特定的资源（例如仅仅是某一相册中的视频）。这样，OAuth让用户可以授权第三方网站访问他们存储在另外服务提供者的某些特定信息，而非所有内容。  
 </code></pre></div>  </div>
@@ -1119,7 +1336,7 @@ OAuth允许用户提供一个令牌，而不是用户名和密码来访问他们
 
 <h4 id="应用生成获取github授权的链接">应用生成获取GitHub授权的链接</h4>
 <p>然后就来到了我们的应用与GitHub联系的关键点，在应用上可能就是一个简单的绑定GitHub账号的按钮，本质上是一串由关键参数组成的URL，下面我们详细说一下这个URL是如何生成的。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URL样例：
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URL样例：
 https://github.com/login/oauth/authorize?client_id=5448811562b83dadc3cf&amp;scope=repo%2Cuser%3Aemail&amp;redirect_uri=http%3A%2F%2Fcd.10.com%2Fapi%2Fgithub%2Foauth%2Fcallback%3Fredirect_url%3Dhttp%253A%252F%252Fwww.baidu.com%26uid%3D99
 </code></pre></div></div>
 
@@ -1153,7 +1370,7 @@ https://github.com/login/oauth/access_token
   <li>获取GitHub资源
 我们这里以获取用户下的仓库列表为例，演示如何使用OAuth token，。
 https://api.github.com/user/repos
-这是获取仓库的API，假若token值为123456789abc，那么在GET的请求头中加入<code class="highlighter-rouge">{‘Authorization’: ‘token 123456789abc’}</code>，就可以拿到GitHub数据了。
+这是获取仓库的API，假若token值为123456789abc，那么在GET的请求头中加入<code class="language-plaintext highlighter-rouge">{‘Authorization’: ‘token 123456789abc’}</code>，就可以拿到GitHub数据了。
 返回值：
     <ul>
       <li>repos_url: 仓库地址</li>
@@ -1185,7 +1402,7 @@ https://api.github.com/user/repos
       <content type="html"><![CDATA[<h1 id="kubernetes部署wordpress项目相关yaml文件">Kubernetes部署WordPress项目相关yaml文件</h1>
 <h2 id="mysql">MySQL</h2>
 <h3 id="部署">部署</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: apps/v1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels: &amp;id001
@@ -1214,7 +1431,7 @@ spec:
 </code></pre></div></div>
 
 <h3 id="服务">服务</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -1235,7 +1452,7 @@ spec:
 
 <h2 id="wordpress">WordPress</h2>
 <h3 id="部署-1">部署</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: apps/v1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels: &amp;id001
@@ -1266,7 +1483,7 @@ spec:
 </code></pre></div></div>
 
 <h3 id="服务-1">服务</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -1303,7 +1520,7 @@ spec:
       <url>/%E5%AE%B9%E5%99%A8/2018/05/20/Modify-the-Kubernetes-NodePort-config/</url>
       <content type="html"><![CDATA[<h2 id="问题">问题</h2>
 <p>在我们的实际使用过程中，如果想让服务能从外部访问，就会使用到NodePort服务类型。默认的选择了NodePort类型之后，端口是从30000-32767范围内随机分配，就算用户自行指定其他端口号，也会报如下错误：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The Service "test" is invalid: spec.ports[0].nodePort: Invalid value: 7712: provided port is not in the valid range. The range of valid ports is 30000-32767
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The Service "test" is invalid: spec.ports[0].nodePort: Invalid value: 7712: provided port is not in the valid range. The range of valid ports is 30000-32767
 </code></pre></div></div>
 
 <p>而我们实际的应用场景中，肯定有需要指定端口号的情况，例如服务要绑定域名只能用默认的80端口，而Kubernetes这样的不灵活限制了我们的使用。好在只需要修改API Server一个配置就可以调整NodePort的范围。</p>
@@ -1321,7 +1538,7 @@ spec:
 
 <h2 id="api-server启动参数说明">API Server启动参数说明</h2>
 <p>下面是一些典型的API Server参数说明，其中service-node-port-range就是我们需要关注修改的配置字段了。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--etcd-servers：指定etcd服务的URL
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--etcd-servers：指定etcd服务的URL
 --insecure-bind-address：apiserver绑定主机的非安全IP地址，设置0.0.0.0表示监听所有IP
 --insecure-port：apiserver绑定主机的非安全端口号，默认为8080
 --service-cluster-ip-range：Kubernetes集群中Service的虚拟IP地址段范围，以CIDR格式表示，该IP范围不能与物理机的真实IP段有重合
@@ -1331,7 +1548,7 @@ spec:
 
 <h2 id="修改方案">修改方案</h2>
 <p>修改API Server的配置，配置文件路径/etc/kubernetes/manifests/kube-apiserver.yaml，新增一行–service-node-port-range=80-32767</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>spec:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>spec:
   containers:
   - command:
     - kube-apiserver
@@ -1478,7 +1695,7 @@ spec:
       <content type="html"><![CDATA[<h1 id="ip资源耗尽导致pod反复创建失败问题">IP资源耗尽导致pod反复创建失败问题</h1>
 <h2 id="现象">现象</h2>
 <p>Pod一直处于ContainerCreating状态</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get pod -o wide
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get pod -o wide
 NAME                                                   READY     STATUS              RESTARTS   AGE       IP            NODE
 abc.fgg-75b769789d-7dmjs                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
 abc.fgg-75b769789d-f8pq2                               0/1       ContainerCreating   0          1h        &lt;none&gt;        k8scluster2node2
@@ -1497,7 +1714,7 @@ shireapp.game2048-d64d84d54-t9sbz                      0/1       ContainerCreati
 </code></pre></div></div>
 
 <p>实际登录到对应的node上通过docker ps -a 可以看出，pod每次一创建好就自动退出了。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2node2 ~]# docker ps -a
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2node2 ~]# docker ps -a
 CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS                              PORTS               NAMES
 eaa05cd8d957        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up 1 second                                             k8s_POD_shireapp.game2048-d64d84d54-t9sbz_default_710c5423-9170-11e8-8f3a-00163e02a461_669
 5e5e9a2ddf4a        k8s.gcr.io/pause-amd64:3.1   "/pause"                 4 seconds ago       Up Less than a second                                   k8s_POD_abc.fgg-75b769789d-jrzbp_default_6fe70cb6-9170-11e8-8f3a-00163e02a461_0
@@ -1521,13 +1738,13 @@ bebc2a958740        k8s.gcr.io/pause-amd64:3.1   "/pause"                 8 seco
 <p>根据kubectl describe查看到的原因，可以看出可用的IP资源已经被消耗殆尽，导致pod无法正常创建启动。</p>
 
 <p>使用kubectl describe pod <pod-name> 可以看到错误的原因：</pod-name></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Normal   SandboxChanged          2m (x12 over 3m)    kubelet, k8scluster2node2  Pod sandbox changed, it will be killed and re-created.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Normal   SandboxChanged          2m (x12 over 3m)    kubelet, k8scluster2node2  Pod sandbox changed, it will be killed and re-created.
   Warning  FailedCreatePodSandBox  2m (x10 over 3m)    kubelet, k8scluster2node2  Failed create pod sandbox: rpc error: code = Unknown desc = NetworkPlugin cni failed to set up pod "abc.fgg-75b769789d-7dmjs_default" network: failed to allocate for range 0: no IP addresses available in range set: 10.244.7.1-10.244.7.254
 </code></pre></div></div>
 
 <h2 id="解决办法">解决办法</h2>
 <p>进入到/var/lib/cni/networks/cbr0目录下，执行下面命令可以释放那些可能是kubelet leak的IP资源：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for hash in $(tail -n +1 * | grep '^[A-Za-z0-9]*$' | cut -c 1-8); do if [ -z $(docker ps -a | grep $hash | awk '{print $1}') ]; then grep -irl $hash ./; fi; done | xargs rm
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for hash in $(tail -n +1 * | grep '^[A-Za-z0-9]*$' | cut -c 1-8); do if [ -z $(docker ps -a | grep $hash | awk '{print $1}') ]; then grep -irl $hash ./; fi; done | xargs rm
 </code></pre></div></div>
 
 <p>IP释放完成之后，pod正常创建启动。</p>
@@ -1625,7 +1842,7 @@ Celery本身不提供消息存储服务，它使用第三方消息服务来传�
       <content type="html"><![CDATA[<h2 id="现象及原因">现象及原因</h2>
 <p>使用阿里云主机通常会通过命令hostname -b <name>修改主机名称便于后续使用和维护，但是在主机重启之后，通常又会被恢复成初始分配的默认名称。  
 作为Kubernetes集群节点的情况下，这样的名称会变化的主机往往会导致已注册的节点重启后无法注册，通过kubelet日志可以看出，报错原因为主机当前名称和原始名称不同，导致节点无法注册到API server。</name></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7月 04 09:46:50 k8scluster2master kubelet[1573]: I0704 09:46:50.750118    1573 kubelet_node_status.go:82] Attempting to register node izj6cgkv35o1qg19b4t96iz
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>7月 04 09:46:50 k8scluster2master kubelet[1573]: I0704 09:46:50.750118    1573 kubelet_node_status.go:82] Attempting to register node izj6cgkv35o1qg19b4t96iz
 7月 04 09:46:50 k8scluster2master kubelet[1573]: E0704 09:46:50.751935    1573 kubelet_node_status.go:106] Unable to register node "izj6cgkv35o1qg19b4t96iz" with API server: nodes "izj6cgkv35o1qg19b4t96iz" is forbidden: node "k8scluster2master" cannot modify node "izj6cgkv35o1qg19b4t96iz"
 </code></pre></div></div>
 
@@ -1649,7 +1866,7 @@ Kubelet组件运行在Node节点上，维持运行中的Pods以及提供kubernte
 
 <h2 id="查看kubelet配置">查看Kubelet配置</h2>
 <p>先查看一下当前机器的kubelet配置文件，可以通过下面这条名称获取，其中/etc/systemd/system/kubelet.service.d/10-kubeadm.conf就是配置文件了。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# service kubelet status
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# service kubelet status
 Redirecting to /bin/systemctl status kubelet.service
 ● kubelet.service - kubelet: The Kubernetes Node Agent
    Loaded: loaded (/etc/systemd/system/kubelet.service; enabled; vendor preset: disabled)
@@ -1664,7 +1881,7 @@ Redirecting to /bin/systemctl status kubelet.service
 </code></pre></div></div>
 
 <p>让我们查看一下配置文件中的具体内容，可以看到这里指定了很多参数用以控制kubelet的运行状态。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 [Service]
 Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
 Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
@@ -1680,7 +1897,7 @@ ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $K
 
 <p>查阅相关资料，可以找到一个参数就是符合我们的预想，用来指定主机注册时的节点名称的：—hostname-override<br />
 那么我们就指定当前主机注册时的节点名称为k8scluster2master，试试看效果如何。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 [Service]
 Environment="KUBELET_KUBECONFIG_ARGS=--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"
 Environment="KUBELET_SYSTEM_PODS_ARGS=--pod-manifest-path=/etc/kubernetes/manifests --allow-privileged=true"
@@ -1697,7 +1914,7 @@ ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $K
 
 <h2 id="重新加载配置">重新加载配置</h2>
 <p>执行如下命令使新增参数生效并检查新增参数是否已经生效</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>执行如下命令使新增参数生效
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>执行如下命令使新增参数生效
 # systemctl stop kubelet
 # systemctl daemon-reload
 # systemctl start kubelet
@@ -1708,7 +1925,7 @@ ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_SYSTEM_PODS_ARGS $K
 
 <h2 id="节点成功注册">节点成功注册</h2>
 <p>修改完配置并重新加载之后，让主机再次加入集群，一会之后可以看到节点已经成功注册，大功告成。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get node
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@k8scluster2master ~]# kubectl get node
 NAME                STATUS    ROLES     AGE       VERSION
 k8scluster2master   Ready     master    74d       v1.10.1
 k8scluster2node1    Ready     &lt;none&gt;    74d       v1.10.1
@@ -1767,17 +1984,17 @@ k8scluster2node2    Ready     &lt;none&gt;    74d       v1.10.1
 </table>
 
 <h2 id="安装docker">安装Docker</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum install -y docker
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum install -y docker
 systemctl enable docker &amp;&amp; systemctl start docker
 </code></pre></div></div>
 
 <h2 id="设置节点名称">设置节点名称</h2>
 <p>Kubernetes集群中的所有节点名称不能相同，所以在创建集群前先修改好各个节点的名称防止冲突。<br />
-<code class="highlighter-rouge">hostname -b 名称</code></p>
+<code class="language-plaintext highlighter-rouge">hostname -b 名称</code></p>
 
 <h2 id="安装kubernetes组件">安装Kubernetes组件</h2>
 <h3 id="配置yum镜像源文件">配置yum镜像源文件</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
@@ -1789,15 +2006,15 @@ EOF
 </code></pre></div></div>
 
 <h3 id="关闭防火墙">关闭防火墙</h3>
-<p><code class="highlighter-rouge">setenforce 0</code></p>
+<p><code class="language-plaintext highlighter-rouge">setenforce 0</code></p>
 
 <h3 id="安装组件">安装组件</h3>
-<p><code class="highlighter-rouge"> yum install -y kubelet kubeadm kubectl </code></p>
+<p>` yum install -y kubelet kubeadm kubectl `</p>
 
 <h3 id="启动服务">启动服务</h3>
-<p><code class="highlighter-rouge"> systemctl enable kubelet &amp;&amp; systemctl start kubelet </code></p>
+<p>` systemctl enable kubelet &amp;&amp; systemctl start kubelet `</p>
 
-<p>最后通过命令<code class="highlighter-rouge">running sysctl net.bridge.bridge-nf-call-iptables=1</code>将/proc/sys/net/bridge/bridge-nf-call-iptables设置为1，否则后续Master创建集群和Node加入集群会产生错误。</p>
+<p>最后通过命令<code class="language-plaintext highlighter-rouge">running sysctl net.bridge.bridge-nf-call-iptables=1</code>将/proc/sys/net/bridge/bridge-nf-call-iptables设置为1，否则后续Master创建集群和Node加入集群会产生错误。</p>
 
 <h2 id="master创建集群">Master创建集群</h2>
 <h3 id="选择cni">选择CNI</h3>
@@ -1814,11 +2031,11 @@ EOF
 </ul>
 
 <h3 id="初始化集群">初始化集群</h3>
-<p><code class="highlighter-rouge">kubeadmin init --pod-network-cidr=10.244.0.0/16 </code><br />
+<p><code class="language-plaintext highlighter-rouge">kubeadmin init --pod-network-cidr=10.244.0.0/16 </code><br />
 为了保证Flannel可以正常工作，需要在Kubeadm init时加上“—pod-network-cidr=10.244.0.0/16 ”参数，使用其余CNI对应的参数各不相同，详情请参考<a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network">官方文档</a></p>
 
 <p>若输出以下类似内容则代表集群已经初始化成功了：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your Kubernetes master has initialized successfully!
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your Kubernetes master has initialized successfully!
 
 To start using your cluster, you need to run the following as a regular user:
 
@@ -1840,13 +2057,13 @@ as root:
 
 <h3 id="配置环境参数">配置环境参数</h3>
 <p>留意kubeadm init成功之后的回显，其中提醒了我们使用集群前需要做的相应配置。<br />
-<code class="highlighter-rouge">mkdir -p $HOME/.kube</code><br />
-<code class="highlighter-rouge">sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</code><br />
-<code class="highlighter-rouge">sudo chown $(id -u):$(id -g) $HOME/.kube/config</code></p>
+<code class="language-plaintext highlighter-rouge">mkdir -p $HOME/.kube</code><br />
+<code class="language-plaintext highlighter-rouge">sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</code><br />
+<code class="language-plaintext highlighter-rouge">sudo chown $(id -u):$(id -g) $HOME/.kube/config</code></p>
 
 <h3 id="安装cni">安装CNI</h3>
 <p>我们使用Flannel作为这个集群的CNI，所以使用如下命令安装Flannel：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
 </code></pre></div></div>
 
 <p>其余类型的CNI的安装方式可以参照<a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network">官方文档</a></p>
@@ -1854,14 +2071,14 @@ as root:
 <h2 id="node加入集群">Node加入集群</h2>
 <p>现在可以将已经安装好Kubernetes组件的主机作为Node节点加入我们已经创建好的集群中了。
 使用类似如下kubeadm join命令完成Node节点的加入（token来自于之前Master上kubeadm init的结果）：<br />
-<code class="highlighter-rouge">kubeadm join 172.31.59.194:6443 --token 0vfzv1.vw6oxga0xhc1lzm5 --discovery-token-ca-cert-hash sha256:39b0319100e9997cb859ef6967a00c93de3ef8e535a7dc3d6e4ed510a5b97e6c</code></p>
+<code class="language-plaintext highlighter-rouge">kubeadm join 172.31.59.194:6443 --token 0vfzv1.vw6oxga0xhc1lzm5 --discovery-token-ca-cert-hash sha256:39b0319100e9997cb859ef6967a00c93de3ef8e535a7dc3d6e4ed510a5b97e6c</code></p>
 
 <h2 id="查看集群状态">查看集群状态</h2>
 <p>到此，我们的集群已经创建完成，可以在Master上通过如下命令查看集群成员：<br />
-<code class="highlighter-rouge">kubectl get nodes</code></p>
+<code class="language-plaintext highlighter-rouge">kubectl get nodes</code></p>
 
 <p>结果类似如下格式，若各节点状态都已经为Ready则代表集群建立完成：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@izj6cfshug9pwgb71j3t10z ~]# kubectl get node
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@izj6cfshug9pwgb71j3t10z ~]# kubectl get node
 NAME                      STATUS    ROLES     AGE       VERSION
 izj6cfshug9pwgb71j3t10z   Ready     master    58m       v1.10.1
 k8scluster1node1          Ready     &lt;none&gt;    24m       v1.10.1
@@ -1891,26 +2108,26 @@ k8scluster1node2          Ready     &lt;none&gt;    1m        v1.10.1
 
 <h2 id="方法一">方法一</h2>
 <p>显示所有的容器，过滤出Exited状态的容器，取出这些容器的ID，<br />
-<code class="highlighter-rouge">sudo docker ps -a|grep Exited|awk '{print $1}'</code></p>
+<code class="language-plaintext highlighter-rouge">sudo docker ps -a|grep Exited|awk '{print $1}'</code></p>
 
 <p>查询所有的容器，过滤出Exited状态的容器，列出容器ID，删除这些容器</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo docker rm `docker ps -a|grep Exited|awk '{print $1}'`
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo docker rm `docker ps -a|grep Exited|awk '{print $1}'`
 </code></pre></div></div>
 
 <h2 id="方法二">方法二</h2>
 <p>删除所有未运行的容器（已经运行的删除不了，未运行的就一起被删除了）<br />
-<code class="highlighter-rouge">sudo docker rm $(sudo docker ps -a -q)</code></p>
+<code class="language-plaintext highlighter-rouge">sudo docker rm $(sudo docker ps -a -q)</code></p>
 
 <h2 id="方法三">方法三</h2>
 <p>根据容器的状态，删除Exited状态的容器<br />
-<code class="highlighter-rouge">sudo docker rm $(sudo docker ps -qf status=exited)</code></p>
+<code class="language-plaintext highlighter-rouge">sudo docker rm $(sudo docker ps -qf status=exited)</code></p>
 
 <h2 id="方法四">方法四</h2>
 <p>Docker 1.13版本以后，可以使用 docker containers prune 命令，删除孤立的容器。<br />
-<code class="highlighter-rouge">sudo docker container prune</code></p>
+<code class="language-plaintext highlighter-rouge">sudo docker container prune</code></p>
 
 <h2 id="删除所有镜像">删除所有镜像</h2>
-<p><code class="highlighter-rouge">sudo docker rmi $(docker images -q)</code></p>
+<p><code class="language-plaintext highlighter-rouge">sudo docker rmi $(docker images -q)</code></p>
 ]]></content>
       <categories>
         
@@ -1994,15 +2211,15 @@ GitHub : https://github.com/ShoreCN<br />
 
 <h1 id="normal-block">Normal block</h1>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alert('Hello World!');
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>alert('Hello World!');
 </code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>print 'helloworld'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>print 'helloworld'
 </code></pre></div></div>
 
 <h1 id="highlight-block">Highlight block</h1>
 
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">alert</span><span class="p">(</span> <span class="s1">'Hello, world!'</span> <span class="p">);</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">alert</span><span class="p">(</span> <span class="dl">'</span><span class="s1">Hello, world!</span><span class="dl">'</span> <span class="p">);</span>
 </code></pre></div></div>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span> <span class="s">'helloworld'</span>
@@ -2022,7 +2239,8 @@ GitHub : https://github.com/ShoreCN<br />
 3
 </pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">foo</span>
   <span class="nb">puts</span> <span class="s1">'foo'</span>
-<span class="k">end</span></pre></td></tr></tbody></table></code></pre></figure>
+<span class="k">end</span>
+</pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
 </span>

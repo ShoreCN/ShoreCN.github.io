@@ -403,14 +403,14 @@
 <h3 id="选择jekyll模板">选择Jekyll模板</h3>
 <p>网上有大量的现成Jekyll模板可以选择，此处以Jekyll-Now为例。
 在服务器上创建一个目录并git clone模板代码：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir jekyllBlog
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir jekyllBlog
 cd jekyllBlog
 git clone https://github.com/barryclark/jekyll-now.git .
 </code></pre></div></div>
 
 <h3 id="构建">构建</h3>
 <p>Jekyll提供了一条build命令将模板编译为静态网页，直接在执行如下Docker命令即可：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export JEKYLL_VERSION=3.8
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export JEKYLL_VERSION=3.8
 docker run --rm --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:$JEKYLL_VERSION jekyll build
 </code></pre></div></div>
 
@@ -418,7 +418,7 @@ docker run --rm --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:$JEKYLL_VERSION je
 
 <h3 id="开启服务">开启服务</h3>
 <p>Jekyll 同时也集成了一个网页服务，通过server命令即可开启。
-<code class="highlighter-rouge">docker run --rm --volume="$PWD:/srv/jekyll" -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll server</code></p>
+<code class="language-plaintext highlighter-rouge">docker run --rm --volume="$PWD:/srv/jekyll" -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll server</code></p>
 
 <p>通过-p参数指定了对外暴露的的服务器端口为4000</p>
 
@@ -558,7 +558,7 @@ docker run --rm --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:$JEKYLL_VERSION je
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -580,7 +580,7 @@ docker run --rm --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:$JEKYLL_VERSION je
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -680,7 +680,7 @@ docker run --rm --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:$JEKYLL_VERSION je
   
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

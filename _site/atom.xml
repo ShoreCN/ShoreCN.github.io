@@ -1,4 +1,200 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2019-03-20T10:05:13+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">macOS上修复word/excel等office文件乱码问题</title><link href="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/" rel="alternate" type="text/html" title="macOS上修复word/excel等office文件乱码问题" /><published>2019-03-19T19:14:39+08:00</published><updated>2019-03-19T19:14:39+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/">&lt;h2 id=&quot;原因&quot;&gt;原因&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2023-06-27T10:44:35+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">区块链代币管理</title><link href="/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager/" rel="alternate" type="text/html" title="区块链代币管理" /><published>2023-05-12T01:23:59+08:00</published><updated>2023-05-12T01:23:59+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager/">&lt;p&gt;区块链代币管理&lt;/p&gt;
+
+&lt;h2 id=&quot;背景&quot;&gt;背景&lt;/h2&gt;
+&lt;p&gt;区块链代币种类繁多, 如何在项目里面合理地管理代币, 这是一个问题.&lt;br /&gt;
+通常情况下项目规模不大, 代币种类也不是很多, 可以直接在代码里面硬编码, 前端和后端各自独立维护, 但是这样的话, 项目的可扩展性和维护性就比较差.&lt;br /&gt;
+通过设计一个简单的代币管理模块, 可以有效地解决这个问题.&lt;/p&gt;
+
+&lt;h2 id=&quot;设计思路&quot;&gt;设计思路&lt;/h2&gt;
+&lt;h3 id=&quot;明确需求&quot;&gt;明确需求&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;准确性有保证, 代币数据准确无误;&lt;/li&gt;
+  &lt;li&gt;可维护性强, 统一管理代币, 避免重复劳动且容易出错;&lt;/li&gt;
+  &lt;li&gt;便捷性较好, 通过设计灵活的接口, 可以适应不同的业务场景.&lt;/li&gt;
+  &lt;li&gt;稳定性高, 单数据源容易出现异常时, 代币数据可能会丢失或无法读取;&lt;/li&gt;
+  &lt;li&gt;可扩展性好, 代币种类可以动态增加, 代币属性可以动态修改;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;设计方案&quot;&gt;设计方案&lt;/h3&gt;
+&lt;h4 id=&quot;数据结构&quot;&gt;数据结构&lt;/h4&gt;
+&lt;p&gt;代币通常需要包含以下属性:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;代币名称&lt;/li&gt;
+  &lt;li&gt;代币符号&lt;/li&gt;
+  &lt;li&gt;代币精度&lt;/li&gt;
+  &lt;li&gt;代币合约地址&lt;/li&gt;
+  &lt;li&gt;代币图标&lt;/li&gt;
+  &lt;li&gt;链类型&lt;/li&gt;
+  &lt;li&gt;协议类型&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在同一条链上, 代币符号常常无法保证唯一性, 例如: USDT, 代币名称可以保证唯一性, 例如: Tether USD.&lt;br /&gt;
+在不同链上, 代币符号也可能相同, 例如: USDT.&lt;br /&gt;
+所以我们需要一个唯一的标识来区分不同链上的代币, 这里我们使用代币名称+链类型来作为唯一标识.&lt;/p&gt;
+
+&lt;h4 id=&quot;数据存储&quot;&gt;数据存储&lt;/h4&gt;
+&lt;p&gt;代币数据的持久化存储, 通常有以下几种方案:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;数据库&lt;/li&gt;
+  &lt;li&gt;文件&lt;/li&gt;
+  &lt;li&gt;缓存
+对于token这类型的数据, 数据库可以选择非关系型数据库, 例如: mongodb, redis等.
+缓存可以选择本地内存缓存, 规模较大的话, 可以选择分布式缓存, 例如: redis, memcached等.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;仅使用单数据源的话, 会存在以下问题:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;单数据源容易出现异常时, 代币数据可能会丢失或无法读取;&lt;/li&gt;
+  &lt;li&gt;单数据源无法保证数据的准确性, 例如: 代币数据被恶意篡改, 或者数据更新不同步等;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;为了解决这个问题, 我们可以使用多数据源的方案, 例如: 数据库+缓存, 数据库+文件等.&lt;/p&gt;
+
+&lt;p&gt;不过多数据源的方案, 会存在数据同步的问题, 例如: 数据库+缓存, 数据库中的数据被修改后, 缓存中的数据没有及时更新, 会导致数据不一致. 通过设计一个简单的数据同步机制, 可以有效地解决这个问题.
+同步机制的设计思路如下:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;数据库中的数据被修改后, 通过消息队列发送消息;&lt;/li&gt;
+  &lt;li&gt;缓存中的数据订阅消息队列, 收到消息后, 更新缓存中的数据;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;接口设计&quot;&gt;接口设计&lt;/h4&gt;
+&lt;p&gt;代币管理系统的接口设计, 通常需要包含以下几个方面:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;数据初始化&lt;/li&gt;
+  &lt;li&gt;数据的读取&lt;/li&gt;
+  &lt;li&gt;数据的更新&lt;/li&gt;
+  &lt;li&gt;数据的删除&lt;/li&gt;
+  &lt;li&gt;数据的同步&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;对象设计&quot;&gt;对象设计&lt;/h4&gt;
+
+&lt;h2 id=&quot;实现方案&quot;&gt;实现方案&lt;/h2&gt;
+&lt;h3 id=&quot;数据结构-1&quot;&gt;数据结构&lt;/h3&gt;
+&lt;p&gt;代币数据的基础结构如下:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataclass&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;chain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;token_addr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;precision&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;logo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;数据存储-1&quot;&gt;数据存储&lt;/h3&gt;
+&lt;p&gt;代币数据的存储方案如下:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;数据库: mongodb&lt;/li&gt;
+  &lt;li&gt;缓存: LocalCache&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;接口实现&quot;&gt;接口实现&lt;/h3&gt;
+&lt;p&gt;代币管理系统的接口设计如下:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;数据初始化: 从数据库中读取数据, 并写入缓存, 如果数据库中没有数据, 则从读取预先硬编码的代币数据, 并写入数据库和缓存;&lt;/li&gt;
+  &lt;li&gt;数据的读取: 从缓存中读取数据, 如果缓存中没有数据, 则从数据库中读取数据, 并写入缓存;&lt;/li&gt;
+  &lt;li&gt;数据的更新: 更新数据库中的数据, 并通知缓存更新数据;&lt;/li&gt;
+  &lt;li&gt;数据的删除: 删除数据库中的数据, 并通知缓存删除数据;&lt;/li&gt;
+  &lt;li&gt;数据的同步: 定时检查数据库和缓存中的数据是否一致, 如果不一致, 则更新缓存中的数据; 定时检查数据库中的数据和外部数据(区块链浏览器,服务提供商等)是否一致, 如果不一致, 则更新数据库中的数据;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;对象实现&quot;&gt;对象实现&lt;/h3&gt;
+&lt;p&gt;以python为例, 代币管理系统的对象如下:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CryptoTokenManager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Database&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Cache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;restore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;恢复数据
+        外部数据(暂无) &amp;gt; 数据库 &amp;gt; 默认数据 &amp;gt; 内存
+
+        Returns:
+            list: 恢复的数据
+        &quot;&quot;&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;获取token信息
+
+        Args:
+            token (str): token名称
+            chain (str): 链
+
+        Returns:
+            dict: token信息
+        &quot;&quot;&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_token_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;获取token列表
+
+        Args:
+            token (str, optional): token名称. Defaults to &apos;&apos;.
+            chain (str, optional): 链. Defaults to &apos;&apos;.
+            protocol (str, optional): 协议. Defaults to &apos;&apos;.
+
+        Returns:
+            list: token列表
+        &quot;&quot;&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;add_token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token_info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;添加token(本地)
+
+        Args:
+            token_info (dict): token信息
+
+        Returns:
+            bool: 是否添加成功
+        &quot;&quot;&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;remove_token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;移除token(本地)
+
+        Args:
+            token (str): token名称
+            chain (str): 链
+        
+        Returns:
+            bool: 是否移除成功
+        &quot;&quot;&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;保存至数据库
+
+        Returns:
+            bool: 是否保存成功
+        &quot;&quot;&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;check_data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;检查数据是否正确
+
+        Returns:
+            bool: 是否正确
+        &quot;&quot;&quot;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;pass&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;思考&quot;&gt;思考🤔&lt;/h2&gt;
+&lt;h3 id=&quot;性能优化&quot;&gt;性能优化&lt;/h3&gt;
+&lt;p&gt;因为代币数据的读取频率远远大于写入频率, 所以我们可以通过缓存来提高读取性能. 作为一个相对静态的数据, 后续还可以考虑通过CDN来提升网络接口表现.&lt;/p&gt;
+
+&lt;h3 id=&quot;安全性&quot;&gt;安全性&lt;/h3&gt;
+&lt;p&gt;代币数据的安全性关键就是保证数据的准确性, 具体来说就是数据的非预期篡改, 例如: 代币数据被恶意篡改, 或者数据更新错误等.&lt;br /&gt;
+不过代币管理虽然贯穿了大部分的业务流程, 但是错误的代币地址通常导致的是业务流程的失败, 而不是错误的业务流程(例如资产流向错误目标等), 所以对于安全性的提升可以更加侧重于密钥管理/收款方确认等方面.&lt;/p&gt;
+
+&lt;h3 id=&quot;后续优化方案&quot;&gt;后续优化方案&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;外部数据同步&lt;/li&gt;
+  &lt;li&gt;异常处理&lt;/li&gt;
+  &lt;li&gt;告警机制&lt;/li&gt;
+  &lt;li&gt;数据存储简化&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="区块链" /><category term="Python" /><summary type="html">区块链代币管理</summary></entry><entry><title type="html">macOS上修复word/excel等office文件乱码问题</title><link href="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/" rel="alternate" type="text/html" title="macOS上修复word/excel等office文件乱码问题" /><published>2019-03-19T19:14:39+08:00</published><updated>2019-03-19T19:14:39+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/">&lt;h2 id=&quot;原因&quot;&gt;原因&lt;/h2&gt;
 &lt;p&gt;编码问题。因为在Windows系统上面，通常使用的是GBK字符编码方式，但是在macOS的系统上使用的是UTF-8的编码方式。所以常常会遇到从Windows系统上编辑创建的word/excel等office文件，在macOS或iOS上面打开显示为乱码。&lt;/p&gt;
 
 &lt;h2 id=&quot;解决办法&quot;&gt;解决办法&lt;/h2&gt;
@@ -9,7 +205,7 @@ macOS或Linux系统下的iconv命令的作用就是进行文件编码方式转�
   &lt;p&gt;iconv的作用是在多种国际编码格式之间进行文本内码的转换。&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Usage: iconv [OPTION...] [-f ENCODING] [-t ENCODING] [INPUTFILE...]
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Usage: iconv [OPTION...] [-f ENCODING] [-t ENCODING] [INPUTFILE...]
 or:    iconv -l
 
 Converts text from one encoding to another encoding.
@@ -37,7 +233,7 @@ Informative output:
   --version                   output version information and exit
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;通过iconv尝试进行文件编码方式转换，执行命令&lt;code class=&quot;highlighter-rouge&quot;&gt;iconv -s -c -f GBK -t UTF8 input.file &amp;gt; output.file&lt;/code&gt;&lt;br /&gt;
+&lt;p&gt;通过iconv尝试进行文件编码方式转换，执行命令&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iconv -s -c -f GBK -t UTF8 input.file &amp;gt; output.file&lt;/code&gt;&lt;br /&gt;
 参数解释：&lt;br /&gt;
 -f 输入文件的编码方式&lt;br /&gt;
 -t 输出文件的编码方式&lt;br /&gt;
@@ -46,8 +242,8 @@ output.file 输出文件名&lt;br /&gt;
 通过执行这条命令，我们打开新生成的输出文件，可以看到文件内容已经正常显示了。&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;iconv命令支持很多文件编码方式，具体的可以通过命令&lt;code class=&quot;highlighter-rouge&quot;&gt;iconv -l&lt;/code&gt;进行查询。&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><summary type="html">原因 编码问题。因为在Windows系统上面，通常使用的是GBK字符编码方式，但是在macOS的系统上使用的是UTF-8的编码方式。所以常常会遇到从Windows系统上编辑创建的word/excel等office文件，在macOS或iOS上面打开显示为乱码。</summary></entry><entry><title type="html">在Google云平台上通过Docker快速搭建ShadowSocks服务</title><link href="/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/" rel="alternate" type="text/html" title="在Google云平台上通过Docker快速搭建ShadowSocks服务" /><published>2019-03-06T06:46:49+08:00</published><updated>2019-03-06T06:46:49+08:00</updated><id>/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker</id><content type="html" xml:base="/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/">&lt;h2 id=&quot;准备&quot;&gt;准备&lt;/h2&gt;
+  &lt;p&gt;iconv命令支持很多文件编码方式，具体的可以通过命令&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iconv -l&lt;/code&gt;进行查询。&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="工具" /><summary type="html">原因 编码问题。因为在Windows系统上面，通常使用的是GBK字符编码方式，但是在macOS的系统上使用的是UTF-8的编码方式。所以常常会遇到从Windows系统上编辑创建的word/excel等office文件，在macOS或iOS上面打开显示为乱码。</summary></entry><entry><title type="html">在Google云平台上通过Docker快速搭建ShadowSocks服务</title><link href="/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/" rel="alternate" type="text/html" title="在Google云平台上通过Docker快速搭建ShadowSocks服务" /><published>2019-03-06T06:46:49+08:00</published><updated>2019-03-06T06:46:49+08:00</updated><id>/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker</id><content type="html" xml:base="/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/">&lt;h2 id=&quot;准备&quot;&gt;准备&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;已激活的Google云账号&lt;/li&gt;
   &lt;li&gt;支付方式已经配置成功&lt;/li&gt;
@@ -104,7 +300,7 @@ output.file 输出文件名&lt;br /&gt;
 &lt;p&gt;使用Google Cloud自带的容器功能可以省去一些安装配置动作.
 但是手工部署可以带来更高的灵活性,用户可以选择更多的可选配置.
 安装完docker相关组件之后,使用如下命令即可部署SS服务:
-&lt;code class=&quot;highlighter-rouge&quot;&gt;docker run -dt --name ss -p &amp;lt;host_port&amp;gt;:&amp;lt;docker_port&amp;gt; mritd/shadowsocks -s &quot;-s 0.0.0.0 -p &amp;lt;s&amp;gt; -m chacha20-ietf-poly1305 -k &amp;lt;password&amp;gt; --fast-open&quot;&lt;/code&gt;&lt;/p&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker run -dt --name ss -p &amp;lt;host_port&amp;gt;:&amp;lt;docker_port&amp;gt; mritd/shadowsocks -s &quot;-s 0.0.0.0 -p &amp;lt;s&amp;gt; -m chacha20-ietf-poly1305 -k &amp;lt;password&amp;gt; --fast-open&quot;&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;参数说明:&lt;/p&gt;
 &lt;ul&gt;
@@ -121,8 +317,8 @@ output.file 输出文件名&lt;br /&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;命令执行完成之后可以通过&lt;code class=&quot;highlighter-rouge&quot;&gt;docker ps&lt;/code&gt;命令查看容器是否正常运行,
-使用&lt;code class=&quot;highlighter-rouge&quot;&gt;ps -ef | grep ss&lt;/code&gt;命令可以查看ShadowSocks服务是否正常运行.&lt;/p&gt;
+&lt;p&gt;命令执行完成之后可以通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker ps&lt;/code&gt;命令查看容器是否正常运行,
+使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ps -ef | grep ss&lt;/code&gt;命令可以查看ShadowSocks服务是否正常运行.&lt;/p&gt;
 
 &lt;p&gt;至此,用户就可以根据自己使用的终端安装对应的客户端使用ShadowSocks服务了.&lt;/p&gt;
 
@@ -135,8 +331,8 @@ output.file 输出文件名&lt;br /&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;tips 如何快速判断是因为网络端口没有放开导致的服务不可用？&lt;br /&gt;
-有时用户无法确定到底是软件安装配置还是网络端口问题导致的服务不可用。只需如下一条命令即可快速启用一个web服务&lt;code class=&quot;highlighter-rouge&quot;&gt;docker run -p &amp;lt;hostPort&amp;gt;:80 -d nginx&lt;/code&gt;，通过访问hostIP:hostPort查看网页是否能够正常访问即可判断端口是否正常放开。&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="ShadowSocks" /><category term="Docker" /><category term="Google" /><summary type="html">准备 已激活的Google云账号 支付方式已经配置成功</summary></entry><entry><title type="html">AWS CloudFront CDN加速功能初步应用</title><link href="/%E6%9E%B6%E6%9E%84/2019/03/03/AWS-cloudfront-basic-deployment/" rel="alternate" type="text/html" title="AWS CloudFront CDN加速功能初步应用" /><published>2019-03-03T06:46:49+08:00</published><updated>2019-03-03T06:46:49+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2019/03/03/AWS-cloudfront-basic-deployment</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2019/03/03/AWS-cloudfront-basic-deployment/">&lt;h2 id=&quot;简介&quot;&gt;简介&lt;/h2&gt;
+有时用户无法确定到底是软件安装配置还是网络端口问题导致的服务不可用。只需如下一条命令即可快速启用一个web服务&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker run -p &amp;lt;hostPort&amp;gt;:80 -d nginx&lt;/code&gt;，通过访问hostIP:hostPort查看网页是否能够正常访问即可判断端口是否正常放开。&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="云计算" /><category term="容器" /><category term="ShadowSocks" /><category term="Docker" /><category term="Google" /><summary type="html">准备 已激活的Google云账号 支付方式已经配置成功</summary></entry><entry><title type="html">AWS CloudFront CDN加速功能初步应用</title><link href="/%E6%9E%B6%E6%9E%84/2019/03/03/AWS-cloudfront-basic-deployment/" rel="alternate" type="text/html" title="AWS CloudFront CDN加速功能初步应用" /><published>2019-03-03T06:46:49+08:00</published><updated>2019-03-03T06:46:49+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2019/03/03/AWS-cloudfront-basic-deployment</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2019/03/03/AWS-cloudfront-basic-deployment/">&lt;h2 id=&quot;简介&quot;&gt;简介&lt;/h2&gt;
 &lt;p&gt;Amazon CloudFront 是一项快速内容分发网络 (CDN) 服务，可以安全地以低延迟和高传输速度向全球客户分发数据、视频、应用程序和 API。&lt;/p&gt;
 
 &lt;h2 id=&quot;使用场景&quot;&gt;使用场景&lt;/h2&gt;
@@ -220,7 +416,7 @@ output.file 输出文件名&lt;br /&gt;
 AWS CloudFront会重新分配一个域名,用户使用这个域名进行内容分发即可达到用户的最优访问效果了.&lt;/p&gt;
 
 &lt;h3 id=&quot;额外功能&quot;&gt;额外功能&lt;/h3&gt;
-&lt;p&gt;Amazon CloudFront还提供了各种的报告和分析功能,用户可以通过Amazon提供的数据查看缓存使用的状态,包括请求数、字节数、HTTP状态、异常报告等等&lt;/p&gt;</content><author><name>Shore</name></author><category term="云计算" /><summary type="html">简介 Amazon CloudFront 是一项快速内容分发网络 (CDN) 服务，可以安全地以低延迟和高传输速度向全球客户分发数据、视频、应用程序和 API。</summary></entry><entry><title type="html">在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客</title><link href="/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS/" rel="alternate" type="text/html" title="在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客" /><published>2019-02-26T06:46:49+08:00</published><updated>2019-02-26T06:46:49+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS/">&lt;h2 id=&quot;jekyll简介&quot;&gt;Jekyll简介&lt;/h2&gt;
+&lt;p&gt;Amazon CloudFront还提供了各种的报告和分析功能,用户可以通过Amazon提供的数据查看缓存使用的状态,包括请求数、字节数、HTTP状态、异常报告等等&lt;/p&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="云计算" /><summary type="html">简介 Amazon CloudFront 是一项快速内容分发网络 (CDN) 服务，可以安全地以低延迟和高传输速度向全球客户分发数据、视频、应用程序和 API。</summary></entry><entry><title type="html">在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客</title><link href="/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS/" rel="alternate" type="text/html" title="在AWS Ubuntu服务器上使用Docker快速部署Jekyll静态博客" /><published>2019-02-26T06:46:49+08:00</published><updated>2019-02-26T06:46:49+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2019/02/26/Deploy-Jekyll-by-docker-in-AWS/">&lt;h2 id=&quot;jekyll简介&quot;&gt;Jekyll简介&lt;/h2&gt;
 &lt;p&gt;Jekyll 是一个简单且完全免费的静态博客站点生成工具，类似WordPress。但是和WordPress又有很大的不同，原因是jekyll只是一个只用 Markdown (或 Textile)、Liquid、HTML &amp;amp; CSS 就可以生成静态网页的工具，不需要数据库支持。但是可以配合第三方服务,例如Disqus。&lt;/p&gt;
 
 &lt;h2 id=&quot;docker简介&quot;&gt;Docker简介&lt;/h2&gt;
@@ -243,14 +439,14 @@ AWS CloudFront会重新分配一个域名,用户使用这个域名进行内容�
 &lt;h3 id=&quot;选择jekyll模板&quot;&gt;选择Jekyll模板&lt;/h3&gt;
 &lt;p&gt;网上有大量的现成Jekyll模板可以选择，此处以Jekyll-Now为例。
 在服务器上创建一个目录并git clone模板代码：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir jekyllBlog
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir jekyllBlog
 cd jekyllBlog
 git clone https://github.com/barryclark/jekyll-now.git .
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;构建&quot;&gt;构建&lt;/h3&gt;
 &lt;p&gt;Jekyll提供了一条build命令将模板编译为静态网页，直接在执行如下Docker命令即可：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export JEKYLL_VERSION=3.8
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;export JEKYLL_VERSION=3.8
 docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -it jekyll/jekyll:$JEKYLL_VERSION jekyll build
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -258,7 +454,7 @@ docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -it jekyll/jekyll:$JEKYLL_
 
 &lt;h3 id=&quot;开启服务&quot;&gt;开启服务&lt;/h3&gt;
 &lt;p&gt;Jekyll 同时也集成了一个网页服务，通过server命令即可开启。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll server&lt;/code&gt;&lt;/p&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -it -p 4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll server&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;通过-p参数指定了对外暴露的的服务器端口为4000&lt;/p&gt;
 
@@ -268,7 +464,7 @@ docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -it jekyll/jekyll:$JEKYLL_
 &lt;blockquote&gt;
   &lt;p&gt;参考资料&lt;br /&gt;
 &lt;a href=&quot;https://stackoverflow.com/questions/53470794/setup-jekyll-via-docker&quot;&gt;Setup Jekyll via Docker? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><summary type="html">Jekyll简介 Jekyll 是一个简单且完全免费的静态博客站点生成工具，类似WordPress。但是和WordPress又有很大的不同，原因是jekyll只是一个只用 Markdown (或 Textile)、Liquid、HTML &amp;amp; CSS 就可以生成静态网页的工具，不需要数据库支持。但是可以配合第三方服务,例如Disqus。</summary></entry><entry><title type="html">使用NGINX Ingress进行Kubernetes集群负载均衡</title><link href="/2018/12/25/k8s-nginx-ingress-install/" rel="alternate" type="text/html" title="使用NGINX Ingress进行Kubernetes集群负载均衡" /><published>2018-12-25T08:23:23+08:00</published><updated>2018-12-25T08:23:23+08:00</updated><id>/2018/12/25/k8s-nginx-ingress-install</id><content type="html" xml:base="/2018/12/25/k8s-nginx-ingress-install/">&lt;h2 id=&quot;1-概述&quot;&gt;1 概述&lt;/h2&gt;
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="工具" /><summary type="html">Jekyll简介 Jekyll 是一个简单且完全免费的静态博客站点生成工具，类似WordPress。但是和WordPress又有很大的不同，原因是jekyll只是一个只用 Markdown (或 Textile)、Liquid、HTML &amp;amp; CSS 就可以生成静态网页的工具，不需要数据库支持。但是可以配合第三方服务,例如Disqus。</summary></entry><entry><title type="html">使用NGINX Ingress进行Kubernetes集群负载均衡</title><link href="/2018/12/25/k8s-nginx-ingress-install/" rel="alternate" type="text/html" title="使用NGINX Ingress进行Kubernetes集群负载均衡" /><published>2018-12-25T08:23:23+08:00</published><updated>2018-12-25T08:23:23+08:00</updated><id>/2018/12/25/k8s-nginx-ingress-install</id><content type="html" xml:base="/2018/12/25/k8s-nginx-ingress-install/">&lt;h2 id=&quot;1-概述&quot;&gt;1 概述&lt;/h2&gt;
 &lt;p&gt;Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。&lt;/p&gt;
 
 &lt;h2 id=&quot;2-安装&quot;&gt;2 安装&lt;/h2&gt;
@@ -298,7 +494,7 @@ hostPort是直接将容器的端口与所调度的节点上的端口连接起来
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apiVersion: v1
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apiVersion: v1
 kind: Pod
 metadata:
   name: influxdb
@@ -316,10 +512,10 @@ spec:
 
 &lt;h3 id=&quot;22-使用loadbalancer提供服务&quot;&gt;2.2 使用LoadBalancer提供服务&lt;/h3&gt;
 &lt;p&gt;这种方式部署起来十分简单，因为stable/nginx-ingress这个helm包默认就是使用这种方式部署。确保在云厂商上已经开通了LoadBalancer服务之后，执行如下命令进行一键安装：&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress&lt;/code&gt;&lt;/p&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;部署完成后查看结果：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl get svc -n kube-system
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl get svc -n kube-system
 NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
 nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   80:30113/TCP,443:32564/TCP   21h
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -330,7 +526,7 @@ nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   8
 &lt;h4 id=&quot;231-选择边缘节点&quot;&gt;2.3.1 选择边缘节点&lt;/h4&gt;
 &lt;p&gt;边缘节点：监听外部流量进入集群内部的节点
 这里我们选择集群内部的一个节点作为边缘节点，注意这个节点需要有外部可以访问的公网地址并且80、443端口没有被其他应用占用。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# kubectl get nodes
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# kubectl get nodes
 NAME                      STATUS   ROLES    AGE   VERSION
 izj6cfiv0zhc0j2k7ruyhsz   Ready    &amp;lt;none&amp;gt;   16d   v1.13.0
 k8s-cluster1-master       Ready    master   16d   v1.13.0
@@ -339,18 +535,18 @@ k8s-cluster1-master       Ready    master   16d   v1.13.0
 
 &lt;h4 id=&quot;232-为边缘节点添加标签&quot;&gt;2.3.2 为边缘节点添加标签&lt;/h4&gt;
 &lt;p&gt;我们使用如下指令给这个节点加上一个内容为node:edge的label，后续在DaemonSet部署时根据label进行绑定即可。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node=edge
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node=edge
 node &quot;izj6cfiv0zhc0j2k7ruyhsz&quot; labeled
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;删除标签可以使用如下命令&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node-
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node-
 node &quot;izj6cfiv0zhc0j2k7ruyhsz&quot; labeled
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h4 id=&quot;233-使用helm安装ingress&quot;&gt;2.3.3 使用helm安装ingress&lt;/h4&gt;
 &lt;p&gt;配置好边缘节点之后即可以使用Helm安装ingress了，安装命令如下：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;helm install stable/nginx-ingress \
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;helm install stable/nginx-ingress \
   --namespace kube-system \
   --name nginx-ingress \
   --set controller.kind=DaemonSet \
@@ -370,7 +566,7 @@ node &quot;izj6cfiv0zhc0j2k7ruyhsz&quot; labeled
 &lt;/ul&gt;
 
 &lt;p&gt;安装完成之后检查一下对应pod是否都正常运行了&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# kubectl get pods -n kube-system | grep nginx-ingress
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# kubectl get pods -n kube-system | grep nginx-ingress
 nginx-ingress-controller-hv8h9                   1/1     Running   0          15d
 nginx-ingress-default-backend-56d99b86fb-4jlxn   1/1     Running   0          15d
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -379,7 +575,7 @@ nginx-ingress-default-backend-56d99b86fb-4jlxn   1/1     Running   0          15
 &lt;h3 id=&quot;31-创建测试服务&quot;&gt;3.1 创建测试服务&lt;/h3&gt;
 &lt;p&gt;Ingress安装完成之后，就可以配置相应规则来对外暴露服务了。我们可以创建一个服务来测试
 创建一个my-nginx.yaml，内容为&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  apiVersion: extensions/v1beta1
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: my-nginx
@@ -411,8 +607,8 @@ spec:
     run: my-nginx
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl apply -f my-nginx.yaml&lt;/code&gt;进行创建，通过&lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl get service&lt;/code&gt;可以看到my-nginx服务已经创建成功&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# kubectl get svc
+&lt;p&gt;通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kubectl apply -f my-nginx.yaml&lt;/code&gt;进行创建，通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kubectl get service&lt;/code&gt;可以看到my-nginx服务已经创建成功&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# kubectl get svc
 NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 kubernetes                           ClusterIP   10.96.0.1        &amp;lt;none&amp;gt;        443/TCP          17d
 my-nginx                             ClusterIP   10.100.181.157   &amp;lt;none&amp;gt;        80/TCP,443/TCP   13d
@@ -420,7 +616,7 @@ my-nginx                             ClusterIP   10.100.181.157   &amp;lt;none&a
 
 &lt;h3 id=&quot;32-创建ingress规则&quot;&gt;3.2 创建ingress规则&lt;/h3&gt;
 &lt;p&gt;创建完成服务之后，我们就可以通过配置ingress规则来暴露服务了，&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apiVersion: extensions/v1beta1
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: my-nginx
@@ -458,8 +654,8 @@ spec:
 创建了证书之后，可以通过tls绑定已创建的secret来实现https安全访问功能&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;至此，我们的Ingress创建完成并且通过配置服务与域名的关系，实现了外部访问的功能，通过域名&lt;code class=&quot;highlighter-rouge&quot;&gt;chenshuo.tk/web&lt;/code&gt;即看到nginx的内容，说明通过域名已经可以访问集群内的服务了&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Welcome to nginx!
+&lt;p&gt;至此，我们的Ingress创建完成并且通过配置服务与域名的关系，实现了外部访问的功能，通过域名&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chenshuo.tk/web&lt;/code&gt;即看到nginx的内容，说明通过域名已经可以访问集群内的服务了&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Welcome to nginx!
 If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
 
 For online documentation and support please refer to nginx.org.
@@ -471,8 +667,8 @@ Thank you for using nginx.
 
 &lt;h2 id=&quot;安装&quot;&gt;安装&lt;/h2&gt;
 &lt;h3 id=&quot;安装客户端helm&quot;&gt;安装客户端（Helm）&lt;/h3&gt;
-&lt;p&gt;官方提供了多种安装方式，这里选用脚本安装的方法，使用命令&lt;code class=&quot;highlighter-rouge&quot;&gt;curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash&lt;/code&gt;会自动抓取最新的版本完成客户端的安装：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+&lt;p&gt;官方提供了多种安装方式，这里选用脚本安装的方法，使用命令&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash&lt;/code&gt;会自动抓取最新的版本完成客户端的安装：&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100  7236  100  7236    0     0  74494      0 --:--:-- --:--:-- --:--:-- 74597
@@ -480,12 +676,12 @@ Downloading https://kubernetes-helm.storage.googleapis.com/helm-v2.12.0-linux-am
 Preparing to install helm and tiller into /usr/local/bin
 helm installed into /usr/local/bin/helm
 tiller installed into /usr/local/bin/tiller
-Run 'helm init' to configure helm.
+Run &apos;helm init&apos; to configure helm.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;安装服务端tiller&quot;&gt;安装服务端（Tiller）&lt;/h3&gt;
-&lt;p&gt;Helm安装完成之后，通过命令行&lt;code class=&quot;highlighter-rouge&quot;&gt;helm init&lt;/code&gt;即可完成服务端Tiller的安装。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# helm init
+&lt;p&gt;Helm安装完成之后，通过命令行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;helm init&lt;/code&gt;即可完成服务端Tiller的安装。&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# helm init
 Creating /root/.helm
 Creating /root/.helm/repository
 Creating /root/.helm/repository/cache
@@ -500,26 +696,26 @@ $HELM_HOME has been configured at /root/.helm.
 
 Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
 
-Please note: by default, Tiller is deployed with an insecure 'allow unauthenticated users' policy.
+Please note: by default, Tiller is deployed with an insecure &apos;allow unauthenticated users&apos; policy.
 To prevent this, run `helm init` with the --tiller-tls-verify flag.
 For more information on securing your installation see: https://docs.helm.sh/using_helm/#securing-your-helm-installation
 Happy Helming!
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;使用命令&lt;code class=&quot;highlighter-rouge&quot;&gt;helm version&lt;/code&gt;可以查看安装是否成功和版本号情况&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# helm version
+&lt;p&gt;使用命令&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;helm version&lt;/code&gt;可以查看安装是否成功和版本号情况&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# helm version
 Client: &amp;amp;version.Version{SemVer:&quot;v2.12.0&quot;, GitCommit:&quot;d325d2a9c179b33af1a024cdb5a4472b6288016a&quot;, GitTreeState:&quot;clean&quot;}
 Server: &amp;amp;version.Version{SemVer:&quot;v2.12.0&quot;, GitCommit:&quot;d325d2a9c179b33af1a024cdb5a4472b6288016a&quot;, GitTreeState:&quot;clean&quot;}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;权限配置&quot;&gt;权限配置&lt;/h3&gt;
 &lt;p&gt;默认安装的 tiller 权限很小，我们执行下面的脚本给它加最大权限，这样方便我们可以用 helm 部署应用到任意 namespace 下:&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl create serviceaccount --namespace=kube-system tiller
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl create serviceaccount --namespace=kube-system tiller
 
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 
-kubectl patch deploy --namespace=kube-system tiller-deploy -p '{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;serviceAccount&quot;:&quot;tiller&quot;}}}}'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Shore</name></author><category term="Kubernetes" /><summary type="html">概述 Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。</summary></entry><entry><title type="html">容器化迁移规范</title><link href="/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard/" rel="alternate" type="text/html" title="容器化迁移规范" /><published>2018-11-28T00:00:00+08:00</published><updated>2018-11-28T00:00:00+08:00</updated><id>/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard</id><content type="html" xml:base="/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard/">&lt;h2 id=&quot;服务器选择&quot;&gt;服务器选择&lt;/h2&gt;
+kubectl patch deploy --namespace=kube-system tiller-deploy -p &apos;{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;serviceAccount&quot;:&quot;tiller&quot;}}}}&apos;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Shore</name></author><category term="Kubernetes" /><category term="Kubernetes" /><summary type="html">概述 Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。</summary></entry><entry><title type="html">容器化迁移规范</title><link href="/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard/" rel="alternate" type="text/html" title="容器化迁移规范" /><published>2018-11-28T00:00:00+08:00</published><updated>2018-11-28T00:00:00+08:00</updated><id>/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard</id><content type="html" xml:base="/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard/">&lt;h2 id=&quot;服务器选择&quot;&gt;服务器选择&lt;/h2&gt;
 &lt;p&gt;用户自行采购服务器主机，服务器规格要求如下：&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;操作系统：CentOS 7或RHEL 7&lt;/li&gt;
@@ -576,7 +772,7 @@ kubectl patch deploy --namespace=kube-system tiller-deploy -p '{&quot;spec&quot;
   &lt;li&gt;通过ENTRYPOINT指令设置容器运行起来后需要执行的程序或命令&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM daocloud.io/centos:7 
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM daocloud.io/centos:7 
 MAINTAINER mate
  
 ENV TZ &quot;Asia/Shanghai&quot; 
@@ -602,7 +798,7 @@ ENTRYPOINT [&quot;/usr/bin/supervisord&quot;, &quot;-n&quot;, &quot;-c&quot;, &q
 &lt;h3 id=&quot;编写dockerfile&quot;&gt;编写Dockerfile&lt;/h3&gt;
 &lt;p&gt;更加详细具体的Dockerfile的语法格式、编写规范可以参考如下资料：&lt;br /&gt;
 &lt;a href=&quot;https://docs.docker.com/engine/reference/builder/&quot;&gt;| Docker Documentation&lt;/a&gt;
-http://www.docker.org.cn/dockerppt/114.html&lt;/p&gt;</content><author><name>Shore</name></author><summary type="html">服务器选择 用户自行采购服务器主机，服务器规格要求如下： 操作系统：CentOS 7或RHEL 7 规格：为了流畅使用Kubernetes功能，主机规格至少达到2 Cpu + 2GB内存 区域：不限，根据用户业务自定 带宽：不限，根据用户业务自定 安全组：需要放开如下Kubernetes集群使用到的端口 Kubernetes API server：6443* etcd server client API：2379-2380 Kubelet API：10250 kube-scheduler：10251 kube-controller-manager：10252 NodePort Services：30000-32767 其他：保证主机的MAC地址和product_uuid在集群内是唯一的；服务器主机之间的网络可以完全正常访问</summary></entry><entry><title type="html">基于云原生技术的产品开发原则</title><link href="/%E6%9E%B6%E6%9E%84/2018/11/25/Cloud-Native-Development-Principle/" rel="alternate" type="text/html" title="基于云原生技术的产品开发原则" /><published>2018-11-25T19:29:39+08:00</published><updated>2018-11-25T19:29:39+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2018/11/25/Cloud-Native-Development-Principle</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2018/11/25/Cloud-Native-Development-Principle/">&lt;h2 id=&quot;传统开发模式困局&quot;&gt;传统开发模式困局&lt;/h2&gt;
+http://www.docker.org.cn/dockerppt/114.html&lt;/p&gt;</content><author><name>Shore</name></author><category term="容器" /><summary type="html">服务器选择 用户自行采购服务器主机，服务器规格要求如下： 操作系统：CentOS 7或RHEL 7 规格：为了流畅使用Kubernetes功能，主机规格至少达到2 Cpu + 2GB内存 区域：不限，根据用户业务自定 带宽：不限，根据用户业务自定 安全组：需要放开如下Kubernetes集群使用到的端口 Kubernetes API server：6443* etcd server client API：2379-2380 Kubelet API：10250 kube-scheduler：10251 kube-controller-manager：10252 NodePort Services：30000-32767 其他：保证主机的MAC地址和product_uuid在集群内是唯一的；服务器主机之间的网络可以完全正常访问</summary></entry><entry><title type="html">基于云原生技术的产品开发原则</title><link href="/%E6%9E%B6%E6%9E%84/2018/11/25/Cloud-Native-Development-Principle/" rel="alternate" type="text/html" title="基于云原生技术的产品开发原则" /><published>2018-11-25T19:29:39+08:00</published><updated>2018-11-25T19:29:39+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2018/11/25/Cloud-Native-Development-Principle</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2018/11/25/Cloud-Native-Development-Principle/">&lt;h2 id=&quot;传统开发模式困局&quot;&gt;传统开发模式困局&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;
     &lt;p&gt;开发、测试、运维无法一体化，上线周期长
@@ -684,7 +880,7 @@ http://www.docker.org.cn/dockerppt/114.html&lt;/p&gt;</content><author><name>Sho
 &lt;a href=&quot;https://zhuanlan.zhihu.com/p/27196777&quot;&gt;云原生（CloudNative）将成为应用云化开发的主流方式 - 知乎&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;https://cloud.tencent.com/developer/article/1156697&quot;&gt;云原生概念 - 云+社区 - 腾讯云&lt;/a&gt;&lt;/p&gt;
 
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="云计算" /><summary type="html">传统开发模式困局 开发、测试、运维无法一体化，上线周期长 开发、测试、线上多套环境需要进行单独维护，容易造成不一致影响各阶段的工作开展，进而引发一些线上故障等问题</summary></entry><entry><title type="html">跨云平台实施方案预研</title><link href="/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis/" rel="alternate" type="text/html" title="跨云平台实施方案预研" /><published>2018-11-20T23:45:20+08:00</published><updated>2018-11-20T23:45:20+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis/">&lt;h2 id=&quot;基于k8s集群搭建&quot;&gt;基于K8S集群搭建&lt;/h2&gt;
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="云计算" /><summary type="html">传统开发模式困局 开发、测试、运维无法一体化，上线周期长 开发、测试、线上多套环境需要进行单独维护，容易造成不一致影响各阶段的工作开展，进而引发一些线上故障等问题</summary></entry><entry><title type="html">跨云平台实施方案预研</title><link href="/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis/" rel="alternate" type="text/html" title="跨云平台实施方案预研" /><published>2018-11-20T23:45:20+08:00</published><updated>2018-11-20T23:45:20+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis/">&lt;h2 id=&quot;基于k8s集群搭建&quot;&gt;基于K8S集群搭建&lt;/h2&gt;
 &lt;p&gt;在不同云厂商或同个云厂商不同区域下创建K8S集群，每个K8S集群中独立运行代理程序，通过代理程序进行镜像部署、服务发现、负载均衡等功能。
 然后再开发一套对K8S集群进行控制管理的系统作为后台，用来进行多个集群的资源管理调度。
 优势：单个K8S集群下的功能可以利用之前拾云平台的现成代码
@@ -777,114 +973,4 @@ Harmony平台的理念是随时随地实施策略，它将安全应用服务与�
 &lt;a href=&quot;https://www.cnrancher.com/docs/rancher/v2.x/cn/overview/architecture/&quot;&gt;1 - 架构设计 | Rancher Labs&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;https://blog.csdn.net/liukuan73/article/details/57082617?utm_source=blogxgwz3&quot;&gt;Cloudify：打通应用和基础架构自动化交付的“任督二脉” - liukuan73的专栏 - CSDN博客&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;https://cloudify.co/&quot;&gt;Cloud &amp;amp; NFV Orchestration Based on TOSCA | Cloudify&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="云计算" /><summary type="html">基于K8S集群搭建 在不同云厂商或同个云厂商不同区域下创建K8S集群，每个K8S集群中独立运行代理程序，通过代理程序进行镜像部署、服务发现、负载均衡等功能。 然后再开发一套对K8S集群进行控制管理的系统作为后台，用来进行多个集群的资源管理调度。 优势：单个K8S集群下的功能可以利用之前拾云平台的现成代码 缺陷：对多个K8S集群的资源进行重新分配管理需要较巨大的开发工作量</summary></entry><entry><title type="html">跨云应用管理方案分析</title><link href="/%E6%9E%B6%E6%9E%84/2018/11/14/Platform-Aurchitecture-Cross-Cloud/" rel="alternate" type="text/html" title="跨云应用管理方案分析" /><published>2018-11-14T08:14:39+08:00</published><updated>2018-11-14T08:14:39+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2018/11/14/Platform-Aurchitecture-Cross-Cloud</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2018/11/14/Platform-Aurchitecture-Cross-Cloud/">&lt;p&gt;跨云应用管理方案分析&lt;/p&gt;
-&lt;h2 id=&quot;需求背景&quot;&gt;需求背景&lt;/h2&gt;
-&lt;p&gt;随着技术的不断发展，越来越多的产品通过使用分布式架构，来解决服务器压力、数据可靠性的问题。为了更聚焦于自己的核心业务，许多企业会直接采用各类云厂商的服务或方案，降低门槛与成本。
-但是对于那些业务灵活、数据敏感的企业及产品，使用的云计算服务就需要具有跨云厂商、灵活伸缩、快速切换等功能，保证在服务变更、功能调整等场景下业务受到较小冲击。&lt;/p&gt;
-
-&lt;h2 id=&quot;相关技术&quot;&gt;相关技术&lt;/h2&gt;
-&lt;h3 id=&quot;云计算&quot;&gt;云计算&lt;/h3&gt;
-&lt;p&gt;云计算是一种信息技术（IT）模式，可以随时访问共享的可配置系统资源池和更高级的服务，这些服务通常可以通过互联网以最少的管理工作快速供应。云计算依靠资源共享来实现连贯性和规模经济，类似于公用事业。&lt;/p&gt;
-
-&lt;h3 id=&quot;容器化&quot;&gt;容器化&lt;/h3&gt;
-&lt;p&gt;容器占用资源少、部署快，每个应用可以被打包成一个容器镜像，每个应用与容器间成一对一关系也使容器有更大优势，使用容器可以在build或release的阶段，为应用创建容器镜像，因为每个应用不需要与其余的应用堆栈组合，也不依赖于生产环境基础结构，这使得从研发到测试、生产能提供一致环境。类似地，容器比虚机轻量、更“透明”，这更便于监控和管理。&lt;/p&gt;
-
-&lt;h3 id=&quot;kubernetes&quot;&gt;Kubernetes&lt;/h3&gt;
-&lt;p&gt;又称K8S，是Google开源的一个容器编排引擎，它支持自动化部署、大规模可伸缩、应用容器化管理。在生产环境中部署一个应用程序时，通常要部署该应用的多个实例以便对应用请求进行负载均衡。
-在K8S中，我们可以创建多个容器，每个容器里面运行一个应用实例，然后通过内置的负载均衡策略，实现对这一组应用实例的管理、发现、访问，而这些细节都不需要运维人员去进行复杂的手工配置和处理。&lt;/p&gt;
-
-&lt;h2 id=&quot;k8s集群&quot;&gt;K8S集群&lt;/h2&gt;
-&lt;p&gt;K8S通过将多个主机组成集群并在上层再进行一次虚拟化，使得资源可以充分被利用并灵活地调度。
-但是K8S集群是基于局域网建立的，所以若使用云主机的话，单个集群通常无法跨单个云厂商的多个区域，更不用说支持不同的云厂商。这个对于容灾、迁移、管理方面都是很大的制约。&lt;/p&gt;
-
-&lt;h2 id=&quot;k8s联邦集群federation&quot;&gt;K8S联邦集群（Federation）&lt;/h2&gt;
-&lt;p&gt;K8S提供了联邦集群的机制，将分布在多个区域或者多个云厂商的K8S集群整合成一个大的集群，统一管理与调度。&lt;/p&gt;
-
-&lt;h3 id=&quot;优点&quot;&gt;优点&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;低延迟：让多个区域中的集群通过向距离它们最近的用户提供服务来最大限度地减少延迟。&lt;/li&gt;
-  &lt;li&gt;故障隔离：最好有多个小型集群而不是一个单独的大型集群来进行故障隔离。&lt;/li&gt;
-  &lt;li&gt;可扩展性：单个K8S集群具有可扩展性限制。&lt;/li&gt;
-  &lt;li&gt;混合云：可以在不同的云提供商或本地数据中心上拥有多个群集。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;实现&quot;&gt;实现&lt;/h3&gt;
-&lt;p&gt;联邦集群可以轻松管理多个群集，它通过2个主要构件来实现：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;跨群集同步资源：联邦可以使多个群集中的资源保持同步。 例如，可以确保多个群集中部署相同的程序。&lt;/li&gt;
-  &lt;li&gt;跨群集发现：联邦提供了自动配置DNS服务器和对群集后端负载均衡的功能
-&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/k8s_federation_architecture.jpg&quot; alt=&quot;&quot; /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;影响&quot;&gt;影响&lt;/h3&gt;
-&lt;p&gt;虽然联邦有很多有吸引力的用处，但也有一些注意事项：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;增加网络带宽和成本：联邦控制台监视所有群集以确保当前状态符合预期。如果集群在云提供商或不同云提供商的不同区域(regions)运行，这可能会导致显著的网络成本。&lt;/li&gt;
-  &lt;li&gt;减少跨群集隔离：联邦控制台中的错误可能影响所有群集。通过将联邦控制台中的逻辑保持最简，可以缓解这一问题，尽可能将大部分任务都交给K8S集群处理。 设计和实施也在安全方面做了很多考虑，并避免发生错误时多集群停机。&lt;/li&gt;
-  &lt;li&gt;成熟度：联邦项目相对较新，不太成熟。 并非所有资源都可用，许多资源仍然是alpha状态。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;跨云集群方案&quot;&gt;跨云集群方案&lt;/h2&gt;
-&lt;h3 id=&quot;框架&quot;&gt;框架&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/%E8%B7%A8%E4%BA%91%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84%E6%A1%86%E6%9E%B6%E5%9B%BE.jpg&quot; alt=&quot;&quot; /&gt;
-简单框架原型，镜像功能独立于跨云，暂不列入框架图&lt;/p&gt;
-
-&lt;h4 id=&quot;业务层&quot;&gt;业务层&lt;/h4&gt;
-&lt;p&gt;K8S联邦集群可以管理的资源如框架图中所示，基于这些资源我们可以提供如下跨云功能：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;集群管理&lt;/li&gt;
-  &lt;li&gt;部署&lt;/li&gt;
-  &lt;li&gt;服务&lt;/li&gt;
-  &lt;li&gt;负载均衡&lt;/li&gt;
-  &lt;li&gt;资源隔离&lt;/li&gt;
-  &lt;li&gt;冗余/可靠性&lt;/li&gt;
-  &lt;li&gt;安全&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;平台层&quot;&gt;平台层&lt;/h4&gt;
-&lt;p&gt;利用K8S联邦集群的控制平台，运行一个核心管理平台，衔接业务层的各类操作和底层每个云集群的资源控制动作。&lt;/p&gt;
-
-&lt;h4 id=&quot;服务器层&quot;&gt;服务器层&lt;/h4&gt;
-&lt;p&gt;通过在各个云集群部署代理应用，获取各个云集群及下属云主机的控制权、资源、日志等等&lt;/p&gt;
-
-&lt;h3 id=&quot;云主机&quot;&gt;云主机&lt;/h3&gt;
-&lt;p&gt;云主机可以由客户采购+平台管理或者平台采购+平台管理：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;客户采购+平台管理：由客户自行采购主机并管理核心业务，我们提供平台或工具进行管理，节省了集群采购开支并降低产品运营、数据相关的政策风险。但是至少需要获得用户的主机管理权限才能进行管理，对于一些业务敏感的企业可能会有抵触。&lt;/li&gt;
-  &lt;li&gt;平台采购+平台管理：由我们采购大量主机并搭建平台，类似于给用户提供PaaS服务，增加了主机采购维护的成本和风险，好处在于具有完整的主机控制管理权，可以更自如地部署平台层面的资源调度管理功能。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;规格&quot;&gt;规格&lt;/h3&gt;
-&lt;p&gt;基于K8S v1.12版本，每个集群可以管理的规格如下：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;不超过5000个nodes&lt;/li&gt;
-  &lt;li&gt;不超过150000个pods&lt;/li&gt;
-  &lt;li&gt;不超过300000个容器&lt;/li&gt;
-  &lt;li&gt;每个node上不超过100个pods&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;市场竞品分析&quot;&gt;市场、竞品分析&lt;/h2&gt;
-&lt;p&gt;应用交付(Application Delivery Controller，简称ADC)主要部署于数据中心的应用服务器前端，利用负载均衡、服务器卸载、压缩和缓存、链接复用和防火墙等技术，实现应用的可用性、高效性和安全性。
-主要厂商：深信服、H3C、F5、A10、Radware和Array等&lt;/p&gt;
-
-&lt;h3 id=&quot;f5&quot;&gt;F5&lt;/h3&gt;
-&lt;p&gt;行业领导者，F5 解决方案集成了以下各项：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;公有云提供商，如 AWS、Microsoft Azure 和 Google Cloud Platform。&lt;/li&gt;
-  &lt;li&gt;私有云和开源平台，如 OpenStack、VMware 和 OpenShift。&lt;/li&gt;
-  &lt;li&gt;自动化工具包，因此您可以使用 Ansible、Puppet 或 HashiCorp 部署应用服务，在 DevOps 方法中为应用服务提供声明接口。&lt;/li&gt;
-  &lt;li&gt;容器环境中的微服务（如 Kubernetes 和 Mesos），以便在东西向流量中启用应用服务。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;a10-network&quot;&gt;A10 Network&lt;/h3&gt;
-&lt;h4 id=&quot;harmony-controller&quot;&gt;Harmony Controller&lt;/h4&gt;
-&lt;p&gt;Harmony 平台的理念是随时随地实施策略，它将安全应用服务与内部部署环境、公有云、私有云和混合云衔接在一起。A10 Harmony 控制器具备虚拟化、SaaS 和物理规格，可用于管理多云环境下的安全应用交付服务，并集成多种配置和自动化服务。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;参考资料：&lt;br /&gt;
-&lt;a href=&quot;https://kubernetes.io/docs/concepts/cluster-administration/federation/&quot;&gt;Federation - Kubernetes&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://kubernetes.io/docs/setup/cluster-large/&quot;&gt;Building Large Clusters - Kubernetes&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;http://stor.51cto.com/art/201708/546850.htm&quot;&gt;A10 Networks来了，给你来点不一样的料 - 51CTO.COM&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;http://cloud.it168.com/a2018/0619/3210/000003210034.shtml&quot;&gt;专访：多云应用交付新时代下的F5与中国-云计算专区&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;http://network.51cto.com/act/f5/ADreport&quot;&gt;F5发布2018全球应用交付报告&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="Kubernetes" /><summary type="html">跨云应用管理方案分析 需求背景 随着技术的不断发展，越来越多的产品通过使用分布式架构，来解决服务器压力、数据可靠性的问题。为了更聚焦于自己的核心业务，许多企业会直接采用各类云厂商的服务或方案，降低门槛与成本。 但是对于那些业务灵活、数据敏感的企业及产品，使用的云计算服务就需要具有跨云厂商、灵活伸缩、快速切换等功能，保证在服务变更、功能调整等场景下业务受到较小冲击。</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="云计算" /><summary type="html">基于K8S集群搭建 在不同云厂商或同个云厂商不同区域下创建K8S集群，每个K8S集群中独立运行代理程序，通过代理程序进行镜像部署、服务发现、负载均衡等功能。 然后再开发一套对K8S集群进行控制管理的系统作为后台，用来进行多个集群的资源管理调度。 优势：单个K8S集群下的功能可以利用之前拾云平台的现成代码 缺陷：对多个K8S集群的资源进行重新分配管理需要较巨大的开发工作量</summary></entry></feed>

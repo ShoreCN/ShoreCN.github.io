@@ -409,17 +409,17 @@
 </table>
 
 <h2 id="安装docker">安装Docker</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum install -y docker
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yum install -y docker
 systemctl enable docker &amp;&amp; systemctl start docker
 </code></pre></div></div>
 
 <h2 id="设置节点名称">设置节点名称</h2>
 <p>Kubernetes集群中的所有节点名称不能相同，所以在创建集群前先修改好各个节点的名称防止冲突。<br />
-<code class="highlighter-rouge">hostname -b 名称</code></p>
+<code class="language-plaintext highlighter-rouge">hostname -b 名称</code></p>
 
 <h2 id="安装kubernetes组件">安装Kubernetes组件</h2>
 <h3 id="配置yum镜像源文件">配置yum镜像源文件</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
@@ -431,15 +431,15 @@ EOF
 </code></pre></div></div>
 
 <h3 id="关闭防火墙">关闭防火墙</h3>
-<p><code class="highlighter-rouge">setenforce 0</code></p>
+<p><code class="language-plaintext highlighter-rouge">setenforce 0</code></p>
 
 <h3 id="安装组件">安装组件</h3>
-<p><code class="highlighter-rouge"> yum install -y kubelet kubeadm kubectl </code></p>
+<p>` yum install -y kubelet kubeadm kubectl `</p>
 
 <h3 id="启动服务">启动服务</h3>
-<p><code class="highlighter-rouge"> systemctl enable kubelet &amp;&amp; systemctl start kubelet </code></p>
+<p>` systemctl enable kubelet &amp;&amp; systemctl start kubelet `</p>
 
-<p>最后通过命令<code class="highlighter-rouge">running sysctl net.bridge.bridge-nf-call-iptables=1</code>将/proc/sys/net/bridge/bridge-nf-call-iptables设置为1，否则后续Master创建集群和Node加入集群会产生错误。</p>
+<p>最后通过命令<code class="language-plaintext highlighter-rouge">running sysctl net.bridge.bridge-nf-call-iptables=1</code>将/proc/sys/net/bridge/bridge-nf-call-iptables设置为1，否则后续Master创建集群和Node加入集群会产生错误。</p>
 
 <h2 id="master创建集群">Master创建集群</h2>
 <h3 id="选择cni">选择CNI</h3>
@@ -456,11 +456,11 @@ EOF
 </ul>
 
 <h3 id="初始化集群">初始化集群</h3>
-<p><code class="highlighter-rouge">kubeadmin init --pod-network-cidr=10.244.0.0/16 </code><br />
+<p><code class="language-plaintext highlighter-rouge">kubeadmin init --pod-network-cidr=10.244.0.0/16 </code><br />
 为了保证Flannel可以正常工作，需要在Kubeadm init时加上“—pod-network-cidr=10.244.0.0/16 ”参数，使用其余CNI对应的参数各不相同，详情请参考<a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network">官方文档</a></p>
 
 <p>若输出以下类似内容则代表集群已经初始化成功了：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your Kubernetes master has initialized successfully!
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your Kubernetes master has initialized successfully!
 
 To start using your cluster, you need to run the following as a regular user:
 
@@ -482,13 +482,13 @@ as root:
 
 <h3 id="配置环境参数">配置环境参数</h3>
 <p>留意kubeadm init成功之后的回显，其中提醒了我们使用集群前需要做的相应配置。<br />
-<code class="highlighter-rouge">mkdir -p $HOME/.kube</code><br />
-<code class="highlighter-rouge">sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</code><br />
-<code class="highlighter-rouge">sudo chown $(id -u):$(id -g) $HOME/.kube/config</code></p>
+<code class="language-plaintext highlighter-rouge">mkdir -p $HOME/.kube</code><br />
+<code class="language-plaintext highlighter-rouge">sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</code><br />
+<code class="language-plaintext highlighter-rouge">sudo chown $(id -u):$(id -g) $HOME/.kube/config</code></p>
 
 <h3 id="安装cni">安装CNI</h3>
 <p>我们使用Flannel作为这个集群的CNI，所以使用如下命令安装Flannel：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
 </code></pre></div></div>
 
 <p>其余类型的CNI的安装方式可以参照<a href="https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network">官方文档</a></p>
@@ -496,14 +496,14 @@ as root:
 <h2 id="node加入集群">Node加入集群</h2>
 <p>现在可以将已经安装好Kubernetes组件的主机作为Node节点加入我们已经创建好的集群中了。
 使用类似如下kubeadm join命令完成Node节点的加入（token来自于之前Master上kubeadm init的结果）：<br />
-<code class="highlighter-rouge">kubeadm join 172.31.59.194:6443 --token 0vfzv1.vw6oxga0xhc1lzm5 --discovery-token-ca-cert-hash sha256:39b0319100e9997cb859ef6967a00c93de3ef8e535a7dc3d6e4ed510a5b97e6c</code></p>
+<code class="language-plaintext highlighter-rouge">kubeadm join 172.31.59.194:6443 --token 0vfzv1.vw6oxga0xhc1lzm5 --discovery-token-ca-cert-hash sha256:39b0319100e9997cb859ef6967a00c93de3ef8e535a7dc3d6e4ed510a5b97e6c</code></p>
 
 <h2 id="查看集群状态">查看集群状态</h2>
 <p>到此，我们的集群已经创建完成，可以在Master上通过如下命令查看集群成员：<br />
-<code class="highlighter-rouge">kubectl get nodes</code></p>
+<code class="language-plaintext highlighter-rouge">kubectl get nodes</code></p>
 
 <p>结果类似如下格式，若各节点状态都已经为Ready则代表集群建立完成：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@izj6cfshug9pwgb71j3t10z ~]# kubectl get node
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@izj6cfshug9pwgb71j3t10z ~]# kubectl get node
 NAME                      STATUS    ROLES     AGE       VERSION
 izj6cfshug9pwgb71j3t10z   Ready     master    58m       v1.10.1
 k8scluster1node1          Ready     &lt;none&gt;    24m       v1.10.1
@@ -646,7 +646,7 @@ k8scluster1node2          Ready     &lt;none&gt;    1m        v1.10.1
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -668,7 +668,7 @@ k8scluster1node2          Ready     &lt;none&gt;    1m        v1.10.1
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -768,7 +768,7 @@ k8scluster1node2          Ready     &lt;none&gt;    1m        v1.10.1
   
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

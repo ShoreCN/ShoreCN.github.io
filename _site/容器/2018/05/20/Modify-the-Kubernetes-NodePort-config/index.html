@@ -380,7 +380,7 @@
       
         <h2 id="问题">问题</h2>
 <p>在我们的实际使用过程中，如果想让服务能从外部访问，就会使用到NodePort服务类型。默认的选择了NodePort类型之后，端口是从30000-32767范围内随机分配，就算用户自行指定其他端口号，也会报如下错误：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The Service "test" is invalid: spec.ports[0].nodePort: Invalid value: 7712: provided port is not in the valid range. The range of valid ports is 30000-32767
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The Service "test" is invalid: spec.ports[0].nodePort: Invalid value: 7712: provided port is not in the valid range. The range of valid ports is 30000-32767
 </code></pre></div></div>
 
 <p>而我们实际的应用场景中，肯定有需要指定端口号的情况，例如服务要绑定域名只能用默认的80端口，而Kubernetes这样的不灵活限制了我们的使用。好在只需要修改API Server一个配置就可以调整NodePort的范围。</p>
@@ -398,7 +398,7 @@
 
 <h2 id="api-server启动参数说明">API Server启动参数说明</h2>
 <p>下面是一些典型的API Server参数说明，其中service-node-port-range就是我们需要关注修改的配置字段了。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--etcd-servers：指定etcd服务的URL
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>--etcd-servers：指定etcd服务的URL
 --insecure-bind-address：apiserver绑定主机的非安全IP地址，设置0.0.0.0表示监听所有IP
 --insecure-port：apiserver绑定主机的非安全端口号，默认为8080
 --service-cluster-ip-range：Kubernetes集群中Service的虚拟IP地址段范围，以CIDR格式表示，该IP范围不能与物理机的真实IP段有重合
@@ -408,7 +408,7 @@
 
 <h2 id="修改方案">修改方案</h2>
 <p>修改API Server的配置，配置文件路径/etc/kubernetes/manifests/kube-apiserver.yaml，新增一行–service-node-port-range=80-32767</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>spec:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>spec:
   containers:
   - command:
     - kube-apiserver
@@ -585,7 +585,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -607,7 +607,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -707,7 +707,7 @@
   
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
