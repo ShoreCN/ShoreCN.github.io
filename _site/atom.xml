@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2023-06-27T10:44:35+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">区块链代币管理</title><link href="/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager/" rel="alternate" type="text/html" title="区块链代币管理" /><published>2023-05-12T01:23:59+08:00</published><updated>2023-05-12T01:23:59+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager/">&lt;p&gt;区块链代币管理&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2023-06-28T01:07:40+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">区块链代币管理</title><link href="/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager/" rel="alternate" type="text/html" title="区块链代币管理" /><published>2023-05-12T01:23:59+08:00</published><updated>2023-05-12T01:23:59+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager/">&lt;p&gt;区块链代币管理&lt;/p&gt;
 
 &lt;h2 id=&quot;背景&quot;&gt;背景&lt;/h2&gt;
 &lt;p&gt;区块链代币种类繁多, 如何在项目里面合理地管理代币, 这是一个问题.&lt;br /&gt;
@@ -194,7 +194,58 @@
   &lt;li&gt;异常处理&lt;/li&gt;
   &lt;li&gt;告警机制&lt;/li&gt;
   &lt;li&gt;数据存储简化&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="区块链" /><category term="Python" /><summary type="html">区块链代币管理</summary></entry><entry><title type="html">macOS上修复word/excel等office文件乱码问题</title><link href="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/" rel="alternate" type="text/html" title="macOS上修复word/excel等office文件乱码问题" /><published>2019-03-19T19:14:39+08:00</published><updated>2019-03-19T19:14:39+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/">&lt;h2 id=&quot;原因&quot;&gt;原因&lt;/h2&gt;
+&lt;/ul&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="区块链" /><category term="Python" /><summary type="html">区块链代币管理</summary></entry><entry><title type="html">公网ssh访问局域网内部Mac主机</title><link href="/%E5%B7%A5%E5%85%B7/2023/01/04/access-mac-host-in-LAN-via-ssh/" rel="alternate" type="text/html" title="公网ssh访问局域网内部Mac主机" /><published>2023-01-04T18:01:00+08:00</published><updated>2023-01-04T18:01:00+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2023/01/04/access-mac-host-in-LAN-via-ssh</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2023/01/04/access-mac-host-in-LAN-via-ssh/">&lt;h1 id=&quot;需求&quot;&gt;需求&lt;/h1&gt;
+&lt;p&gt;我们的日常网络应用都是基于公网IP进行的，那么如果电脑处在于某个局域网内（例如公司网络、校园网络等情况），那么就常常出现使用公网IP无法访问的情况。要解决此问题涉及如下两部分配置：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Mac端启动sshd服务&lt;/li&gt;
+  &lt;li&gt;配置端口映射用以内访问内网设备&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;1mac端启动sshd服务&quot;&gt;1.Mac端启动sshd服务&lt;/h1&gt;
+
+&lt;p&gt;系统版本：macOS High Sierra 10.13.1 (17B1003)
+macOS系统自带了sshd服务，只需要启动即可，使用如下命令：&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 启动sshd服务
+sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 停止sshd服务
+sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 查看sshd服务情况
+sudo launchctl list | grep ssh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意事项：
+此处需要格外注意，必须要使用具有root权限的用户启动sshd服务，否则可能会因无法访问ssh key导致客户端ssh连接失败
+ssh_exchange_identification: Connection closed by remote host&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;参考资料
+https://www.cnblogs.com/EasonJim/p/7173859.html&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;2端口映射外网访问局域网内部主机&quot;&gt;2.端口映射外网访问局域网内部主机&lt;/h1&gt;
+
+&lt;p&gt;位于公司、校园等局域网环境下面的多台主机，共用的都是一个公网IP，
+所以外网直接通过此公网IP+端口访问某个局域网主机必然会产生混乱，此时就需要配置端口映射。&lt;/p&gt;
+
+&lt;p&gt;此处访问的是ssh服务，端口号为22，无法直接访问。
+那么我们可以在局域网出口路由器上定义一个未使用的端口号（例如38998），映射到内网主机的端口22，具体如下：
+外网终端 &amp;lt;–&amp;gt; 局域网出口路由器38998端口 &amp;lt;–&amp;gt; 内网主机22端口&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;如此配置完之后，在外网就可以通过自定义的端口号和公网IP就可以访问内网的主机了&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh user_name@server_ip -p 38998&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;如果需要通过ssh拷贝文件的话，可以采用scp命令&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scp -P 38998 src_file user_name@server_ip:dst_file&lt;/code&gt;&lt;/p&gt;</content><author><name>Shore</name></author><category term="工具" /><category term="ssh" /><category term="macOS" /><summary type="html">需求 我们的日常网络应用都是基于公网IP进行的，那么如果电脑处在于某个局域网内（例如公司网络、校园网络等情况），那么就常常出现使用公网IP无法访问的情况。要解决此问题涉及如下两部分配置： Mac端启动sshd服务 配置端口映射用以内访问内网设备</summary></entry><entry><title type="html">macOS上修复word/excel等office文件乱码问题</title><link href="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/" rel="alternate" type="text/html" title="macOS上修复word/excel等office文件乱码问题" /><published>2019-03-19T19:14:39+08:00</published><updated>2019-03-19T19:14:39+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/">&lt;h2 id=&quot;原因&quot;&gt;原因&lt;/h2&gt;
 &lt;p&gt;编码问题。因为在Windows系统上面，通常使用的是GBK字符编码方式，但是在macOS的系统上使用的是UTF-8的编码方式。所以常常会遇到从Windows系统上编辑创建的word/excel等office文件，在macOS或iOS上面打开显示为乱码。&lt;/p&gt;
 
 &lt;h2 id=&quot;解决办法&quot;&gt;解决办法&lt;/h2&gt;
@@ -880,97 +931,4 @@ http://www.docker.org.cn/dockerppt/114.html&lt;/p&gt;</content><author><name>Sho
 &lt;a href=&quot;https://zhuanlan.zhihu.com/p/27196777&quot;&gt;云原生（CloudNative）将成为应用云化开发的主流方式 - 知乎&lt;/a&gt;&lt;br /&gt;
 &lt;a href=&quot;https://cloud.tencent.com/developer/article/1156697&quot;&gt;云原生概念 - 云+社区 - 腾讯云&lt;/a&gt;&lt;/p&gt;
 
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="云计算" /><summary type="html">传统开发模式困局 开发、测试、运维无法一体化，上线周期长 开发、测试、线上多套环境需要进行单独维护，容易造成不一致影响各阶段的工作开展，进而引发一些线上故障等问题</summary></entry><entry><title type="html">跨云平台实施方案预研</title><link href="/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis/" rel="alternate" type="text/html" title="跨云平台实施方案预研" /><published>2018-11-20T23:45:20+08:00</published><updated>2018-11-20T23:45:20+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2018/11/20/Cross-Cloud-credible-analysis/">&lt;h2 id=&quot;基于k8s集群搭建&quot;&gt;基于K8S集群搭建&lt;/h2&gt;
-&lt;p&gt;在不同云厂商或同个云厂商不同区域下创建K8S集群，每个K8S集群中独立运行代理程序，通过代理程序进行镜像部署、服务发现、负载均衡等功能。
-然后再开发一套对K8S集群进行控制管理的系统作为后台，用来进行多个集群的资源管理调度。
-优势：单个K8S集群下的功能可以利用之前拾云平台的现成代码
-缺陷：对多个K8S集群的资源进行重新分配管理需要较巨大的开发工作量&lt;/p&gt;
-
-&lt;p&gt;此方案工作量较大且重复。&lt;/p&gt;
-
-&lt;h2 id=&quot;基于k8s联邦集群搭建&quot;&gt;基于K8S联邦集群搭建&lt;/h2&gt;
-&lt;p&gt;使用K8S联邦集群的机制，利用K8S定义好的各类资源概念，省去了资源调度、集群间通信、等诸多开发工作量。
-&lt;img src=&quot;https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/%E8%B7%A8%E4%BA%91%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84%E6%A1%86%E6%9E%B6%E5%9B%BE.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;可以将产品分为如下几个模块：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;服务器适配：
-这层主要内容是通过在云主机上常驻一个agent程序，对接我们管理平台的控制指令，并实时采集系统资源情况。
-可以使用golang开发，具有语法简单性能较高，并且编译生成出服务代理agent程序之后，可以方便地部署在不同的云厂商主机上，不用关心跨厂商主机之间的环境差异等问题。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;管理平台：
-通过将K8S的各类资源（Cluster、Deployment、ReplicasSet、Service、Ingress等），按照业务逻辑封装成我们自己的系统后台功能（集群管理、部署、冗余、服务、负载均衡等），通过沿用部分原有的后台代码，使用Python语言以Tornado为框架开发一套针对上述资源的RESTful API，可以沿用之前的后台框架设计。
-&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/TenCloud_Architecture.png&quot; alt=&quot;&quot; /&gt;
-数据层、镜像、用户、Tornado框架部分可以沿用原有代码，重新开发业务服务部分的集群、部署、服务功能。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;管理平台操作界面：
-通过对接后台提供的RESTful API，产品化设计后以前端形式展现管理界面。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;精简版本&quot;&gt;精简版本&lt;/h3&gt;
-&lt;p&gt;一个可以考虑的精简版本就是开发一个直接跑在云主机上的脚本式命令行管理系统。封装K8S联邦集群的部署过程、模板化整合K8S联邦集群底层的资源操作。
-精简版本的开发工作量主要集中在：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;业务模型梳理封装&lt;/li&gt;
-  &lt;li&gt;命令解析转换&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;问题：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;涉及一些用户第三方授权的操作（如GitHub OAuth认证），在命令行端可能难以实现&lt;/li&gt;
-  &lt;li&gt;若想收集K8S以外的主机、任务等信息，还是需要实现一套响应网络请求的框架&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;基于现有产品搭建&quot;&gt;基于现有产品搭建&lt;/h2&gt;
-&lt;h3 id=&quot;f5&quot;&gt;F5&lt;/h3&gt;
-&lt;p&gt;行业领导者，F5 解决方案集成了以下各项：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;公有云提供商，如 AWS、Microsoft Azure 和 Google Cloud Platform。&lt;/li&gt;
-  &lt;li&gt;私有云和开源平台，如 OpenStack、VMware 和 OpenShift。&lt;/li&gt;
-  &lt;li&gt;自动化工具包，因此您可以使用 Ansible、Puppet 或 HashiCorp 部署应用服务，在 DevOps 方法中为应用服务提供声明接口。&lt;/li&gt;
-  &lt;li&gt;容器环境中的微服务（如 Kubernetes 和 Mesos），以便在东西向流量中启用应用服务。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;a10-network&quot;&gt;A10 Network&lt;/h3&gt;
-&lt;p&gt;跨云产品Harmony Controller 
-Harmony平台的理念是随时随地实施策略，它将安全应用服务与内部部署环境、公有云、私有云和混合云衔接在一起。A10 Harmony 控制器具备虚拟化、SaaS 和物理规格，可用于管理多云环境下的安全应用交付服务，并集成多种配置和自动化服务。&lt;/p&gt;
-
-&lt;h3 id=&quot;redhat&quot;&gt;RedHat&lt;/h3&gt;
-&lt;p&gt;OpenShift容器平台
-红帽 OpenShift 是一款开源容器应用程序平台，主要以 Docker 容器为基础，并采用 Kubernetes 容器集群管理进行编排。OpenShift可支持多种编程语言和服务，包括 Web 框架、数据库或与移动应用和外部后台的连接器。OpenShift 平台同时支持云原生、无状态的应用程序以及传统、有状态的应用
-程序。
-&lt;img src=&quot;https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/Redhat_Openshift_Architecture.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;rancher&quot;&gt;Rancher&lt;/h3&gt;
-&lt;p&gt;Rancher为DevOps工程师提供了一个直观的用户界面来管理他们的服务容器，用户不需要深入了解Kubernetes概念就可以开始使用Rancher。 Rancher包含应用商店，支持一键式部署Helm和Compose模板。Rancher通过各种云、本地生态系统产品认证，其中包括安全工具，监控系统，容器仓库以及存储和网络驱动程序。
-&lt;img src=&quot;https://github.com/ShoreCN/ShoreCN.github.io/blob/master/resource/Rancher_Architecture.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;容器平台能同时对多个Kubernetes集群进行管理，但每个集群上运行的应用和其他集群隔离。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;时速云&quot;&gt;时速云&lt;/h3&gt;
-&lt;p&gt;企业级容器 PaaS 平台 TenxCloud Enterprise (TCE)
-随着业务的发展，客户通常会使用多个不同的节点区域，甚至使用多个不同的基础云服务提供商。时速云的跨云管理解决方案通过创建私有集群，并添加不同IaaS的云主机，可一键将容器镜像发布到不同的IaaS平台上，屏蔽了不同IaaS厂商之间的底层异构问题，极大的降低了IT管理的复杂度，并可轻松实现应用在多个不同的IaaS之间的迁移、容灾以及热备份。&lt;/p&gt;
-
-&lt;p&gt;方案特点：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;一键创建私有Docker主机集群，并支持将云主机、物理机或者虚拟机等添加到私有集群。&lt;/li&gt;
-  &lt;li&gt;通过时速云容器云平台统一管理多个不同IaaS上的应用。&lt;/li&gt;
-  &lt;li&gt;利用容器技术屏蔽底层基础云服务之间的差异，实现应用在多个云之间的迁移、容灾及热备。&lt;/li&gt;
-  &lt;li&gt;私有集群可以无缝使用容器部署、镜像下载、集群 API 等服务。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;cloudify&quot;&gt;Cloudify&lt;/h3&gt;
-&lt;p&gt;Cloudify是一个开源的云应用编排系统，可以让你的应用自动化在各种不同的云上方便地部署。Cloudify重点关注应用自动化，承担了部分业务自动化的工作。从云IaaS、PaaS、SaaS分层看，Cloudify是一个典型的面向应用编排自动化的PaaS平台。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;参考资料&lt;br /&gt;
-&lt;a href=&quot;https://www.redhat.com/cms/managed-files/cl-openshift-container-platform-3.5-datasheet-f7213kc-201704-a4-zh.pdf&quot;&gt;红帽 OPENSHIFT 容器平台 3.5&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://www.jianshu.com/p/0622d7dbbaa7&quot;&gt;跨集群服务——如何利用Kubernetes 1.3实现跨区高可用 - 简书&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://www.cnrancher.com/docs/rancher/v2.x/cn/overview/architecture/&quot;&gt;1 - 架构设计 | Rancher Labs&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://blog.csdn.net/liukuan73/article/details/57082617?utm_source=blogxgwz3&quot;&gt;Cloudify：打通应用和基础架构自动化交付的“任督二脉” - liukuan73的专栏 - CSDN博客&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://cloudify.co/&quot;&gt;Cloud &amp;amp; NFV Orchestration Based on TOSCA | Cloudify&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="云计算" /><summary type="html">基于K8S集群搭建 在不同云厂商或同个云厂商不同区域下创建K8S集群，每个K8S集群中独立运行代理程序，通过代理程序进行镜像部署、服务发现、负载均衡等功能。 然后再开发一套对K8S集群进行控制管理的系统作为后台，用来进行多个集群的资源管理调度。 优势：单个K8S集群下的功能可以利用之前拾云平台的现成代码 缺陷：对多个K8S集群的资源进行重新分配管理需要较巨大的开发工作量</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="云计算" /><summary type="html">传统开发模式困局 开发、测试、运维无法一体化，上线周期长 开发、测试、线上多套环境需要进行单独维护，容易造成不一致影响各阶段的工作开展，进而引发一些线上故障等问题</summary></entry></feed>
