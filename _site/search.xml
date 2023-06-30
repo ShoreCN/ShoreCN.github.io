@@ -3,7 +3,7 @@
   
     <entry>
       <title><![CDATA[区块链代币管理]]></title>
-      <url>/%E6%9E%B6%E6%9E%84/2023/05/12/Blockchain-token-manager/</url>
+      <url>/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager/</url>
       <content type="html"><![CDATA[<p>区块链代币管理</p>
 
 <h2 id="背景">背景</h2>
@@ -207,12 +207,14 @@
         
           <category> 架构 </category>
         
+          <category> 区块链 </category>
+        
       </categories>
       <tags>
         
-          <tag> 区块链 </tag>
-        
           <tag> Python </tag>
+        
+          <tag> 加密货币 </tag>
         
       </tags>
       <tags></tags>
@@ -1720,6 +1722,159 @@ spec:
       <tags>
         
           <tag> Kubernetes </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
+      <title><![CDATA[区块链地址标准及编码解码]]></title>
+      <url>/%E5%8C%BA%E5%9D%97%E9%93%BE/2018/05/05/Blockchain-address-standard-and-codec/</url>
+      <content type="html"><![CDATA[<p>区块链地址标准及编码解码</p>
+<h2 id="数据类型-地址-address">数据类型-地址 address</h2>
+<p>在solidity里的address等价于 uint160, 即长度20字节的数值<br />
+在大部分开发语言内部通常使用十六进制格式进行操作(fe1f0e6efead80045af5ddb58b664fb6492230e3)<br />
+有时显示时加上0x标明这是一个十六进制格式(0xfe1f0e6efead80045af5ddb58b664fb6492230e3)</p>
+
+<h2 id="checksum格式字符串">CheckSum格式字符串</h2>
+<p>为了防止输入错误或者其他复制、粘贴、传输地址等情况出现失误, EIP-55制定了一套地址编码规则<br />
+样例: 0xfE1f0e6EFEad80045Af5ddb58b664fb6492230E3</p>
+
+<h3 id="产生规则">产生规则</h3>
+<ol>
+  <li>将地址转换为十六进制结果(fe1f0e6efead80045af5ddb58b664fb6492230e3)
+进行一次Keccak256哈希处理, 得到参照表(1ea1041c8817750ddd7e542a4754354676f5deb7ce20334eccf0936e81ba8726)</li>
+  <li>遍历十六进制结果的每个字符,数字跳过, 字母处理, 使用参照表里相同位置的数值进行判断, 如果小于8则不变化, 大于8则变成大写字母(fE1f0e6EFEad80045Af5ddb58b664fb6492230E3)</li>
+  <li>加上0x头, 得到最终结果(0xfE1f0e6EFEad80045Af5ddb58b664fb6492230E3)
+    <h2 id="eth地址">ETH地址</h2>
+    <p>使用如上规则</p>
+    <h2 id="tron地址">TRON地址</h2>
+    <h3 id="支持hex格式地址">支持Hex格式地址</h3>
+    <p>(官方文档说法) 同一个私钥生成的Hex格式TRON地址和以太坊地址相比，除了最前面加上41，其他完全一样<br />
+<strong>所以TRON地址是21字节长度</strong></p>
+  </li>
+</ol>
+
+<h3 id="支持base58check格式地址">支持Base58Check格式地址</h3>
+<p>(官方文档说法) 对Hex格式的地址进行basecheck计算得到Base58格式地址，所有账户地址的第一个字符均为T<br />
+样例: TWEkjtFFeVtfsdRT32Xx5KuWGcskYfhWjX</p>
+<blockquote>
+  <p>地址前面添加版本前缀可以影响编码结果的前导符号</p>
+</blockquote>
+
+<h3 id="产生规则-1">产生规则</h3>
+<ol>
+  <li>取版本字段(41)和有效负载信息(de533fbbb750d302728d3ad29d31e070bc14af4b)，并将它们连接在一起(41de533fbbb750d302728d3ad29d31e070bc14af4b)</li>
+  <li>对第一步结果进行两次SHA256变换，取结果的前4个字节, 作为校验内容(6421c276)</li>
+  <li>将第一步结果和第二步结果连接在一起(41de533fbbb750d302728d3ad29d31e070bc14af4b6421c276)</li>
+  <li>进行base58 encode, 得到结果(TWEkjtFFeVtfsdRT32Xx5KuWGcskYfhWjX)</li>
+</ol>
+
+<p><strong>但是在 TVM 虚拟机和 Solidity 编程中，需要再去掉前缀 41 成为和以太坊兼容的20字节地址格式</strong></p>
+
+<h2 id="application-binary-interfaceabi">Application Binary Interface(ABI)</h2>
+<p>ABI即应用二进制接口, 作为与智能合约交互的标准, 起到交互数据的作用</p>
+
+<h3 id="结构">结构</h3>
+<p>数据由函数选择器和参数编码组成</p>
+<ul>
+  <li>函数选择器Function Selector<br />
+函数签名的 Keccak（SHA-3）哈希的前 4 字节<br />
+基础原型即是函数名称加上由括号括起来的参数类型列表，参数类型间由一个逗号分隔开，且没有空格<br />
+<code class="language-plaintext highlighter-rouge">例如transfer(address,uint256)</code></li>
+  <li>参数编码<br />
+从第5字节开始是被编码的参数<br />
+动态类型(bytes,string,list,tuple)和静态类型(其他)<br />
+编码规则
+    <ul>
+      <li>转换为十六进制之后补齐到32字节长度</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="第三方库">第三方库</h3>
+<p>后端Python使用eth-abi库进行编码解码
+iOS
+Android</p>
+
+<h3 id="调用链条">调用链条</h3>
+<h4 id="eth">ETH</h4>
+<ul>
+  <li>前端-SDK-编码-发送请求至节点服务商-区块链</li>
+  <li>后端-Web3 SDK-编码-发送请求至节点服务商-区块链</li>
+</ul>
+
+<h4 id="tron">TRON</h4>
+<ul>
+  <li>前端-SDK-编码-发送请求至节点服务商-区块链</li>
+  <li>后端-编码(eth-abi)-发送请求至节点服务商-区块链
+    <ul>
+      <li>编码过程中将TRON地址的首字节去除</li>
+      <li>logic.contract_tron_logic.TronContractInterface.execute_contract_func -&gt; trx_abi.encode_single</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="tron-地址的特殊处理">TRON 地址的特殊处理</h2>
+<p>由于 EVM 中 address 为 20 字节 bytes160 类型，而 TRON 地址的 hex 地址为 21 字节， 所以在传入参数的时候需要截取后 20 字节</p>
+
+<p><strong>TVM 对 21 字节地址只有有限的支持，建议不要依赖此特性</strong></p>
+
+<h2 id="衍生">衍生</h2>
+<p>bytes数据格式, 可转换为十六进制的字符串进行传递, 不需要加0x头</p>
+
+<h2 id="参考产品">参考产品</h2>
+<ul>
+  <li>TronLink<br />
+进行Token转账时产生的data数据里面地址没有41前缀</li>
+  <li>imToken<br />
+未测试</li>
+</ul>
+
+<h2 id="参考资料">参考资料</h2>
+
+<blockquote>
+  <p>ERC-55: Mixed-case checksum address encoding
+https://eips.ethereum.org/EIPS/eip-55</p>
+</blockquote>
+
+<blockquote>
+  <p>应用二进制接口Application Binary Interface(ABI) 说明
+https://solidity-cn.readthedocs.io/zh/develop/abi-spec.html</p>
+</blockquote>
+
+<blockquote>
+  <p>TRON协议-账户地址格式
+https://cn.developers.tron.network/docs/&gt; account#%E8%B4%A6%E6%88%B7%E5%9C%B0%E5%9D%80%E6%A0%BC%E5%BC%8F</p>
+</blockquote>
+
+<blockquote>
+  <p>TRON参数编码和解码
+https://cn.developers.tron.network/docs/parameter-encoding-and-decoding</p>
+</blockquote>
+
+<blockquote>
+  <p>Solidity ABI - TRON 地址的特殊处理TRON 地址的特殊处理
+https://andelf.gitbook.io/tron/smart-contract/abi</p>
+</blockquote>
+
+<blockquote>
+  <p>List of address prefixes
+https://en.bitcoin.it/wiki/List_of_address_prefixes</p>
+</blockquote>
+]]></content>
+      <categories>
+        
+          <category> 区块链 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> 加密货币 </tag>
+        
+          <tag> TRON </tag>
+        
+          <tag> 以太坊 </tag>
         
       </tags>
       <tags></tags>
