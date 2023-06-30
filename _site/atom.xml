@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2023-06-30T10:21:47+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">区块链代币管理</title><link href="/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager/" rel="alternate" type="text/html" title="区块链代币管理" /><published>2023-05-12T01:23:59+08:00</published><updated>2023-05-12T01:23:59+08:00</updated><id>/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager/">&lt;p&gt;区块链代币管理&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2023-06-30T10:32:30+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">区块链代币管理</title><link href="/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager/" rel="alternate" type="text/html" title="区块链代币管理" /><published>2023-05-12T01:23:59+08:00</published><updated>2023-05-12T01:23:59+08:00</updated><id>/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager/">&lt;p&gt;区块链代币管理&lt;/p&gt;
 
 &lt;h2 id=&quot;背景&quot;&gt;背景&lt;/h2&gt;
 &lt;p&gt;区块链代币种类繁多, 如何在项目里面合理地管理代币, 这是一个问题.&lt;br /&gt;
@@ -194,7 +194,138 @@
   &lt;li&gt;异常处理&lt;/li&gt;
   &lt;li&gt;告警机制&lt;/li&gt;
   &lt;li&gt;数据存储简化&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="区块链" /><category term="Python" /><category term="加密货币" /><summary type="html">区块链代币管理</summary></entry><entry><title type="html">公网ssh访问局域网内部Mac主机</title><link href="/%E5%B7%A5%E5%85%B7/2023/01/04/access-mac-host-in-LAN-via-ssh/" rel="alternate" type="text/html" title="公网ssh访问局域网内部Mac主机" /><published>2023-01-04T18:01:00+08:00</published><updated>2023-01-04T18:01:00+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2023/01/04/access-mac-host-in-LAN-via-ssh</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2023/01/04/access-mac-host-in-LAN-via-ssh/">&lt;h1 id=&quot;需求&quot;&gt;需求&lt;/h1&gt;
+&lt;/ul&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="区块链" /><category term="Python" /><category term="加密货币" /><summary type="html">区块链代币管理</summary></entry><entry><title type="html">区块链地址标准及编码解码</title><link href="/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/04/01/Blockchain-address-standard-and-codec/" rel="alternate" type="text/html" title="区块链地址标准及编码解码" /><published>2023-04-01T23:44:29+08:00</published><updated>2023-04-01T23:44:29+08:00</updated><id>/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/04/01/Blockchain-address-standard-and-codec</id><content type="html" xml:base="/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/04/01/Blockchain-address-standard-and-codec/">&lt;p&gt;区块链地址标准及编码解码&lt;/p&gt;
+&lt;h2 id=&quot;数据类型-地址-address&quot;&gt;数据类型-地址 address&lt;/h2&gt;
+&lt;p&gt;在solidity里的address等价于 uint160, 即长度20字节的数值&lt;br /&gt;
+在大部分开发语言内部通常使用十六进制格式进行操作(fe1f0e6efead80045af5ddb58b664fb6492230e3)&lt;br /&gt;
+有时显示时加上0x标明这是一个十六进制格式(0xfe1f0e6efead80045af5ddb58b664fb6492230e3)&lt;/p&gt;
+
+&lt;h2 id=&quot;checksum格式字符串&quot;&gt;CheckSum格式字符串&lt;/h2&gt;
+&lt;p&gt;为了防止输入错误或者其他复制、粘贴、传输地址等情况出现失误, EIP-55制定了一套地址编码规则&lt;br /&gt;
+样例: 0xfE1f0e6EFEad80045Af5ddb58b664fb6492230E3&lt;/p&gt;
+
+&lt;h3 id=&quot;产生规则&quot;&gt;产生规则&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;将地址转换为十六进制结果(fe1f0e6efead80045af5ddb58b664fb6492230e3)
+进行一次Keccak256哈希处理, 得到参照表(1ea1041c8817750ddd7e542a4754354676f5deb7ce20334eccf0936e81ba8726)&lt;/li&gt;
+  &lt;li&gt;遍历十六进制结果的每个字符,数字跳过, 字母处理, 使用参照表里相同位置的数值进行判断, 如果小于8则不变化, 大于8则变成大写字母(fE1f0e6EFEad80045Af5ddb58b664fb6492230E3)&lt;/li&gt;
+  &lt;li&gt;加上0x头, 得到最终结果(0xfE1f0e6EFEad80045Af5ddb58b664fb6492230E3)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;eth地址&quot;&gt;ETH地址&lt;/h2&gt;
+&lt;p&gt;使用如上规则&lt;/p&gt;
+&lt;h2 id=&quot;tron地址&quot;&gt;TRON地址&lt;/h2&gt;
+&lt;h3 id=&quot;支持hex格式地址&quot;&gt;支持Hex格式地址&lt;/h3&gt;
+&lt;p&gt;(官方文档说法) 同一个私钥生成的Hex格式TRON地址和以太坊地址相比，除了最前面加上41，其他完全一样&lt;br /&gt;
+&lt;strong&gt;所以TRON地址是21字节长度&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;支持base58check格式地址&quot;&gt;支持Base58Check格式地址&lt;/h3&gt;
+&lt;p&gt;(官方文档说法) 对Hex格式的地址进行basecheck计算得到Base58格式地址，所有账户地址的第一个字符均为T&lt;br /&gt;
+样例: TWEkjtFFeVtfsdRT32Xx5KuWGcskYfhWjX&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;地址前面添加版本前缀可以影响编码结果的前导符号&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;产生规则-1&quot;&gt;产生规则&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;取版本字段(41)和有效负载信息(de533fbbb750d302728d3ad29d31e070bc14af4b)，并将它们连接在一起(41de533fbbb750d302728d3ad29d31e070bc14af4b)&lt;/li&gt;
+  &lt;li&gt;对第一步结果进行两次SHA256变换，取结果的前4个字节, 作为校验内容(6421c276)&lt;/li&gt;
+  &lt;li&gt;将第一步结果和第二步结果连接在一起(41de533fbbb750d302728d3ad29d31e070bc14af4b6421c276)&lt;/li&gt;
+  &lt;li&gt;进行base58 encode, 得到结果(TWEkjtFFeVtfsdRT32Xx5KuWGcskYfhWjX)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;但是在 TVM 虚拟机和 Solidity 编程中，需要再去掉前缀 41 成为和以太坊兼容的20字节地址格式&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;application-binary-interfaceabi&quot;&gt;Application Binary Interface(ABI)&lt;/h2&gt;
+&lt;p&gt;ABI即应用二进制接口, 作为与智能合约交互的标准, 起到交互数据的作用&lt;/p&gt;
+
+&lt;h3 id=&quot;结构&quot;&gt;结构&lt;/h3&gt;
+&lt;p&gt;数据由函数选择器和参数编码组成&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;函数选择器Function Selector&lt;br /&gt;
+函数签名的 Keccak（SHA-3）哈希的前 4 字节&lt;br /&gt;
+基础原型即是函数名称加上由括号括起来的参数类型列表，参数类型间由一个逗号分隔开，且没有空格&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;例如transfer(address,uint256)&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;参数编码&lt;br /&gt;
+从第5字节开始是被编码的参数&lt;br /&gt;
+动态类型(bytes,string,list,tuple)和静态类型(其他)&lt;br /&gt;
+编码规则
+    &lt;ul&gt;
+      &lt;li&gt;转换为十六进制之后补齐到32字节长度&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;第三方库&quot;&gt;第三方库&lt;/h3&gt;
+&lt;p&gt;后端Python使用eth-abi库进行编码解码
+iOS
+Android&lt;/p&gt;
+
+&lt;h3 id=&quot;调用链条&quot;&gt;调用链条&lt;/h3&gt;
+&lt;h4 id=&quot;eth&quot;&gt;ETH&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;前端-SDK-编码-发送请求至节点服务商-区块链&lt;/li&gt;
+  &lt;li&gt;后端-Web3 SDK-编码-发送请求至节点服务商-区块链&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;tron&quot;&gt;TRON&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;前端-SDK-编码-发送请求至节点服务商-区块链&lt;/li&gt;
+  &lt;li&gt;后端-编码(eth-abi)-发送请求至节点服务商-区块链
+    &lt;ul&gt;
+      &lt;li&gt;编码过程中将TRON地址的首字节去除&lt;/li&gt;
+      &lt;li&gt;logic.contract_tron_logic.TronContractInterface.execute_contract_func -&amp;gt; trx_abi.encode_single&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;tron-地址的特殊处理&quot;&gt;TRON 地址的特殊处理&lt;/h2&gt;
+&lt;p&gt;由于 EVM 中 address 为 20 字节 bytes160 类型，而 TRON 地址的 hex 地址为 21 字节， 所以在传入参数的时候需要截取后 20 字节&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;TVM 对 21 字节地址只有有限的支持，建议不要依赖此特性&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;衍生&quot;&gt;衍生&lt;/h2&gt;
+&lt;p&gt;bytes数据格式, 可转换为十六进制的字符串进行传递, 不需要加0x头&lt;/p&gt;
+
+&lt;h2 id=&quot;参考产品&quot;&gt;参考产品&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;TronLink&lt;br /&gt;
+进行Token转账时产生的data数据里面地址没有41前缀&lt;/li&gt;
+  &lt;li&gt;imToken&lt;br /&gt;
+未测试&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;参考资料&quot;&gt;参考资料&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;ERC-55: Mixed-case checksum address encoding
+https://eips.ethereum.org/EIPS/eip-55&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;应用二进制接口Application Binary Interface(ABI) 说明
+https://solidity-cn.readthedocs.io/zh/develop/abi-spec.html&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;TRON协议-账户地址格式
+https://cn.developers.tron.network/docs/&amp;gt; account#%E8%B4%A6%E6%88%B7%E5%9C%B0%E5%9D%80%E6%A0%BC%E5%BC%8F&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;TRON参数编码和解码
+https://cn.developers.tron.network/docs/parameter-encoding-and-decoding&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Solidity ABI - TRON 地址的特殊处理TRON 地址的特殊处理
+https://andelf.gitbook.io/tron/smart-contract/abi&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;List of address prefixes
+https://en.bitcoin.it/wiki/List_of_address_prefixes&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="区块链" /><category term="加密货币" /><category term="TRON" /><category term="以太坊" /><summary type="html">区块链地址标准及编码解码 数据类型-地址 address 在solidity里的address等价于 uint160, 即长度20字节的数值 在大部分开发语言内部通常使用十六进制格式进行操作(fe1f0e6efead80045af5ddb58b664fb6492230e3) 有时显示时加上0x标明这是一个十六进制格式(0xfe1f0e6efead80045af5ddb58b664fb6492230e3)</summary></entry><entry><title type="html">公网ssh访问局域网内部Mac主机</title><link href="/%E5%B7%A5%E5%85%B7/2023/01/04/access-mac-host-in-LAN-via-ssh/" rel="alternate" type="text/html" title="公网ssh访问局域网内部Mac主机" /><published>2023-01-04T18:01:00+08:00</published><updated>2023-01-04T18:01:00+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2023/01/04/access-mac-host-in-LAN-via-ssh</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2023/01/04/access-mac-host-in-LAN-via-ssh/">&lt;h1 id=&quot;需求&quot;&gt;需求&lt;/h1&gt;
 &lt;p&gt;我们的日常网络应用都是基于公网IP进行的，那么如果电脑处在于某个局域网内（例如公司网络、校园网络等情况），那么就常常出现使用公网IP无法访问的情况。要解决此问题涉及如下两部分配置：&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;Mac端启动sshd服务&lt;/li&gt;
@@ -798,87 +929,4 @@ Server: &amp;amp;version.Version{SemVer:&quot;v2.12.0&quot;, GitCommit:&quot;d32
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 
 kubectl patch deploy --namespace=kube-system tiller-deploy -p &apos;{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;serviceAccount&quot;:&quot;tiller&quot;}}}}&apos;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Shore</name></author><category term="Kubernetes" /><category term="Kubernetes" /><summary type="html">概述 Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。</summary></entry><entry><title type="html">容器化迁移规范</title><link href="/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard/" rel="alternate" type="text/html" title="容器化迁移规范" /><published>2018-11-28T00:00:00+08:00</published><updated>2018-11-28T00:00:00+08:00</updated><id>/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard</id><content type="html" xml:base="/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard/">&lt;h2 id=&quot;服务器选择&quot;&gt;服务器选择&lt;/h2&gt;
-&lt;p&gt;用户自行采购服务器主机，服务器规格要求如下：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;操作系统：CentOS 7或RHEL 7&lt;/li&gt;
-  &lt;li&gt;规格：为了流畅使用Kubernetes功能，主机规格至少达到2 Cpu + 2GB内存&lt;/li&gt;
-  &lt;li&gt;区域：不限，根据用户业务自定&lt;/li&gt;
-  &lt;li&gt;带宽：不限，根据用户业务自定&lt;/li&gt;
-  &lt;li&gt;安全组：需要放开如下Kubernetes集群使用到的端口
-    &lt;ul&gt;
-      &lt;li&gt;Kubernetes API server：6443*&lt;/li&gt;
-      &lt;li&gt;etcd server client API：2379-2380&lt;/li&gt;
-      &lt;li&gt;Kubelet API：10250&lt;/li&gt;
-      &lt;li&gt;kube-scheduler：10251&lt;/li&gt;
-      &lt;li&gt;kube-controller-manager：10252&lt;/li&gt;
-      &lt;li&gt;NodePort Services：30000-32767&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;其他：保证主机的MAC地址和product_uuid在集群内是唯一的；服务器主机之间的网络可以完全正常访问&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;集群搭建&quot;&gt;集群搭建&lt;/h2&gt;
-&lt;p&gt;集群由至少一台Master加若干Node节点组成，如果需要实现更高可靠性，可以增加更多服务器。Kubernetes提供了较高的灵活性，后续根据业务扩张情况弹性增加服务器也十分方便。
-选定好Master之后，即可使用我们提供的工具搭建集群了。&lt;/p&gt;
-
-&lt;h2 id=&quot;应用镜像制作&quot;&gt;应用镜像制作&lt;/h2&gt;
-&lt;p&gt;容器化的关键步骤之一就是将应用的部署过程制作成镜像，通过分发镜像完成应用的快速实例化、自动化部署的目的。
-制作镜像需要关注如下几个关键要素：&lt;/p&gt;
-
-&lt;h3 id=&quot;系统环境&quot;&gt;系统环境&lt;/h3&gt;
-&lt;p&gt;选择应用需要使用的基础镜像，基础镜像通常是各种Linux发行版的Docker镜像比如ubuntu、Debian、centos等，也有已安装好相应软件的基础镜像，如NGINX、Python、redis等。根据用户的需求自行选择对应的系统及版本。
-常用的基础镜像可以在官方仓库（https://hub.docker.com/explore）或其他源（&lt;a href=&quot;https://dev.aliyun.com&quot;&gt;开发者平台&lt;/a&gt;）查询获取。&lt;/p&gt;
-
-&lt;h3 id=&quot;应用依赖&quot;&gt;应用依赖&lt;/h3&gt;
-&lt;p&gt;通过依赖清单的方式明确的声明所有的依赖项，并且在运行过程中，使用依赖隔离工具来确保程序不会调用系统中存在但清单中未声明的依赖项。这样可以简化环境配置流程，并保证应用的生产和开发环境更加一致。
-具体到语言上来说例如Ruby 的 Bundler 使用 Gemfile 作为依赖项声明清单，使用 bundle exec 来进行依赖隔离。Python 中则可分别使用两种工具： Pip 用作依赖声明， Virtualenv 用作依赖隔离。甚至 C 语言也有类似工具， Autoconf 用作依赖声明，静态链接库用作依赖隔离。无论用什么工具，依赖声明和依赖隔离建议一起使用。&lt;/p&gt;
-
-&lt;h3 id=&quot;分离有状态与无状态服务&quot;&gt;分离有状态与无状态服务&lt;/h3&gt;
-&lt;p&gt;有状态的服务牵扯到存储卷挂载等问题很难在水平方向（服务器主机层面）上进行迁移，所以任何需要持久化的数据都应存储在后端服务（比如数据库），而非直接和服务端耦合在一起，而且数据库等有状态服务也不适合做进镜像内，制作进镜像的部分应该都为无状态且无共享的。
-具体来说，通过使用云数据库或者其他方式，把有状态的模块进行服务化，服务端代码只需要引用地址或访问相应API即可使用相关资源。如此实现之后，服务端镜像化之后可以自由地在各个主机上进行实例化，不受数据持续化等问题的制约。&lt;/p&gt;
-
-&lt;h3 id=&quot;记录部署过程&quot;&gt;记录部署过程&lt;/h3&gt;
-&lt;p&gt;进行一次应用部署，并将部署过程中的如下指令操作记录下来：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;软件安装&lt;/li&gt;
-  &lt;li&gt;配置操作&lt;/li&gt;
-  &lt;li&gt;选择暴露的端口&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;以下面这个Dockerfile为例：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;通过ENV指令设置环境变量&lt;/li&gt;
-  &lt;li&gt;通过ADD指令将本地文件拷贝到容器里&lt;/li&gt;
-  &lt;li&gt;通过RUN指令执行命令行操作，这里主要是yum install进行依赖软件包安装&lt;/li&gt;
-  &lt;li&gt;通过EXPOSE指令指定需要暴露的服务端口&lt;/li&gt;
-  &lt;li&gt;通过ENTRYPOINT指令设置容器运行起来后需要执行的程序或命令&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;FROM daocloud.io/centos:7 
-MAINTAINER mate
- 
-ENV TZ &quot;Asia/Shanghai&quot; 
-ENV TERM xterm 
-
-ADD aliyun-mirror.repo /etc/yum.repos.d/CentOS-Base.repo 
-ADD aliyun-epel.repo /etc/yum.repos.d/epel.repo 
-RUN yum install -y curl wget tar bzip2 unzip vim-enhanced passwd sudo yum-utils hostname net-tools rsync man &amp;amp;&amp;amp; \ 
-	yum install -y gcc gcc-c++ git make automake cmake patch logrotate python-devel libpng-devel libjpeg-devel &amp;amp;&amp;amp; \ 
-	yum install -y --enablerepo=epel pwgen python-pip &amp;amp;&amp;amp; \ 
-	yum clean all 
-RUN pip install supervisor
- 
-ADD supervisord.conf /etc/supervisord.conf 
-RUN mkdir -p /etc/supervisor.conf.d &amp;amp;&amp;amp; mkdir -p /var/log/supervisor 
-EXPOSE 22 
-ENTRYPOINT [&quot;/usr/bin/supervisord&quot;, &quot;-n&quot;, &quot;-c&quot;, &quot;/etc/supervisord.conf&quot;] 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;备注：
-制作镜像过程中，配置可以通过ENV直接设置到环境变量中，但如果是运行的程序依赖的配置需要文件化，类似样例中的supervisord.conf配置文件，那么此文件最好&lt;/p&gt;
-
-&lt;h3 id=&quot;编写dockerfile&quot;&gt;编写Dockerfile&lt;/h3&gt;
-&lt;p&gt;更加详细具体的Dockerfile的语法格式、编写规范可以参考如下资料：&lt;br /&gt;
-&lt;a href=&quot;https://docs.docker.com/engine/reference/builder/&quot;&gt;| Docker Documentation&lt;/a&gt;
-http://www.docker.org.cn/dockerppt/114.html&lt;/p&gt;</content><author><name>Shore</name></author><category term="容器" /><summary type="html">服务器选择 用户自行采购服务器主机，服务器规格要求如下： 操作系统：CentOS 7或RHEL 7 规格：为了流畅使用Kubernetes功能，主机规格至少达到2 Cpu + 2GB内存 区域：不限，根据用户业务自定 带宽：不限，根据用户业务自定 安全组：需要放开如下Kubernetes集群使用到的端口 Kubernetes API server：6443* etcd server client API：2379-2380 Kubelet API：10250 kube-scheduler：10251 kube-controller-manager：10252 NodePort Services：30000-32767 其他：保证主机的MAC地址和product_uuid在集群内是唯一的；服务器主机之间的网络可以完全正常访问</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Shore</name></author><category term="Kubernetes" /><category term="Kubernetes" /><summary type="html">概述 Helm 是 Kubernetes 的包管理器，可以帮我们简化 kubernetes 的操作，一键部署应用。假如你的机器上已经安装了 kubectl 并且能够操作集群，那么你就可以安装 Helm 了。</summary></entry></feed>

@@ -283,6 +283,177 @@
   
 
   <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shore">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/assets/images/shore_robot_logo.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shore Space">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+                
+                <a class="post-title-link" href="/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard/" itemprop="url">
+                容器化迁移规范
+              </a>
+            
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-28T00:00:00+08:00">
+                2018-11-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/category/#/%E5%AE%B9%E5%99%A8" itemprop="url" rel="index">
+                    <span itemprop="name">容器</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="服务器选择">服务器选择</h2>
+<p>用户自行采购服务器主机，服务器规格要求如下：</p>
+<ul>
+  <li>操作系统：CentOS 7或RHEL 7</li>
+  <li>规格：为了流畅使用Kubernetes功能，主机规格至少达到2 Cpu + 2GB内存</li>
+  <li>区域：不限，根据用户业务自定</li>
+  <li>带宽：不限，根据用户业务自定</li>
+  <li>安全组：需要放开如下Kubernetes集群使用到的端口
+    <ul>
+      <li>Kubernetes API server：6443*</li>
+      <li>etcd server client API：2379-2380</li>
+      <li>Kubelet API：10250</li>
+      <li>kube-scheduler：10251</li>
+      <li>kube-controller-manager：10252</li>
+      <li>NodePort Services：30000-32767</li>
+    </ul>
+  </li>
+  <li>其他：保证主机的MAC地址和product_uuid在集群内是唯一的；服务器主机之间的网络可以完全正常访问</li>
+</ul>
+
+
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/%E5%AE%B9%E5%99%A8/2018/11/28/Container-Trans-Standard/#" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+        
+        
+        
+        
+          <div class="post-eof"></div>
+        
+      
+    </footer>
+  </article>
+
+  
+    
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="/%E6%9E%B6%E6%9E%84/2018/11/25/Cloud-Native-Development-Principle/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1199,163 +1370,6 @@ spec:
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/%E5%AE%B9%E5%99%A8/2018/05/20/Modify-the-Kubernetes-NodePort-config/#" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-        
-        
-        
-        
-          <div class="post-eof"></div>
-        
-      
-    </footer>
-  </article>
-
-  
-    
-    
-
-  
-
-  
-  
-  
-
-  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="/%E5%8C%BA%E5%9D%97%E9%93%BE/2018/05/05/Blockchain-address-standard-and-codec/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Shore">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/assets/images/shore_robot_logo.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Shore Space">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-                
-                <a class="post-title-link" href="/%E5%8C%BA%E5%9D%97%E9%93%BE/2018/05/05/Blockchain-address-standard-and-codec/" itemprop="url">
-                区块链地址标准及编码解码
-              </a>
-            
-          
-        </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-05T07:29:53+08:00">
-                2018-05-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/category/#/%E5%8C%BA%E5%9D%97%E9%93%BE" itemprop="url" rel="index">
-                    <span itemprop="name">区块链</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>区块链地址标准及编码解码</p>
-<h2 id="数据类型-地址-address">数据类型-地址 address</h2>
-<p>在solidity里的address等价于 uint160, 即长度20字节的数值<br />
-在大部分开发语言内部通常使用十六进制格式进行操作(fe1f0e6efead80045af5ddb58b664fb6492230e3)<br />
-有时显示时加上0x标明这是一个十六进制格式(0xfe1f0e6efead80045af5ddb58b664fb6492230e3)</p>
-
-
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/%E5%8C%BA%E5%9D%97%E9%93%BE/2018/05/05/Blockchain-address-standard-and-codec/#" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
