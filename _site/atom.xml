@@ -1,4 +1,84 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2023-09-01T09:47:55+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">个人技能树</title><link href="/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities/" rel="alternate" type="text/html" title="个人技能树" /><published>2023-08-24T23:17:19+08:00</published><updated>2023-08-24T23:17:19+08:00</updated><id>/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities</id><content type="html" xml:base="/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities/">&lt;p&gt;个人技能情况:
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2024-03-18T17:32:20+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">应用服务软件梳理</title><link href="/%E6%9E%B6%E6%9E%84/2024/03/02/application-server-software-brief/" rel="alternate" type="text/html" title="应用服务软件梳理" /><published>2024-03-02T07:11:33+08:00</published><updated>2024-03-02T07:11:33+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2024/03/02/application-server-software-brief</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2024/03/02/application-server-software-brief/">&lt;p&gt;&lt;img src=&quot;/resource/application-server-software.png&quot; alt=&quot;应用服务软件梳理&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最近接触到一些不常用的服务端应用软件, 正好值此之际简单整理一番&lt;/p&gt;
+
+&lt;h1 id=&quot;应用服务软件梳理&quot;&gt;应用服务软件梳理&lt;/h1&gt;
+
+&lt;h2 id=&quot;什么是应用服务软件&quot;&gt;什么是应用服务软件&lt;/h2&gt;
+&lt;p&gt;运行在服务器之上, 可以通过监听特定的端口, 响应用户请求对外提供服务的软件&lt;/p&gt;
+
+&lt;h2 id=&quot;根据内容进行的服务分类&quot;&gt;根据内容进行的服务分类&lt;/h2&gt;
+&lt;h3 id=&quot;1-静态服务&quot;&gt;1. 静态服务&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;通常访问的都是静态资源, 不同用户在不同时间获取到的都是相同的内容&lt;/li&gt;
+  &lt;li&gt;生成固定的HTML页面, 可以直接托管在github上, 例如Hexo,   Hugo&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;2-动态服务&quot;&gt;2. 动态服务&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;支持动态响应, 返回动态资源, 根据用户的身份权限等区别返回不同的内容和资源&lt;/li&gt;
+  &lt;li&gt;需要有对应的应用服务器进行承载, 例如Halo或WordPress&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;根据场景进行的服务分类&quot;&gt;根据场景进行的服务分类&lt;/h2&gt;
+&lt;h3 id=&quot;1-web服务&quot;&gt;1. web服务&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;提供web化服务, 例如页面服务/邮件服务/下载服务等&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;2-http服务&quot;&gt;2. http服务&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;侧重于采用的是http网络协议将用户请求传输给后端, 因为现今大部分web服务器都采用的http协议, 所以http服务器在大部分情况下是和web服务器对等的&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;3-应用服务&quot;&gt;3. 应用服务&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;一个特定应用的承载容器, 需要运行时环境的支持&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;常用服务器端服务软件&quot;&gt;常用服务器端服务软件&lt;/h2&gt;
+&lt;h3 id=&quot;nginx&quot;&gt;NGINX&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;开源的静态http服务软件, 主要用于反向代理/负载均衡/流量转发等&lt;/li&gt;
+  &lt;li&gt;因其性能强, 稳定性高, 所以常用于和动态服务组合使用, 作为直面用户请求的服务提供灵活稳定的web服务&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;apache-http-server&quot;&gt;Apache http server&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;主要用于静态服务, 在性能和资源消耗上的表现弱于NGINX, 因此使用量更低&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;iis&quot;&gt;IIS&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;微软旗下的Windows系统的应用服务软件, 支持ASP.NET&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;tomcat&quot;&gt;Tomcat&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;最常用的Java应用服务软件, 提供动态服务, 需要Java运行时环境支持&lt;/li&gt;
+  &lt;li&gt;Spring Boot直接内嵌Tomcat作为默认应用容器(应用服务)&lt;/li&gt;
+  &lt;li&gt;虽然Tomcat也可以直接提供动态服务, 但除非流量不大的情况, Tomcat在实际场景中很少使用Tomcat直面用户, 而是会放置在NGINX等http服务后面&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;jettyundertow&quot;&gt;Jetty/Undertow&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;功能和Tomcat相当, 相对Tomcat来说会更加轻量简单, 也作为Spring的应用容器选项之一&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;jbosswildfly&quot;&gt;JBoss/Wildfly&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;RedHat开发的平台级应用服务软件, 可以部署动态应用, 除了作为Java动态应用服务软件, 更倾向于提供整套J2EE解决方案, 比起前面几种服务软件来说属于重量级的应用服务平台&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;weblogic&quot;&gt;WebLogic&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Oracle出品的企业级Java应用的应用服务软件, 支持基本所有的Java功能, 作为一个商业软件提供了完整的组件.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;websphere&quot;&gt;WebSphere&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;IBM公司出品的企业级Java应用的应用服务软件, 功能强大可以和IBM的开发工具配套使用, 使用价格较高&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="后端" /><summary type="html"></summary></entry><entry><title type="html">个人技能树</title><link href="/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities/" rel="alternate" type="text/html" title="个人技能树" /><published>2023-08-24T23:17:19+08:00</published><updated>2023-08-24T23:17:19+08:00</updated><id>/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities</id><content type="html" xml:base="/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities/">&lt;p&gt;个人技能情况:
 &lt;img src=&quot;/resource/个人技能树(20230822).png&quot; alt=&quot;个人技能树&quot; /&gt;&lt;/p&gt;</content><author><name>Shore</name></author><category term="个人" /><category term="简历" /><summary type="html">个人技能情况:</summary></entry><entry><title type="html">区块链代币管理</title><link href="/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager/" rel="alternate" type="text/html" title="区块链代币管理" /><published>2023-05-12T01:23:59+08:00</published><updated>2023-05-12T01:23:59+08:00</updated><id>/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager/">&lt;p&gt;区块链代币管理&lt;/p&gt;
 
 &lt;h2 id=&quot;背景&quot;&gt;背景&lt;/h2&gt;
@@ -679,202 +759,4 @@ docker run --rm --volume=&quot;$PWD:/srv/jekyll&quot; -it jekyll/jekyll:$JEKYLL_
 &lt;blockquote&gt;
   &lt;p&gt;参考资料&lt;br /&gt;
 &lt;a href=&quot;https://stackoverflow.com/questions/53470794/setup-jekyll-via-docker&quot;&gt;Setup Jekyll via Docker? - Stack Overflow&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="工具" /><summary type="html">Jekyll简介 Jekyll 是一个简单且完全免费的静态博客站点生成工具，类似WordPress。但是和WordPress又有很大的不同，原因是jekyll只是一个只用 Markdown (或 Textile)、Liquid、HTML &amp;amp; CSS 就可以生成静态网页的工具，不需要数据库支持。但是可以配合第三方服务,例如Disqus。</summary></entry><entry><title type="html">使用NGINX Ingress进行Kubernetes集群负载均衡</title><link href="/2018/12/25/k8s-nginx-ingress-install/" rel="alternate" type="text/html" title="使用NGINX Ingress进行Kubernetes集群负载均衡" /><published>2018-12-25T08:23:23+08:00</published><updated>2018-12-25T08:23:23+08:00</updated><id>/2018/12/25/k8s-nginx-ingress-install</id><content type="html" xml:base="/2018/12/25/k8s-nginx-ingress-install/">&lt;h2 id=&quot;1-概述&quot;&gt;1 概述&lt;/h2&gt;
-&lt;p&gt;Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。&lt;/p&gt;
-
-&lt;h2 id=&quot;2-安装&quot;&gt;2 安装&lt;/h2&gt;
-&lt;p&gt;Ingress的安装方式有两种&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;通过Kubernetes配置文件安装&lt;br /&gt;
-Ingress相关的yaml文件归档在如下地址：&lt;a href=&quot;https://github.com/nginxinc/kubernetes-ingress/tree/master/deployments&quot;&gt;kubernetes-ingress/deployments at master · nginxinc/kubernetes-ingress · GitHub&lt;/a&gt;
-可以通过下载相关文件后使用kubectl apply直接进行部署，参阅指导文档&lt;a href=&quot;https://github.com/nginxinc/kubernetes-ingress/blob/master/docs/installation.md&quot;&gt;kubernetes-ingress/installation.md at master · nginxinc/kubernetes-ingress · GitHub&lt;/a&gt;，此处不予赘述&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;通过Helm安装&lt;br /&gt;
-本文主要介绍通过Helm安装使用Ingress，所以开始前请确保已经安装好Helm了。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;21-选择服务暴露方式&quot;&gt;2.1 选择服务暴露方式&lt;/h3&gt;
-&lt;p&gt;Ingress对外部提供服务通常选择如下两种方式：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;LoadBalancer&lt;br /&gt;
-需要云厂商支持并购买，为每个LoadBalancer类型的Service分配公网IP地址&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;hostPort&lt;br /&gt;
-hostPort是直接将容器的端口与所调度的节点上的端口连接起来，这样用户就可以通过宿主机的IP加上端口号来访问Pod了，如:&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apiVersion: v1
-kind: Pod
-metadata:
-  name: influxdb
-spec:
-  containers:
-    - name: influxdb
-      image: influxdb
-      ports:
-        - containerPort: 8086
-          hostPort: 8086
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;hostPort的方案有个缺点，因为Pod重新调度的时候该Pod被调度到的宿主机可能会变动，这样就变化后用户必须自己维护一个Pod与所在宿主机的对应关系。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;22-使用loadbalancer提供服务&quot;&gt;2.2 使用LoadBalancer提供服务&lt;/h3&gt;
-&lt;p&gt;这种方式部署起来十分简单，因为stable/nginx-ingress这个helm包默认就是使用这种方式部署。确保在云厂商上已经开通了LoadBalancer服务之后，执行如下命令进行一键安装：&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;helm install --name nginx-ingress --namespace kube-system stable/nginx-ingress&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;部署完成后查看结果：&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl get svc -n kube-system
-NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE
-nginx-ingress-controller        LoadBalancer   10.3.255.138   119.28.121.125   80:30113/TCP,443:32564/TCP   21h
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;23-使用hostport提供服务&quot;&gt;2.3 使用hostPort提供服务&lt;/h3&gt;
-&lt;p&gt;之前有提到hostPort的缺点在于Pod被调度变化到其他宿主机时需要手动维护。那么我们通过DaemonSet将Nginx 的 Ingress Controller Pod指定到特定宿主机上面来解决这个问题，牺牲了一定的可靠性，但就可以不再操心如何手工维护服务的地址变化问题了，二者的利弊取舍可以根据使用场景进行评估。&lt;/p&gt;
-
-&lt;h4 id=&quot;231-选择边缘节点&quot;&gt;2.3.1 选择边缘节点&lt;/h4&gt;
-&lt;p&gt;边缘节点：监听外部流量进入集群内部的节点
-这里我们选择集群内部的一个节点作为边缘节点，注意这个节点需要有外部可以访问的公网地址并且80、443端口没有被其他应用占用。&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# kubectl get nodes
-NAME                      STATUS   ROLES    AGE   VERSION
-izj6cfiv0zhc0j2k7ruyhsz   Ready    &amp;lt;none&amp;gt;   16d   v1.13.0
-k8s-cluster1-master       Ready    master   16d   v1.13.0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;以这个集群为例，我们选择izj6cfiv0zhc0j2k7ruyhsz作为边缘节点&lt;/p&gt;
-
-&lt;h4 id=&quot;232-为边缘节点添加标签&quot;&gt;2.3.2 为边缘节点添加标签&lt;/h4&gt;
-&lt;p&gt;我们使用如下指令给这个节点加上一个内容为node:edge的label，后续在DaemonSet部署时根据label进行绑定即可。&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node=edge
-node &quot;izj6cfiv0zhc0j2k7ruyhsz&quot; labeled
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;删除标签可以使用如下命令&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ kubectl label node izj6cfiv0zhc0j2k7ruyhsz node-
-node &quot;izj6cfiv0zhc0j2k7ruyhsz&quot; labeled
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;233-使用helm安装ingress&quot;&gt;2.3.3 使用helm安装ingress&lt;/h4&gt;
-&lt;p&gt;配置好边缘节点之后即可以使用Helm安装ingress了，安装命令如下：&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;helm install stable/nginx-ingress \
-  --namespace kube-system \
-  --name nginx-ingress \
-  --set controller.kind=DaemonSet \
-  --set controller.daemonset.useHostPort=true \
-  --set controller.nodeSelector.node=edge \
-  --set controller.service.type=ClusterIP
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;参数解释：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;namespace  可选项，配置后可指定ingress安装的命令空间，默认为default&lt;/li&gt;
-  &lt;li&gt;name  生成的资源名称&lt;/li&gt;
-  &lt;li&gt;set controller.kind=DaemonSet  选择部署方式为DaemonSet&lt;/li&gt;
-  &lt;li&gt;set controller.daemonset.useHostPort=true  开启hostPort功能，可以直接通过节点访问ingress服务&lt;/li&gt;
-  &lt;li&gt;controller.nodeSelector.node=edge  提供对外提供服务的节点筛选方式，需要和之前配置的节点label匹配，例如之前配置的node=edge，这里也需要填上一样的键值&lt;/li&gt;
-  &lt;li&gt;set controller.service.type=ClusterIP  内部服务的类型&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;安装完成之后检查一下对应pod是否都正常运行了&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# kubectl get pods -n kube-system | grep nginx-ingress
-nginx-ingress-controller-hv8h9                   1/1     Running   0          15d
-nginx-ingress-default-backend-56d99b86fb-4jlxn   1/1     Running   0          15d
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;3-配置&quot;&gt;3 配置&lt;/h2&gt;
-&lt;h3 id=&quot;31-创建测试服务&quot;&gt;3.1 创建测试服务&lt;/h3&gt;
-&lt;p&gt;Ingress安装完成之后，就可以配置相应规则来对外暴露服务了。我们可以创建一个服务来测试
-创建一个my-nginx.yaml，内容为&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: my-nginx
-spec:
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        run: my-nginx
-    spec:
-      containers:
-      - name: my-nginx
-        image: nginx
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-nginx
-  labels:
-    app: my-nginx
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-    name: http
-  selector:
-    run: my-nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kubectl apply -f my-nginx.yaml&lt;/code&gt;进行创建，通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;kubectl get service&lt;/code&gt;可以看到my-nginx服务已经创建成功&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[root@k8s-cluster1-master ~]# kubectl get svc
-NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
-kubernetes                           ClusterIP   10.96.0.1        &amp;lt;none&amp;gt;        443/TCP          17d
-my-nginx                             ClusterIP   10.100.181.157   &amp;lt;none&amp;gt;        80/TCP,443/TCP   13d
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;32-创建ingress规则&quot;&gt;3.2 创建ingress规则&lt;/h3&gt;
-&lt;p&gt;创建完成服务之后，我们就可以通过配置ingress规则来暴露服务了，&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: my-nginx
-  annotations:
-    kubernetes.io/ingress.class: &quot;nginx&quot;
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-  - host: www.10cloud.tk
-    http:
-      paths:
-      - path: /web
-        backend:
-          serviceName: my-nginx
-          servicePort: 80
-  tls:
-  - hosts:
-    - www.10cloud.tk
-    secretName: www-10cloud-tk-tls
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;参数解释&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;kubernetes.io/ingress.class: “nginx”&lt;br /&gt;
-通过定义kubernetes.io/ingress.class 这个annotation可以在有多个ingress controller的情况下能够让请求被我们安装的这个处理&lt;/li&gt;
-  &lt;li&gt;nginx.ingress.kubernetes.io/rewrite-target: /&lt;br /&gt;
-配置位置重定向，作用是使Ingress以根路径转发到后端，避免访问路径错误配置而导致的404错误。参数详细说明参照&lt;a href=&quot;https://github.com/kubernetes/ingress-nginx/tree/master/docs/examples/rewrite&quot;&gt;ingress-nginx/docs/examples/rewrite at master · kubernetes/ingress-nginx · GitHub&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;host&lt;br /&gt;
-域名地址&lt;/li&gt;
-  &lt;li&gt;path&lt;br /&gt;
-外部访问的相对地址&lt;/li&gt;
-  &lt;li&gt;backend&lt;br /&gt;
-通过配置服务名称和服务端口来指定和path绑定的后端服务&lt;/li&gt;
-  &lt;li&gt;tls&lt;br /&gt;
-创建了证书之后，可以通过tls绑定已创建的secret来实现https安全访问功能&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;至此，我们的Ingress创建完成并且通过配置服务与域名的关系，实现了外部访问的功能，通过域名&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chenshuo.tk/web&lt;/code&gt;即看到nginx的内容，说明通过域名已经可以访问集群内的服务了&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Welcome to nginx!
-If you see this page, the nginx web server is successfully installed and working. Further configuration is required.
-
-For online documentation and support please refer to nginx.org.
-Commercial support is available at nginx.com.
-
-Thank you for using nginx.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Shore</name></author><category term="Kubernetes" /><summary type="html">1 概述 Nginx Ingress Controller 是 Kubernetes Ingress Controller 的一种实现，作为反向代理将外部流量导入集群内部，实现将 Kubernetes 内部的 Service 暴露给外部，这样我们就能通过公网或内网直接访问集群内部的服务。</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="工具" /><summary type="html">Jekyll简介 Jekyll 是一个简单且完全免费的静态博客站点生成工具，类似WordPress。但是和WordPress又有很大的不同，原因是jekyll只是一个只用 Markdown (或 Textile)、Liquid、HTML &amp;amp; CSS 就可以生成静态网页的工具，不需要数据库支持。但是可以配合第三方服务,例如Disqus。</summary></entry></feed>
