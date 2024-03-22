@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2024-03-19T12:00:09+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">神经网络和深度学习简史</title><link href="/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks/" rel="alternate" type="text/html" title="神经网络和深度学习简史" /><published>2024-03-18T21:00:01+08:00</published><updated>2024-03-18T21:00:01+08:00</updated><id>/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks</id><content type="html" xml:base="/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks/">&lt;h2 id=&quot;神经网络和深度学习简史&quot;&gt;神经网络和深度学习简史&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2024-03-23T00:53:02+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">神经网络和深度学习简史</title><link href="/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks/" rel="alternate" type="text/html" title="神经网络和深度学习简史" /><published>2024-03-18T21:00:01+08:00</published><updated>2024-03-18T21:00:01+08:00</updated><id>/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks</id><content type="html" xml:base="/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks/">&lt;h2 id=&quot;神经网络和深度学习简史&quot;&gt;神经网络和深度学习简史&lt;/h2&gt;
 
 &lt;p&gt;March 17, 2024&lt;/p&gt;
 
@@ -703,7 +703,125 @@ https://www.cnblogs.com/EasonJim/p/7173859.html&lt;/p&gt;
 大部分情况下, 二者的快捷键可以使用如下方式对应:&lt;br /&gt;
 MacOS的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Option&lt;/code&gt;键对应Windows的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Alt&lt;/code&gt;键;&lt;br /&gt;
 MacOS的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Command&lt;/code&gt;键对应Windows的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ctrl&lt;/code&gt;键;&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="工具" /><category term="vscode" /><summary type="html">列编辑模式 在原来使用notepad++的时候，经常使用列编辑模式，可以快速地对多行文本进行编辑。最近使用vscode，发现vscode也有类似的功能，记录一下。</summary></entry><entry><title type="html">macOS上修复word/excel等office文件乱码问题</title><link href="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/" rel="alternate" type="text/html" title="macOS上修复word/excel等office文件乱码问题" /><published>2019-03-19T19:14:39+08:00</published><updated>2019-03-19T19:14:39+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/">&lt;h2 id=&quot;原因&quot;&gt;原因&lt;/h2&gt;
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="工具" /><category term="vscode" /><summary type="html">列编辑模式 在原来使用notepad++的时候，经常使用列编辑模式，可以快速地对多行文本进行编辑。最近使用vscode，发现vscode也有类似的功能，记录一下。</summary></entry><entry><title type="html">文件数据传输协议比较</title><link href="/%E5%B7%A5%E5%85%B7/2022/09/27/data-transfer-protocol-compare/" rel="alternate" type="text/html" title="文件数据传输协议比较" /><published>2022-09-27T00:00:00+08:00</published><updated>2022-09-27T00:00:00+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2022/09/27/data-transfer-protocol-compare</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2022/09/27/data-transfer-protocol-compare/">&lt;h2 id=&quot;文件传输协议比较&quot;&gt;文件传输协议比较&lt;/h2&gt;
+
+&lt;p&gt;目前常见的文件传输协议有FTP、SFTP、SCP、Rsync、NFS、Samba等，下面对这些协议的原理和使用场景进行简单的比较。&lt;/p&gt;
+
+&lt;h2 id=&quot;分类方式&quot;&gt;分类方式&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;传输方式：FTP、SFTP、SCP、Rsync&lt;/li&gt;
+  &lt;li&gt;文件系统：NFS、Samba、AFP&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;ftp&quot;&gt;FTP&lt;/h2&gt;
+
+&lt;p&gt;FTP（File Transfer Protocol）是一种标准的网络协议，用于将文件从一个主机传输到另一个主机。FTP是一个明文协议，不提供加密功能，因此不适合传输敏感数据。&lt;/p&gt;
+
+&lt;p&gt;FTP的工作方式是客户端与服务器之间建立连接，客户端通过FTP命令与服务器进行交互，服务器响应客户端的请求，客户端通过FTP命令进行文件的上传和下载。&lt;/p&gt;
+
+&lt;p&gt;FTP的优点是简单易用，缺点是不安全，不适合传输敏感数据, 不适用于在线文件编辑，不支持增量同步。
+使用方法:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ftp user@host
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;sftp&quot;&gt;SFTP&lt;/h2&gt;
+
+&lt;p&gt;SFTP（SSH File Transfer Protocol）是一种基于SSH协议的安全文件传输协议，提供加密功能，适合传输敏感数据。&lt;/p&gt;
+
+&lt;p&gt;SFTP的工作方式是客户端与服务器之间建立SSH连接，客户端通过SFTP命令与服务器进行交互，服务器响应客户端的请求，客户端通过SFTP命令进行文件的上传和下载。&lt;/p&gt;
+
+&lt;p&gt;SFTP的优点是安全可靠，缺点是相对FTP来说复杂一些。
+使用方法:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sftp user@host
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;scp&quot;&gt;SCP&lt;/h2&gt;
+
+&lt;p&gt;SCP（Secure Copy Protocol）是一种基于SSH协议的安全文件传输协议，提供加密功能，适合传输敏感数据。&lt;/p&gt;
+
+&lt;p&gt;SCP的工作方式是客户端与服务器之间建立SSH连接，客户端通过SCP命令与服务器进行交互，服务器响应客户端的请求，客户端通过SCP命令进行文件的上传和下载。&lt;/p&gt;
+
+&lt;p&gt;SCP的优点是安全可靠，缺点是相对SFTP来说功能较少。
+使用方法:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;scp /path/to/source user@host:/path/to/destination
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;rsync&quot;&gt;Rsync&lt;/h2&gt;
+
+&lt;p&gt;Rsync是一种用于文件同步的工具，可以在本地或远程主机之间同步文件，支持增量同步，节省带宽和时间。&lt;/p&gt;
+
+&lt;p&gt;Rsync的工作方式是客户端与服务器之间建立SSH连接，客户端通过Rsync命令与服务器进行交互，服务器响应客户端的请求，客户端通过Rsync命令进行文件的同步。
+Rsync的增量同步功能是通过比较源文件和目标文件的MD5值来实现的，只同步有变化的文件，节省带宽和时间。&lt;/p&gt;
+
+&lt;p&gt;Rsync的用户权限控制功能是通过SSH协议来实现的，对于用户细颗粒度的权限控制能力需要在SSH配置文件中进行配置。&lt;/p&gt;
+
+&lt;p&gt;Rsync的优点是快速高效，支持增量同步, 缺点是使用较为复杂。&lt;/p&gt;
+
+&lt;p&gt;Rsync需要在客户端和服务器上都安装Rsync工具。
+使用方法:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;rsync &lt;span class=&quot;nt&quot;&gt;-avz&lt;/span&gt; /path/to/source user@host:/path/to/destination
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;nfs&quot;&gt;NFS&lt;/h2&gt;
+
+&lt;p&gt;NFS（Network File System）是一种分布式文件系统，用于在不同主机之间共享文件，提供高性能的文件共享服务。&lt;/p&gt;
+
+&lt;p&gt;NFS的工作方式是将服务器文件系统挂载到客户端，客户端可以像访问本地文件一样访问远程文件。&lt;/p&gt;
+
+&lt;p&gt;NFS的工作流程是服务端启动RPC和NFS服务, NFS服务向RPC服务注册自身使用的端口号, 客户端向服务端的RPC服务请求NFS服务的端口号, 客户端通过NFS服务的端口号访问服务端的NFS服务。&lt;/p&gt;
+
+&lt;p&gt;NFS的用户管理功能是通过在服务端配置可以访问的用户和用户组来实现的, 对于用户的权限控制能力十分有限, 不能实现细粒度的权限控制。&lt;/p&gt;
+
+&lt;p&gt;NFS的优点是高性能，适合大规模文件共享。NFS的缺点是传输是基于RPC, 安全性较差，不适合传输敏感数据。&lt;/p&gt;
+
+&lt;p&gt;NFS需要在服务器和客户端上都安装NFS服务。
+使用方法:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; nfs server:/path/to/source /path/to/destination
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;samba&quot;&gt;Samba&lt;/h2&gt;
+
+&lt;p&gt;Samba早期版本是一种用于在Windows系统之间共享文件的工具，提供高性能的文件共享服务。
+现今版本的Samba已经支持Windows, MacOS, Linux等系统之间的文件共享。&lt;/p&gt;
+
+&lt;p&gt;Samba的工作方式是将服务器文件系统挂载到客户端，客户端可以像访问本地文件一样访问远程文件。
+Samba服务和NFS服务类似，但是Samba支持Windows系统，更适合Windows系统之间的文件共享。&lt;/p&gt;
+
+&lt;p&gt;Samba的优点是高性能，适合大规模文件共享，除了共享文件之外，还可以共享打印机等资源。缺点是不安全，不适合传输敏感数据。&lt;/p&gt;
+
+&lt;p&gt;Samba需要在服务器和客户端上都安装Samba服务。
+使用方法:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; cifs //server/share /path/to/destination &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;user,password&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;pass
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;afp&quot;&gt;AFP&lt;/h2&gt;
+
+&lt;p&gt;AFP（Apple Filing Protocol）是一种用于在Mac系统之间共享文件的协议，提供高性能的文件共享服务。&lt;/p&gt;
+
+&lt;p&gt;AFP的工作方式是将服务器文件系统挂载到客户端，客户端可以像访问本地文件一样访问远程文件。&lt;/p&gt;
+
+&lt;p&gt;AFP的优点是高性能，适合Mac系统之间的文件共享。
+使用方法:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; afp afp://user:pass@server/share /path/to/destination
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;应用场景比较&quot;&gt;应用场景比较&lt;/h2&gt;
+
+&lt;h3 id=&quot;根据所属网络场景来区分&quot;&gt;根据所属网络场景来区分&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;内网传输: NFS, Samba&lt;/li&gt;
+  &lt;li&gt;外网传输: SFTP, SCP, Rsync&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;根据使用者设备来区分&quot;&gt;根据使用者设备来区分&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Windows: Samba&lt;/li&gt;
+  &lt;li&gt;MacOS: AFP&lt;/li&gt;
+  &lt;li&gt;Linux: NFS&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Shore</name></author><category term="工具" /><category term="操作系统" /><summary type="html">文件传输协议比较</summary></entry><entry><title type="html">macOS上修复word/excel等office文件乱码问题</title><link href="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/" rel="alternate" type="text/html" title="macOS上修复word/excel等office文件乱码问题" /><published>2019-03-19T19:14:39+08:00</published><updated>2019-03-19T19:14:39+08:00</updated><id>/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac</id><content type="html" xml:base="/%E5%B7%A5%E5%85%B7/2019/03/19/office-on-windows-trans-encoding-on-mac/">&lt;h2 id=&quot;原因&quot;&gt;原因&lt;/h2&gt;
 &lt;p&gt;编码问题。因为在Windows系统上面，通常使用的是GBK字符编码方式，但是在macOS的系统上使用的是UTF-8的编码方式。所以常常会遇到从Windows系统上编辑创建的word/excel等office文件，在macOS或iOS上面打开显示为乱码。&lt;/p&gt;
 
 &lt;h2 id=&quot;解决办法&quot;&gt;解决办法&lt;/h2&gt;
@@ -841,88 +959,4 @@ output.file 输出文件名&lt;br /&gt;
 &lt;blockquote&gt;
   &lt;p&gt;tips 如何快速判断是因为网络端口没有放开导致的服务不可用？&lt;br /&gt;
 有时用户无法确定到底是软件安装配置还是网络端口问题导致的服务不可用。只需如下一条命令即可快速启用一个web服务&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker run -p &amp;lt;hostPort&amp;gt;:80 -d nginx&lt;/code&gt;，通过访问hostIP:hostPort查看网页是否能够正常访问即可判断端口是否正常放开。&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="云计算" /><category term="容器" /><category term="ShadowSocks" /><category term="Docker" /><category term="Google" /><summary type="html">准备 已激活的Google云账号 支付方式已经配置成功</summary></entry><entry><title type="html">AWS CloudFront CDN加速功能初步应用</title><link href="/%E6%9E%B6%E6%9E%84/2019/03/03/AWS-cloudfront-basic-deployment/" rel="alternate" type="text/html" title="AWS CloudFront CDN加速功能初步应用" /><published>2019-03-03T06:46:49+08:00</published><updated>2019-03-03T06:46:49+08:00</updated><id>/%E6%9E%B6%E6%9E%84/2019/03/03/AWS-cloudfront-basic-deployment</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/2019/03/03/AWS-cloudfront-basic-deployment/">&lt;h2 id=&quot;简介&quot;&gt;简介&lt;/h2&gt;
-&lt;p&gt;Amazon CloudFront 是一项快速内容分发网络 (CDN) 服务，可以安全地以低延迟和高传输速度向全球客户分发数据、视频、应用程序和 API。&lt;/p&gt;
-
-&lt;h2 id=&quot;使用场景&quot;&gt;使用场景&lt;/h2&gt;
-&lt;p&gt;Amazon CloudFront可以使用在如下场景中:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;静态资源缓存
-    &lt;ul&gt;
-      &lt;li&gt;默认提供多层缓存和区域性边缘缓存站点，可在对象尚未缓存在边缘站点时缩短延迟并降低来源服务器上的负载。缓存静态内容可为您提供所需的性能和规模，以便在浏览者访问您的站点时为其提供快速可靠的访问体验。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;动态内容和API加速
-    &lt;ul&gt;
-      &lt;li&gt;可用于保护并加速您的 WebSocket 流量及 API 调用。与客户端的 TLS 连接将在附近的边缘站点终止，然后，CloudFront 将使用经过优化的 AWS 主干网络路径安全地访问您的 API 服务器。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;直播/视频加速
-    &lt;ul&gt;
-      &lt;li&gt;以持续的高吞吐量来流式处理您的媒体内容（包括预录制文件和现场直播），从而满足您向全球浏览者分发媒体内容的需求。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;提升安全性
-    &lt;ul&gt;
-      &lt;li&gt;CloudFront 可与 AWS Shield 无缝集成以提供第 3/4 层 DDoS 缓解，并可与 AWS WAF 集成以提供第 7 层防护。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;软件分发
-    &lt;ul&gt;
-      &lt;li&gt;无论您的用户在何处，您都可以通过内容分发网络让您的软件在边缘可用。CDN 的高数据传输速率可加快您的二进制文件的分发速度，从而改善客户体验并降低成本。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;准备&quot;&gt;准备&lt;/h2&gt;
-&lt;h3 id=&quot;部署服务&quot;&gt;部署服务&lt;/h3&gt;
-&lt;p&gt;在使用Amazon CloudFront功能签,你应该已经有一些存储在Amazon云上的文件或者部署好的网站了.
-下面我们以一个已经在AWS EC2上部署好的静态博客网站服务为例进行介绍.&lt;/p&gt;
-
-&lt;h2 id=&quot;使用&quot;&gt;使用&lt;/h2&gt;
-&lt;h3 id=&quot;选择内容分发方式&quot;&gt;选择内容分发方式&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;Web
-    &lt;ul&gt;
-      &lt;li&gt;适用于加速静态和动态的网站内容&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;RTMP
-    &lt;ul&gt;
-      &lt;li&gt;适合使用 Adobe Flash Media Server 的 RTMP 协议的流媒体文件&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;大部分情况下都是选用web内容分发方式,我们这里是用于博客网站加速,所以选用的也是web内容分发方式.&lt;/p&gt;
-
-&lt;h3 id=&quot;创建分配&quot;&gt;创建分配&lt;/h3&gt;
-&lt;p&gt;创建分配规则最主要的关注如下几个配置项:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;源域名
-    &lt;ul&gt;
-      &lt;li&gt;选择需要加速的资源来源,支持直接选择存储在AWS S3数据库之中的内容如果是自建网站,那么填写我们的网站域名即可.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;源协议策略
-    &lt;ul&gt;
-      &lt;li&gt;选择兼顾HTTP与HTTPS的协议策略,方便后续网站协议变更&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;端口
-    &lt;ul&gt;
-      &lt;li&gt;根据自己的网络服务配置情况进行填写&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;其他的配置使用默认即可&lt;/p&gt;
-
-&lt;h3 id=&quot;使用内容分发&quot;&gt;使用内容分发&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/2019-03-02-AWS-cloudfront-basic-deployment.png&quot; alt=&quot;&quot; /&gt;
-创建完内容分发配置之后,等待其状态变为已部署就可以使用了.
-AWS CloudFront会重新分配一个域名,用户使用这个域名进行内容分发即可达到用户的最优访问效果了.&lt;/p&gt;
-
-&lt;h3 id=&quot;额外功能&quot;&gt;额外功能&lt;/h3&gt;
-&lt;p&gt;Amazon CloudFront还提供了各种的报告和分析功能,用户可以通过Amazon提供的数据查看缓存使用的状态,包括请求数、字节数、HTTP状态、异常报告等等&lt;/p&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="云计算" /><summary type="html">简介 Amazon CloudFront 是一项快速内容分发网络 (CDN) 服务，可以安全地以低延迟和高传输速度向全球客户分发数据、视频、应用程序和 API。</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="云计算" /><category term="容器" /><category term="ShadowSocks" /><category term="Docker" /><category term="Google" /><summary type="html">准备 已激活的Google云账号 支付方式已经配置成功</summary></entry></feed>
