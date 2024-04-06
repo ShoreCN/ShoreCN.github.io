@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2024-03-26T20:54:05+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">神经网络和深度学习简史</title><link href="/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks/" rel="alternate" type="text/html" title="神经网络和深度学习简史" /><published>2024-03-18T21:00:01+08:00</published><updated>2024-03-18T21:00:01+08:00</updated><id>/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks</id><content type="html" xml:base="/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks/">&lt;h2 id=&quot;神经网络和深度学习简史&quot;&gt;神经网络和深度学习简史&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="/atom.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2024-04-06T22:24:53+08:00</updated><id>/atom.xml</id><title type="html">Shore Space</title><subtitle>C/Python/通信/云计算/Docker/K8S</subtitle><author><name>Shore</name></author><entry><title type="html">神经网络和深度学习简史</title><link href="/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks/" rel="alternate" type="text/html" title="神经网络和深度学习简史" /><published>2024-03-18T21:00:01+08:00</published><updated>2024-03-18T21:00:01+08:00</updated><id>/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks</id><content type="html" xml:base="/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/03/18/the-history-of-neural-networks/">&lt;h2 id=&quot;神经网络和深度学习简史&quot;&gt;神经网络和深度学习简史&lt;/h2&gt;
 
 &lt;p&gt;March 17, 2024&lt;/p&gt;
 
@@ -292,7 +292,183 @@
 &lt;h3 id=&quot;websphere&quot;&gt;WebSphere&lt;/h3&gt;
 &lt;ul&gt;
   &lt;li&gt;IBM公司出品的企业级Java应用的应用服务软件, 功能强大可以和IBM的开发工具配套使用, 使用价格较高&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="后端" /><summary type="html"></summary></entry><entry><title type="html">个人技能树</title><link href="/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities/" rel="alternate" type="text/html" title="个人技能树" /><published>2023-08-24T23:17:19+08:00</published><updated>2023-08-24T23:17:19+08:00</updated><id>/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities</id><content type="html" xml:base="/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities/">&lt;p&gt;个人技能情况:
+&lt;/ul&gt;</content><author><name>Shore</name></author><category term="架构" /><category term="后端" /><summary type="html"></summary></entry><entry><title type="html">RAG在用户输入推荐场景中的应用</title><link href="/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/02/12/RAG-in-words-recommend/" rel="alternate" type="text/html" title="RAG在用户输入推荐场景中的应用" /><published>2024-02-12T06:01:39+08:00</published><updated>2024-02-12T06:01:39+08:00</updated><id>/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/02/12/RAG-in-words-recommend</id><content type="html" xml:base="/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/02/12/RAG-in-words-recommend/">&lt;h2 id=&quot;推荐系统的实现方式&quot;&gt;推荐系统的实现方式&lt;/h2&gt;
+
+&lt;p&gt;推荐系统有多种实现方式, 简单的可以直接使用类似于ElasticSearch这样的搜索引擎, 通过检索的方式获取到相关的信息, 然后返回给用户, 也可以使用深度学习模型, 通过训练的方式获取到相关的信息, 然后返回给用户.&lt;/p&gt;
+
+&lt;h2 id=&quot;elasticsearch实现推荐系统&quot;&gt;ElasticSearch实现推荐系统&lt;/h2&gt;
+
+&lt;p&gt;ElasticSearch是一个基于Lucene的搜索引擎, 提供了一个分布式多用户能力的全文搜索引擎, 通过ElasticSearch可以实现搜索, 分析, 存储等功能, 适用于各种场景, 包括推荐系统.&lt;/p&gt;
+
+&lt;p&gt;ElasticSearch提供了MLT(More Like This)的功能, 可以通过检索的方式获取到相关的信息, 并进行相应的评分排序返回给调用者, 用以实现简单的推荐系统.&lt;br /&gt;
+ElasticSearch内部的评分排序算法是基于BM25的, 通过计算文档之间的相似度, 然后进行排序. 但是结果中存在噪音数据的可能性, 所以在使用时需要根据实际情况通过参数min_doc_freq和min_term_freq进行调整.&lt;/p&gt;
+
+&lt;h3 id=&quot;样例&quot;&gt;样例&lt;/h3&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST news/_search
+{
+  &quot;query&quot;: {
+    &quot;more_like_this&quot;: {
+      &quot;fields&quot;: [
+        &quot;title&quot;
+      ],
+      &quot;like&quot;: [
+        &quot;体育运动&quot;
+      ],
+      &quot;analyzer&quot;: &quot;ik_smart&quot;,
+      &quot;min_doc_freq&quot;: 2,
+      &quot;min_term_freq&quot;: 1
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;什么是rag&quot;&gt;什么是RAG&lt;/h2&gt;
+
+&lt;p&gt;RAG是检索增强生成(Retrieval Augmented Generation)的缩写, 是一种结合检索和生成的模型, 通过检索的方式获取到相关信息, 然后通过生成的方式生成出最终的结果, 适用于问答系统, 文本生成等场景.&lt;/p&gt;
+
+&lt;h2 id=&quot;为何要用rag&quot;&gt;为何要用RAG&lt;/h2&gt;
+
+&lt;p&gt;在传统的用户输入推荐场景中, 常常使用的是检索的方式, 通过检索用户输入的关键词, 然后返回相关的结果, 但是这种方式往往会受限于检索的质量, 无法提供足够的信息量, 而RAG模式则可以通过生成的方式, 生成出更加丰富的信息, 从而提升用户体验.&lt;/p&gt;
+
+&lt;h2 id=&quot;rag的实现方式&quot;&gt;RAG的实现方式&lt;/h2&gt;
+
+&lt;h3 id=&quot;检索&quot;&gt;检索&lt;/h3&gt;
+
+&lt;p&gt;在RAG实现的第一步, 需要通过检索的方式获取到相关的信息, 目前常用的检索方式有文本检索和语义检索.&lt;/p&gt;
+
+&lt;h4 id=&quot;文本检索&quot;&gt;文本检索&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;文本预处理: 对文本进行分词, 去除停用词等处理;&lt;/li&gt;
+  &lt;li&gt;文本索引: 将处理后的文本建立倒排索引, 记录包含每个词的文档以及位置重新洗, 以便后续检索;&lt;/li&gt;
+  &lt;li&gt;文本检索: 通过用户输入的关键词, 在倒排索引中检索相关的文档, 并根据TFIDF或者BM25等算法进行排序返回结果.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;可以通过使用ElasticSearch等搜索引擎内置的相似检索功能获得相应数据.&lt;/p&gt;
+
+&lt;h4 id=&quot;语义检索&quot;&gt;语义检索&lt;/h4&gt;
+
+&lt;p&gt;语义检索是通过将文本转换为向量表示, 然后通过计算向量之间的相似度, 从而获取到相关的信息, 例如BERT, GPT等模型. 使得用户可以获得更加丰富的信息.
+此处以m3e模型为例, 通过检索的方式获取到相关的信息, 并进行相应的评分排序返回给调用者, 用以实现推荐系统.&lt;/p&gt;
+
+&lt;h5 id=&quot;文本切分&quot;&gt;文本切分&lt;/h5&gt;
+
+&lt;p&gt;如果文本块过大, 可能会影响检索的效果, 可以通过文本切分的方式将文本切分为多个子文本, 然后分别进行检索, 最后将结果进行合并返回给用户.&lt;br /&gt;
+通常文本切分的方式有按句子切分, 按段落切分, 按TOKEN切分等.&lt;/p&gt;
+
+&lt;h5 id=&quot;文本嵌入&quot;&gt;文本嵌入&lt;/h5&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;词嵌入: 将文本中的词转换为向量表示, 例如Word2Vec, GloVe等;&lt;/li&gt;
+  &lt;li&gt;句子嵌入: 将文本中的句子转换为向量表示, 例如BERT, GPT等;&lt;/li&gt;
+  &lt;li&gt;文档嵌入: 将文本中的文档转换为向量表示, 例如Doc2Vec等.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h5 id=&quot;语义检索-1&quot;&gt;语义检索&lt;/h5&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;计算相似度: 通过计算向量之间的相似度, 从而获取到相关的信息, 例如余弦相似度等;&lt;/li&gt;
+  &lt;li&gt;排序: 根据相似度进行排序, 返回给用户.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h5 id=&quot;示例代码&quot;&gt;示例代码&lt;/h5&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sentence_transformers&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SentenceTransformer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;util&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SentenceTransformer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;moka-ai/m3e-small&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;recommends&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# 输入文本
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;体育运动&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;娱乐活动&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# 检索相关文档
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;corpus&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;体育运动&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;足球比赛&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;篮球比赛&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;乒乓球比赛&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;音乐会&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;电影节&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;corpus_embeddings&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;corpus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;normalize_embeddings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;query_embedding&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;query&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;normalize_embeddings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# 计算相似度
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;corpus_embedding&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;corpus_embeddings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;score&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;corpus_embedding&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;query_embedding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;max_score&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;score&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argsort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;recommends&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;corpus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max_score&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;M3E是一种基于BERT的语义检索模型, 通过将文本转换为向量表示, 然后通过计算向量之间的相似度, 从而获取到相关的信息, 适用于问答系统, 文本生成等场景.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;文本检索和语义检索的对比&quot;&gt;文本检索和语义检索的对比&lt;/h4&gt;
+
+&lt;p&gt;文本检索的通过匹配关键词的方式, 无法处理一些复杂的语义关系, 例如同义词, 近义词等, 而语义检索则可以通过语义模型获取到更加丰富的信息, 但是语义检索的计算成本较高, 且需要大量的数据进行训练, 文本检索基于索引完成, 速度更快.&lt;/p&gt;
+
+&lt;h4 id=&quot;文本检索和语义检索的结合&quot;&gt;文本检索和语义检索的结合&lt;/h4&gt;
+
+&lt;p&gt;为了兼具两者的优点, 可以将文本检索和语义检索结合起来, 通过文本检索获取到相关的文档, 然后通过语义检索获取到更加丰富的信息, 从而提升检索的效果.&lt;/p&gt;
+
+&lt;h4 id=&quot;多路召回&quot;&gt;多路召回&lt;/h4&gt;
+
+&lt;p&gt;如果只采用单一的检索方式, 可能会受限于检索的质量, 无法提供足够的信息量, 所以可以通过多路召回的方式, 将多种检索方式的结果进行合并, 从而提升检索的效果.&lt;/p&gt;
+
+&lt;p&gt;多路召回通常采用的方式有并集召回, 交集召回, 加权召回等.&lt;/p&gt;
+
+&lt;p&gt;例如通过给不同的检索方式设置不同的权重, 从而获取到更加丰富的信息, 例如文本检索的权重为0.6, 语义检索的权重为0.4, 从而提升检索的效果.&lt;/p&gt;
+
+&lt;p&gt;而按照段落/句子/页不同的角度进行语义编码检索, 综合也可以获得更加丰富的信息.&lt;/p&gt;
+
+&lt;h4 id=&quot;重排序&quot;&gt;重排序&lt;/h4&gt;
+
+&lt;p&gt;在多路召回的方式中, 可能会存在一些噪音数据, 为了提升检索的效果, 可以通过重排序的方式, 对检索出来的top k结果进行重新排序, 从而提升检索的效果.
+例如综合使用BM25+BGE RERANK的方式, 通过BM25获取到相关的文档, 然后通过BGE RERANK对文档进行重排序, 从而提升检索的效果.&lt;/p&gt;
+
+&lt;p&gt;重排序的模型有很多, 例如基于BERT的bge reranker等&lt;/p&gt;
+
+&lt;p&gt;样例代码&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;transformers&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AutoTokenizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AutoModelForSequenceClassification&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;tokenizer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AutoTokenizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from_pretrained&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;BAAI/bge reranker-base&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AutoModelForSequenceClassification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from_pretrained&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;BAAI/bge reranker-base&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# 多路召回的结果
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;retrieval_results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;体育运动&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;足球比赛&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;篮球比赛&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;乒乓球比赛&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;音乐会&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;电影节&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# 重排序
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rerank_results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;retrieval_results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;inputs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tokenizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;return_tensors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;outputs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inputs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;rerank_results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;outputs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# 对结果进行重排序
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rerank_results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sorted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rerank_results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reverse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;大模型生成推荐结果&quot;&gt;大模型生成推荐结果&lt;/h3&gt;
+
+&lt;p&gt;在检索出相应的文档后, 可以通过大模型生成推荐结果, 例如GPT, CHATGLM等模型, 通过配合一定的Prompt, 将检索结果和用户输入结合生成出更加丰富的信息, 从而提升用户体验.&lt;br /&gt;
+同时, 可以在prompt中加入一些特定的关键词, 从而引导模型生成出更加符合用户需求的信息, 并且根据不同的情况返回一些特点的关键词, 例如无法找到结果, 可以返回一些提示信息, 便于后续的处理.&lt;/p&gt;
+
+&lt;h4 id=&quot;过滤敏感信息&quot;&gt;过滤敏感信息&lt;/h4&gt;
+
+&lt;p&gt;在生成推荐结果时, 可能会存在一些敏感信息, 为了保护用户隐私, 可以通过过滤敏感信息的方式, 对生成的结果进行过滤, 从而保护用户隐私.&lt;/p&gt;
+
+&lt;h4 id=&quot;过滤无效信息&quot;&gt;过滤无效信息&lt;/h4&gt;
+
+&lt;p&gt;在输出的结果后处理流程中, 如果发现提前设定的关键词出现, 可以返回指定的提示信息, 例如”没有找到相关信息”, 从而提升用户体验.&lt;/p&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;RAG的实际应用场景可以分成如下步骤:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;文本检索&lt;/li&gt;
+  &lt;li&gt;语义检索&lt;/li&gt;
+  &lt;li&gt;多路召回&lt;/li&gt;
+  &lt;li&gt;重排序&lt;/li&gt;
+  &lt;li&gt;大模型生成推荐结果&lt;/li&gt;
+  &lt;li&gt;过滤敏感信息&lt;/li&gt;
+  &lt;li&gt;过滤无效信息&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Shore</name></author><category term="人工智能" /><category term="后端" /><summary type="html">推荐系统的实现方式</summary></entry><entry><title type="html">个人技能树</title><link href="/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities/" rel="alternate" type="text/html" title="个人技能树" /><published>2023-08-24T23:17:19+08:00</published><updated>2023-08-24T23:17:19+08:00</updated><id>/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities</id><content type="html" xml:base="/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities/">&lt;p&gt;个人技能情况:
 &lt;img src=&quot;/resource/个人技能树(20230822).png&quot; alt=&quot;个人技能树&quot; /&gt;&lt;/p&gt;</content><author><name>Shore</name></author><category term="个人" /><category term="简历" /><summary type="html">个人技能情况:</summary></entry><entry><title type="html">区块链代币管理</title><link href="/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager/" rel="alternate" type="text/html" title="区块链代币管理" /><published>2023-05-12T01:23:59+08:00</published><updated>2023-05-12T01:23:59+08:00</updated><id>/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager</id><content type="html" xml:base="/%E6%9E%B6%E6%9E%84/%E5%8C%BA%E5%9D%97%E9%93%BE/2023/05/12/Blockchain-token-manager/">&lt;p&gt;区块链代币管理&lt;/p&gt;
 
 &lt;h2 id=&quot;背景&quot;&gt;背景&lt;/h2&gt;
@@ -870,93 +1046,4 @@ output.file 输出文件名&lt;br /&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;iconv命令支持很多文件编码方式，具体的可以通过命令&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iconv -l&lt;/code&gt;进行查询。&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="工具" /><summary type="html">原因 编码问题。因为在Windows系统上面，通常使用的是GBK字符编码方式，但是在macOS的系统上使用的是UTF-8的编码方式。所以常常会遇到从Windows系统上编辑创建的word/excel等office文件，在macOS或iOS上面打开显示为乱码。</summary></entry><entry><title type="html">在Google云平台上通过Docker快速搭建ShadowSocks服务</title><link href="/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/" rel="alternate" type="text/html" title="在Google云平台上通过Docker快速搭建ShadowSocks服务" /><published>2019-03-06T06:46:49+08:00</published><updated>2019-03-06T06:46:49+08:00</updated><id>/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker</id><content type="html" xml:base="/%E4%BA%91%E8%AE%A1%E7%AE%97/%E5%AE%B9%E5%99%A8/2019/03/06/google-cloud-deploy-ss-on-docker/">&lt;h2 id=&quot;准备&quot;&gt;准备&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;已激活的Google云账号&lt;/li&gt;
-  &lt;li&gt;支付方式已经配置成功&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;创建实例&quot;&gt;创建实例&lt;/h2&gt;
-&lt;p&gt;通过Google Cloud Platform左上角的导航菜单进入“Compute Engine - VM实例视图”创建VM实例
-&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;选择区域与配置&quot;&gt;选择区域与配置&lt;/h3&gt;
-&lt;p&gt;目前谷歌云支持18个区域,列表如下:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Taiwan(asia-east1)&lt;/li&gt;
-  &lt;li&gt;Hong Kong(asia-east2)&lt;/li&gt;
-  &lt;li&gt;Singapore(asia-southeast1)&lt;/li&gt;
-  &lt;li&gt;Tokyo(asia-northeast1)&lt;/li&gt;
-  &lt;li&gt;Montreal, Canada(northamerica-northeast1)&lt;/li&gt;
-  &lt;li&gt;Los Angeles, USA(us-west2)&lt;/li&gt;
-  &lt;li&gt;South Carolina, USA(us-east1)&lt;/li&gt;
-  &lt;li&gt;Northern Virginia, USA(us-east4)&lt;/li&gt;
-  &lt;li&gt;Sydney(australia-southeast1)&lt;/li&gt;
-  &lt;li&gt;Mumbai(asia-south1)&lt;/li&gt;
-  &lt;li&gt;Belgium(europe-west1)&lt;/li&gt;
-  &lt;li&gt;Netherlands(europe-west4)&lt;/li&gt;
-  &lt;li&gt;Hamina, Finland(europe-north1)&lt;/li&gt;
-  &lt;li&gt;London, UK(europe-west2)&lt;/li&gt;
-  &lt;li&gt;Iowa, USA(us-central1)&lt;/li&gt;
-  &lt;li&gt;Oregon, USA(us-west1)&lt;/li&gt;
-  &lt;li&gt;São Paulo(southamerica-east1)&lt;/li&gt;
-  &lt;li&gt;Frankfurt, Germany(europe-west3)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;根据业务选择适合自己的区域,通常选用访问延迟较低的区域,可以根据谷歌云主机测速网站&lt;a href=&quot;http://www.gcping.com/&quot;&gt;GCP ping&lt;/a&gt;的数据进行选择.
-此处以台湾服务器为例
-&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;可选是否使用容器功能&quot;&gt;(可选)是否使用容器功能&lt;/h3&gt;
-&lt;p&gt;Google云已经全流程支持容器功能,可以在创建实例的时候就进行容器配置
-&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;选择映像&quot;&gt;选择映像&lt;/h3&gt;
-&lt;p&gt;如果使用容器化部署的话,系统会自动启用容器定制系统,用户就无需自己再选择映像了.
-若没有使用到云平台配套的容器功能,用户可以根据需求选择合适自己的映像(即镜像)
-&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;防火墙配置&quot;&gt;防火墙配置&lt;/h3&gt;
-&lt;p&gt;勾选允许HTTP和HTTPS流量的选项
-&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/5.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;连接实例&quot;&gt;连接实例&lt;/h2&gt;
-&lt;p&gt;Google Cloud提供了浏览器登录、SSH登录等多种方式,选择合适自己的即可.&lt;/p&gt;
-
-&lt;h2 id=&quot;手工使用docker部署shadowsocks服务&quot;&gt;手工使用Docker部署ShadowSocks服务&lt;/h2&gt;
-&lt;p&gt;使用Google Cloud自带的容器功能可以省去一些安装配置动作.
-但是手工部署可以带来更高的灵活性,用户可以选择更多的可选配置.
-安装完docker相关组件之后,使用如下命令即可部署SS服务:
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker run -dt --name ss -p &amp;lt;host_port&amp;gt;:&amp;lt;docker_port&amp;gt; mritd/shadowsocks -s &quot;-s 0.0.0.0 -p &amp;lt;s&amp;gt; -m chacha20-ietf-poly1305 -k &amp;lt;password&amp;gt; --fast-open&quot;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;参数说明:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;-d: 后台运行容器，并返回容器ID；&lt;/li&gt;
-  &lt;li&gt;-t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用；&lt;/li&gt;
-  &lt;li&gt;-p: 根据“服务器端口:容器端口”格式顺序配置端口映射关系&lt;/li&gt;
-  &lt;li&gt;-s: 用户自行指定参数
-    &lt;ul&gt;
-      &lt;li&gt;-s  服务主机IP&lt;/li&gt;
-      &lt;li&gt;-p 对外暴露的服务端口&lt;/li&gt;
-      &lt;li&gt;-m 选择加密方式,这里选择chacha20-ietf-poly1305&lt;/li&gt;
-      &lt;li&gt;-k 配置密码&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;命令执行完成之后可以通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker ps&lt;/code&gt;命令查看容器是否正常运行,
-使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ps -ef | grep ss&lt;/code&gt;命令可以查看ShadowSocks服务是否正常运行.&lt;/p&gt;
-
-&lt;p&gt;至此,用户就可以根据自己使用的终端安装对应的客户端使用ShadowSocks服务了.&lt;/p&gt;
-
-&lt;h2 id=&quot;常见问题&quot;&gt;常见问题&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;ShadowSocks安装及配置没有错误的情况下，客户端为何还是无法使用服务？
-使用云服务器出现这种情况很可能是因为云厂商的网络安全策略限制所致，请确保相应的网络端口都已经打开。此处以谷歌云为例，导航菜单-VPC网络-防火墙规则-创建防火墙规则-填写允许访问的协议和端口。
-&lt;img src=&quot;https://raw.githubusercontent.com/ShoreCN/ShoreCN.github.io/master/resource/20190305/6.png&quot; alt=&quot;&quot; /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tips 如何快速判断是因为网络端口没有放开导致的服务不可用？&lt;br /&gt;
-有时用户无法确定到底是软件安装配置还是网络端口问题导致的服务不可用。只需如下一条命令即可快速启用一个web服务&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker run -p &amp;lt;hostPort&amp;gt;:80 -d nginx&lt;/code&gt;，通过访问hostIP:hostPort查看网页是否能够正常访问即可判断端口是否正常放开。&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="云计算" /><category term="容器" /><category term="ShadowSocks" /><category term="Docker" /><category term="Google" /><summary type="html">准备 已激活的Google云账号 支付方式已经配置成功</summary></entry></feed>
+&lt;/blockquote&gt;</content><author><name>Shore</name></author><category term="工具" /><summary type="html">原因 编码问题。因为在Windows系统上面，通常使用的是GBK字符编码方式，但是在macOS的系统上使用的是UTF-8的编码方式。所以常常会遇到从Windows系统上编辑创建的word/excel等office文件，在macOS或iOS上面打开显示为乱码。</summary></entry></feed>

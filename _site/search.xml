@@ -332,6 +332,200 @@
     </entry>
   
     <entry>
+      <title><![CDATA[RAG在用户输入推荐场景中的应用]]></title>
+      <url>/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/2024/02/12/RAG-in-words-recommend/</url>
+      <content type="html"><![CDATA[<h2 id="推荐系统的实现方式">推荐系统的实现方式</h2>
+
+<p>推荐系统有多种实现方式, 简单的可以直接使用类似于ElasticSearch这样的搜索引擎, 通过检索的方式获取到相关的信息, 然后返回给用户, 也可以使用深度学习模型, 通过训练的方式获取到相关的信息, 然后返回给用户.</p>
+
+<h2 id="elasticsearch实现推荐系统">ElasticSearch实现推荐系统</h2>
+
+<p>ElasticSearch是一个基于Lucene的搜索引擎, 提供了一个分布式多用户能力的全文搜索引擎, 通过ElasticSearch可以实现搜索, 分析, 存储等功能, 适用于各种场景, 包括推荐系统.</p>
+
+<p>ElasticSearch提供了MLT(More Like This)的功能, 可以通过检索的方式获取到相关的信息, 并进行相应的评分排序返回给调用者, 用以实现简单的推荐系统.<br />
+ElasticSearch内部的评分排序算法是基于BM25的, 通过计算文档之间的相似度, 然后进行排序. 但是结果中存在噪音数据的可能性, 所以在使用时需要根据实际情况通过参数min_doc_freq和min_term_freq进行调整.</p>
+
+<h3 id="样例">样例</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST news/_search
+{
+  "query": {
+    "more_like_this": {
+      "fields": [
+        "title"
+      ],
+      "like": [
+        "体育运动"
+      ],
+      "analyzer": "ik_smart",
+      "min_doc_freq": 2,
+      "min_term_freq": 1
+    }
+  }
+}
+</code></pre></div></div>
+
+<h2 id="什么是rag">什么是RAG</h2>
+
+<p>RAG是检索增强生成(Retrieval Augmented Generation)的缩写, 是一种结合检索和生成的模型, 通过检索的方式获取到相关信息, 然后通过生成的方式生成出最终的结果, 适用于问答系统, 文本生成等场景.</p>
+
+<h2 id="为何要用rag">为何要用RAG</h2>
+
+<p>在传统的用户输入推荐场景中, 常常使用的是检索的方式, 通过检索用户输入的关键词, 然后返回相关的结果, 但是这种方式往往会受限于检索的质量, 无法提供足够的信息量, 而RAG模式则可以通过生成的方式, 生成出更加丰富的信息, 从而提升用户体验.</p>
+
+<h2 id="rag的实现方式">RAG的实现方式</h2>
+
+<h3 id="检索">检索</h3>
+
+<p>在RAG实现的第一步, 需要通过检索的方式获取到相关的信息, 目前常用的检索方式有文本检索和语义检索.</p>
+
+<h4 id="文本检索">文本检索</h4>
+
+<ol>
+  <li>文本预处理: 对文本进行分词, 去除停用词等处理;</li>
+  <li>文本索引: 将处理后的文本建立倒排索引, 记录包含每个词的文档以及位置重新洗, 以便后续检索;</li>
+  <li>文本检索: 通过用户输入的关键词, 在倒排索引中检索相关的文档, 并根据TFIDF或者BM25等算法进行排序返回结果.</li>
+</ol>
+
+<p>可以通过使用ElasticSearch等搜索引擎内置的相似检索功能获得相应数据.</p>
+
+<h4 id="语义检索">语义检索</h4>
+
+<p>语义检索是通过将文本转换为向量表示, 然后通过计算向量之间的相似度, 从而获取到相关的信息, 例如BERT, GPT等模型. 使得用户可以获得更加丰富的信息.
+此处以m3e模型为例, 通过检索的方式获取到相关的信息, 并进行相应的评分排序返回给调用者, 用以实现推荐系统.</p>
+
+<h5 id="文本切分">文本切分</h5>
+
+<p>如果文本块过大, 可能会影响检索的效果, 可以通过文本切分的方式将文本切分为多个子文本, 然后分别进行检索, 最后将结果进行合并返回给用户.<br />
+通常文本切分的方式有按句子切分, 按段落切分, 按TOKEN切分等.</p>
+
+<h5 id="文本嵌入">文本嵌入</h5>
+
+<ol>
+  <li>词嵌入: 将文本中的词转换为向量表示, 例如Word2Vec, GloVe等;</li>
+  <li>句子嵌入: 将文本中的句子转换为向量表示, 例如BERT, GPT等;</li>
+  <li>文档嵌入: 将文本中的文档转换为向量表示, 例如Doc2Vec等.</li>
+</ol>
+
+<h5 id="语义检索-1">语义检索</h5>
+
+<ol>
+  <li>计算相似度: 通过计算向量之间的相似度, 从而获取到相关的信息, 例如余弦相似度等;</li>
+  <li>排序: 根据相似度进行排序, 返回给用户.</li>
+</ol>
+
+<h5 id="示例代码">示例代码</h5>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">SentenceTransformer</span><span class="p">,</span> <span class="n">util</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="s">'moka-ai/m3e-small'</span><span class="p">)</span>
+<span class="n">recommends</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># 输入文本
+</span><span class="n">query_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">"体育运动"</span><span class="p">,</span> <span class="s">"娱乐活动"</span><span class="p">]</span>
+
+<span class="c1"># 检索相关文档
+</span><span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="s">"体育运动"</span><span class="p">,</span> <span class="s">"足球比赛"</span><span class="p">,</span> <span class="s">"篮球比赛"</span><span class="p">,</span> <span class="s">"乒乓球比赛"</span><span class="p">,</span> <span class="s">"音乐会"</span><span class="p">,</span> <span class="s">"电影节"</span><span class="p">]</span>
+<span class="n">corpus_embeddings</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">normalize_embeddings</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">query_embedding</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">normalize_embeddings</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># 计算相似度
+</span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">corpus_embedding</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">corpus_embeddings</span><span class="p">):</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">corpus_embedding</span> <span class="o">@</span> <span class="n">query_embedding</span><span class="p">.</span><span class="n">T</span>
+    <span class="n">max_score</span> <span class="o">=</span> <span class="n">score</span><span class="p">.</span><span class="n">argsort</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">recommends</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">corpus</span><span class="p">[</span><span class="n">max_score</span><span class="p">])</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>M3E是一种基于BERT的语义检索模型, 通过将文本转换为向量表示, 然后通过计算向量之间的相似度, 从而获取到相关的信息, 适用于问答系统, 文本生成等场景.</p>
+</blockquote>
+
+<h4 id="文本检索和语义检索的对比">文本检索和语义检索的对比</h4>
+
+<p>文本检索的通过匹配关键词的方式, 无法处理一些复杂的语义关系, 例如同义词, 近义词等, 而语义检索则可以通过语义模型获取到更加丰富的信息, 但是语义检索的计算成本较高, 且需要大量的数据进行训练, 文本检索基于索引完成, 速度更快.</p>
+
+<h4 id="文本检索和语义检索的结合">文本检索和语义检索的结合</h4>
+
+<p>为了兼具两者的优点, 可以将文本检索和语义检索结合起来, 通过文本检索获取到相关的文档, 然后通过语义检索获取到更加丰富的信息, 从而提升检索的效果.</p>
+
+<h4 id="多路召回">多路召回</h4>
+
+<p>如果只采用单一的检索方式, 可能会受限于检索的质量, 无法提供足够的信息量, 所以可以通过多路召回的方式, 将多种检索方式的结果进行合并, 从而提升检索的效果.</p>
+
+<p>多路召回通常采用的方式有并集召回, 交集召回, 加权召回等.</p>
+
+<p>例如通过给不同的检索方式设置不同的权重, 从而获取到更加丰富的信息, 例如文本检索的权重为0.6, 语义检索的权重为0.4, 从而提升检索的效果.</p>
+
+<p>而按照段落/句子/页不同的角度进行语义编码检索, 综合也可以获得更加丰富的信息.</p>
+
+<h4 id="重排序">重排序</h4>
+
+<p>在多路召回的方式中, 可能会存在一些噪音数据, 为了提升检索的效果, 可以通过重排序的方式, 对检索出来的top k结果进行重新排序, 从而提升检索的效果.
+例如综合使用BM25+BGE RERANK的方式, 通过BM25获取到相关的文档, 然后通过BGE RERANK对文档进行重排序, 从而提升检索的效果.</p>
+
+<p>重排序的模型有很多, 例如基于BERT的bge reranker等</p>
+
+<p>样例代码</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForSequenceClassification</span>
+
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="p">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s">"BAAI/bge reranker-base"</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForSequenceClassification</span><span class="p">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s">"BAAI/bge reranker-base"</span><span class="p">)</span>
+
+<span class="c1"># 多路召回的结果
+</span><span class="n">retrieval_results</span> <span class="o">=</span> <span class="p">[</span><span class="s">"体育运动"</span><span class="p">,</span> <span class="s">"足球比赛"</span><span class="p">,</span> <span class="s">"篮球比赛"</span><span class="p">,</span> <span class="s">"乒乓球比赛"</span><span class="p">,</span> <span class="s">"音乐会"</span><span class="p">,</span> <span class="s">"电影节"</span><span class="p">]</span>
+
+<span class="c1"># 重排序
+</span><span class="n">rerank_results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">retrieval_results</span><span class="p">:</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s">"pt"</span><span class="p">)</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">rerank_results</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+
+<span class="c1"># 对结果进行重排序
+</span><span class="n">rerank_results</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">rerank_results</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s">"score"</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="大模型生成推荐结果">大模型生成推荐结果</h3>
+
+<p>在检索出相应的文档后, 可以通过大模型生成推荐结果, 例如GPT, CHATGLM等模型, 通过配合一定的Prompt, 将检索结果和用户输入结合生成出更加丰富的信息, 从而提升用户体验.<br />
+同时, 可以在prompt中加入一些特定的关键词, 从而引导模型生成出更加符合用户需求的信息, 并且根据不同的情况返回一些特点的关键词, 例如无法找到结果, 可以返回一些提示信息, 便于后续的处理.</p>
+
+<h4 id="过滤敏感信息">过滤敏感信息</h4>
+
+<p>在生成推荐结果时, 可能会存在一些敏感信息, 为了保护用户隐私, 可以通过过滤敏感信息的方式, 对生成的结果进行过滤, 从而保护用户隐私.</p>
+
+<h4 id="过滤无效信息">过滤无效信息</h4>
+
+<p>在输出的结果后处理流程中, 如果发现提前设定的关键词出现, 可以返回指定的提示信息, 例如”没有找到相关信息”, 从而提升用户体验.</p>
+
+<h2 id="总结">总结</h2>
+
+<p>RAG的实际应用场景可以分成如下步骤:</p>
+<ol>
+  <li>文本检索</li>
+  <li>语义检索</li>
+  <li>多路召回</li>
+  <li>重排序</li>
+  <li>大模型生成推荐结果</li>
+  <li>过滤敏感信息</li>
+  <li>过滤无效信息</li>
+</ol>
+]]></content>
+      <categories>
+        
+          <category> 人工智能 </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> 后端 </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
       <title><![CDATA[个人技能树]]></title>
       <url>/%E4%B8%AA%E4%BA%BA/2023/08/24/personal-abilities/</url>
       <content type="html"><![CDATA[<p>个人技能情况:
